@@ -1,13 +1,17 @@
 #!/usr/bin/env node
 // Quality evaluation against independently sourced references.
 //
-//   npm run build && node benchmarks/evaluate.mjs [--dglai path/to/dglai.json] [--json out.json]
+//   npm run build && node benchmarks/evaluate.mjs [--tawalt tawalt_ar.json] [--dglai dglai.json] [--json out.json]
 //
 // Datasets (data/gold):
 //   moroccan   specification-examples.json + wikidata-lexemes.json  (Arabic-script Amazigh)
 //   toponyms   wikidata-toponyms.json  (official Arabic spellings — a *different* convention)
 //   albane     albane2025-examples.json (Algerian/Kabyle convention — reported only)
-// Optional coverage corpus (not shipped, CC-BY-NC): IRCAM DGLAI scraped dataset.
+// Optional local datasets (not shipped):
+//   tawalt   Tawalt Amazigh–Arabic dictionary (Hugging Face abdelhaqueidali/Tawalt-Amazigh-Arabic-Dictionary,
+//            file tawalt_ar.json, field `tifinagh_in_arabic`; license unspecified) — the largest
+//            independent Arabic-script Amazigh reference found. Only aggregate numbers are reported.
+//   dglai    IRCAM DGLAI scrape (CC-BY-NC) — coverage statistics only.
 import { readFileSync, writeFileSync } from 'node:fs'
 import lib from '../dist/index.js'
 import { dictionaryStyle, naiveTable1 } from './baselines.mjs'
@@ -30,6 +34,22 @@ const DATASETS = {
   toponyms: topo.entries.map((e) => ({ ...e, origin: `wikidata:${e.qid}` })),
   albane: albane.entries.map((e) => ({ ...e, origin: `albane2025:fig${e.figure}` })),
 }
+const LOCAL_ONLY = new Set()
+const tawaltPath = argVal('--tawalt')
+if (tawaltPath) {
+  // unambiguous single-word pairs: one Tifinagh word ↔ exactly one Arabic-script spelling
+  const words = JSON.parse(readFileSync(tawaltPath, 'utf8')).words
+  const seen = new Map()
+  for (const w of words) {
+    const t = (w.tifinagh ?? '').trim()
+    const a = (w.tifinagh_in_arabic ?? '').trim()
+    if (!/^[\u2D30-\u2D7F]+$/.test(t) || !a) continue
+    if (!seen.has(t)) seen.set(t, new Set())
+    seen.get(t).add(a)
+  }
+  DATASETS.tawalt = [...seen].filter(([, v]) => v.size === 1).map(([t, v]) => ({ tifinagh: t, arabic: [...v][0], origin: 'tawalt' }))
+  LOCAL_ONLY.add('tawalt')
+}
 
 // ── Systems ────────────────────────────────────────────────────────────────
 const conv = (profile, arabic = {}) => {
@@ -46,6 +66,8 @@ const SYSTEMS = {
   'ablation: readable − positional rules': conv('readable', { initialVowels: 'alef', hiatus: 'plain' }),
   'ablation: readable − gemination rule': conv('readable', { gemination: 'double' }),
   'ablation: readable − all context': conv('readable', { initialVowels: 'alef', hiatus: 'plain', gemination: 'double' }),
+  'variant: readable + hiatus=hamza-seat (earlier default)': conv('readable', { hiatus: 'hamza-seat' }),
+  'ours: readable + Tawalt conventions (initialVowels=hamza-all, g=gaf)': conv('readable', { initialVowels: 'hamza-all', g: 'gaf' }),
 }
 
 // ── Metrics ────────────────────────────────────────────────────────────────
@@ -61,13 +83,15 @@ function levenshtein(a, b) {
   return prev[y.length]
 }
 
-const HARAKAT = /[ً-ٰٟ]/g
+const HARAKAT = /[\u064B-\u065F\u0670]/g
+const VOWEL_SIGNS = /[\u064B-\u0650\u0652-\u065F\u0670]/g // all marks except shadda
 /**
  * Ordered normalization levels used to *explain* mismatches (never to score the
  * strict metric). Each level includes the previous ones.
  */
 const LEVELS = [
-  ['diacritics (shadda / damma / kasra)', (s) => s.replace(HARAKAT, '')],
+  ['vowel signs / sukun only (fatha, damma, kasra, sukun, U+065B)', (s) => s.replace(VOWEL_SIGNS, '')],
+  ['shadda', (s) => s.replace(HARAKAT, '')],
   ['letter choice for g/ẓ/ṛ (ڭ گ ك · ژ ظ ز · ڔ ر)', (s) => s.replace(/[ڭگ]/g, 'ك').replace(/[ژظ]/g, 'ز').replace(/ڔ/g, 'ر')],
   ['word-initial vowel spelling (ئ ؤ أ إ آ ا)', (s) => s.split(' ').map((w) => w.replace(/^(?:[ئؤأإآا][يو]?)/u, 'ا')).join(' ')],
   ['final -a as ة / ى', (s) => s.replace(/[ةى](?=\s|$)/g, 'ا')],
@@ -103,6 +127,7 @@ function evaluate(sysName, sys, items) {
   let exact = 0
   let altMatch = 0
   let skeleton = 0
+  let noVowelSigns = 0
   let edits = 0
   let refLen = 0
   const byTag = {}
@@ -112,7 +137,8 @@ function evaluate(sysName, sys, items) {
     const pred = sys.run(it.tifinagh)
     const ok = pred === it.arabic
     const alt = ok || (sys.alts ? sys.alts(it.tifinagh).includes(it.arabic) : false)
-    const skel = LEVELS[0][1](pred) === LEVELS[0][1](it.arabic)
+    const skel = pred.replace(HARAKAT, '') === it.arabic.replace(HARAKAT, '')
+    noVowelSigns += pred.replace(VOWEL_SIGNS, '') === it.arabic.replace(VOWEL_SIGNS, '')
     exact += ok
     altMatch += alt
     skeleton += skel
@@ -130,7 +156,7 @@ function evaluate(sysName, sys, items) {
     }
   }
   const n = items.length
-  return { system: sysName, n, exact, exactRate: exact / n, altMatchRate: altMatch / n, skeletonRate: skeleton / n, cer: edits / refLen, byTag, errors, examples }
+  return { system: sysName, n, exact, exactRate: exact / n, altMatchRate: altMatch / n, noVowelSignsRate: noVowelSigns / n, skeletonRate: skeleton / n, cer: edits / refLen, byTag, errors, examples }
 }
 
 const pct = (x) => (100 * x).toFixed(1) + '%'
@@ -183,7 +209,7 @@ function preservation() {
     }
     const text = parts.join(' ')
     const out = readable.convert(text).output
-    const strip = (s) => s.replace(/[؀-ۿⴰ-⵿]+/g, '')
+    const strip = (s) => s.replace(/[\u0600-ۿⴰ-⵿]+/g, '')
     // the non-Arabic, non-Tifinagh skeleton must be identical (protected spans keep their Tifinagh)
     if (strip(out) !== strip(text)) failures++
   }
@@ -195,16 +221,25 @@ const preserve = preservation()
 const lines = []
 for (const [ds, rows] of Object.entries(results)) {
   lines.push(`\n## ${ds} (n = ${rows[0].n})\n`)
-  lines.push('| system | exact | exact or listed alternative | exact ignoring diacritics | CER |')
-  lines.push('|---|---:|---:|---:|---:|')
-  for (const r of rows) lines.push(`| ${r.system} | ${r.exact}/${r.n} (${pct(r.exactRate)}) | ${pct(r.altMatchRate)} | ${pct(r.skeletonRate)} | ${r.cer.toFixed(3)} |`)
+  lines.push('| system | exact | exact or listed alternative | ignoring vowel signs (shadda kept) | ignoring all marks | CER |')
+  lines.push('|---|---:|---:|---:|---:|---:|')
+  for (const r of rows) lines.push(`| ${r.system} | ${r.exact}/${r.n} (${pct(r.exactRate)}) | ${pct(r.altMatchRate)} | ${pct(r.noVowelSignsRate)} | ${pct(r.skeletonRate)} | ${r.cer.toFixed(3)} |`)
 }
 lines.push('\n## coverage\n')
 lines.push('```json\n' + JSON.stringify(coverage, null, 2) + '\n```')
 lines.push(`\n## preservation\n\n${preserve.failures} failures in ${preserve.cases} synthetic mixed-script documents`)
 console.log(lines.join('\n'))
 
-const readableTopo = results.toponyms.find((r) => r.system.startsWith('ours: readable'))
+for (const ds of LOCAL_ONLY) {
+  console.log(`\n${ds} — mismatch explanations:`)
+  for (const r of results[ds]) if (r.system.startsWith('ours')) console.log(r.system, r.errors)
+  const rr = results[ds].find((r) => r.system === 'ours: readable (default)')
+  console.log(`${ds} — readable by phenomenon (exact):`)
+  console.log(Object.fromEntries(Object.entries(rr.byTag).map(([k, v]) => [k, `${v.exact}/${v.n}`])))
+  // never write entries of unlicensed datasets to disk
+  for (const r of results[ds]) r.examples = []
+}
+const readableTopo = results.toponyms.find((r) => r.system === 'ours: readable (default)')
 console.log('\nreadable vs official toponyms — mismatch explanations:')
 console.log(readableTopo.errors)
 console.log('\nreadable vs official toponyms — by phenomenon (exact):')

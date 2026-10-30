@@ -7,6 +7,7 @@
         "exact": 5,
         "exactRate": 0.7142857142857143,
         "altMatchRate": 0.7142857142857143,
+        "noVowelSignsRate": 0.7142857142857143,
         "skeletonRate": 0.7142857142857143,
         "cer": 0.10810810810810811,
         "byTag": {
@@ -51,6 +52,7 @@
         "exact": 5,
         "exactRate": 0.7142857142857143,
         "altMatchRate": 0.7142857142857143,
+        "noVowelSignsRate": 0.7142857142857143,
         "skeletonRate": 0.7142857142857143,
         "cer": 0.08108108108108109,
         "byTag": {
@@ -95,6 +97,7 @@
         "exact": 7,
         "exactRate": 1,
         "altMatchRate": 1,
+        "noVowelSignsRate": 1,
         "skeletonRate": 1,
         "cer": 0,
         "byTag": {
@@ -124,6 +127,7 @@
         "exact": 5,
         "exactRate": 0.7142857142857143,
         "altMatchRate": 0.8571428571428571,
+        "noVowelSignsRate": 0.8571428571428571,
         "skeletonRate": 0.8571428571428571,
         "cer": 0.05405405405405406,
         "byTag": {
@@ -146,7 +150,7 @@
         },
         "errors": {
           "other (consonant or lexical difference)": 1,
-          "diacritics (shadda / damma / kasra)": 1
+          "vowel signs / sukun only (fatha, damma, kasra, sukun, U+065B)": 1
         },
         "examples": [
           {
@@ -159,7 +163,7 @@
             "tifinagh": "ⴱⵔⴰⵢⵔ",
             "reference": "براير",
             "predicted": "برايٛر",
-            "category": "diacritics (shadda / damma / kasra)"
+            "category": "vowel signs / sukun only (fatha, damma, kasra, sukun, U+065B)"
           }
         ]
       },
@@ -169,6 +173,7 @@
         "exact": 6,
         "exactRate": 0.8571428571428571,
         "altMatchRate": 1,
+        "noVowelSignsRate": 1,
         "skeletonRate": 1,
         "cer": 0.02702702702702703,
         "byTag": {
@@ -190,14 +195,14 @@
           }
         },
         "errors": {
-          "diacritics (shadda / damma / kasra)": 1
+          "vowel signs / sukun only (fatha, damma, kasra, sukun, U+065B)": 1
         },
         "examples": [
           {
             "tifinagh": "ⴱⵔⴰⵢⵔ",
             "reference": "براير",
             "predicted": "برايٛر",
-            "category": "diacritics (shadda / damma / kasra)"
+            "category": "vowel signs / sukun only (fatha, damma, kasra, sukun, U+065B)"
           }
         ]
       },
@@ -206,7 +211,8 @@
         "n": 7,
         "exact": 5,
         "exactRate": 0.7142857142857143,
-        "altMatchRate": 0.7142857142857143,
+        "altMatchRate": 1,
+        "noVowelSignsRate": 0.7142857142857143,
         "skeletonRate": 0.7142857142857143,
         "cer": 0.10810810810810811,
         "byTag": {
@@ -251,6 +257,7 @@
         "exact": 6,
         "exactRate": 0.8571428571428571,
         "altMatchRate": 0.8571428571428571,
+        "noVowelSignsRate": 0.8571428571428571,
         "skeletonRate": 0.8571428571428571,
         "cer": 0.02702702702702703,
         "byTag": {
@@ -288,7 +295,8 @@
         "n": 7,
         "exact": 5,
         "exactRate": 0.7142857142857143,
-        "altMatchRate": 0.7142857142857143,
+        "altMatchRate": 0.8571428571428571,
+        "noVowelSignsRate": 0.7142857142857143,
         "skeletonRate": 0.7142857142857143,
         "cer": 0.13513513513513514,
         "byTag": {
@@ -327,6 +335,87 @@
             "category": "word-initial vowel spelling (ئ ؤ أ إ آ ا)"
           }
         ]
+      },
+      {
+        "system": "variant: readable + hiatus=hamza-seat (earlier default)",
+        "n": 7,
+        "exact": 7,
+        "exactRate": 1,
+        "altMatchRate": 1,
+        "noVowelSignsRate": 1,
+        "skeletonRate": 1,
+        "cer": 0,
+        "byTag": {
+          "initial vowel": {
+            "n": 5,
+            "exact": 5
+          },
+          "vowel i/u": {
+            "n": 5,
+            "exact": 5
+          },
+          "gemination": {
+            "n": 1,
+            "exact": 1
+          },
+          "semivowel": {
+            "n": 1,
+            "exact": 1
+          }
+        },
+        "errors": {},
+        "examples": []
+      },
+      {
+        "system": "ours: readable + Tawalt conventions (initialVowels=hamza-all, g=gaf)",
+        "n": 7,
+        "exact": 4,
+        "exactRate": 0.5714285714285714,
+        "altMatchRate": 1,
+        "noVowelSignsRate": 0.5714285714285714,
+        "skeletonRate": 0.5714285714285714,
+        "cer": 0.08108108108108109,
+        "byTag": {
+          "initial vowel": {
+            "n": 5,
+            "exact": 2
+          },
+          "vowel i/u": {
+            "n": 5,
+            "exact": 3
+          },
+          "gemination": {
+            "n": 1,
+            "exact": 1
+          },
+          "semivowel": {
+            "n": 1,
+            "exact": 1
+          }
+        },
+        "errors": {
+          "word-initial vowel spelling (ئ ؤ أ إ آ ا)": 3
+        },
+        "examples": [
+          {
+            "tifinagh": "ⴰⵣⵓⵍ",
+            "reference": "ازول",
+            "predicted": "أزول",
+            "category": "word-initial vowel spelling (ئ ؤ أ إ آ ا)"
+          },
+          {
+            "tifinagh": "ⴰⵎⵖⴰⵔ",
+            "reference": "امغار",
+            "predicted": "أمغار",
+            "category": "word-initial vowel spelling (ئ ؤ أ إ آ ا)"
+          },
+          {
+            "tifinagh": "ⴰⴼⵓⵙ",
+            "reference": "افوس",
+            "predicted": "أفوس",
+            "category": "word-initial vowel spelling (ئ ؤ أ إ آ ا)"
+          }
+        ]
       }
     ],
     "toponyms": [
@@ -336,6 +425,7 @@
         "exact": 34,
         "exactRate": 0.17708333333333334,
         "altMatchRate": 0.17708333333333334,
+        "noVowelSignsRate": 0.17708333333333334,
         "skeletonRate": 0.17708333333333334,
         "cer": 0.2143928035982009,
         "byTag": {
@@ -456,6 +546,7 @@
         "exact": 39,
         "exactRate": 0.203125,
         "altMatchRate": 0.203125,
+        "noVowelSignsRate": 0.203125,
         "skeletonRate": 0.203125,
         "cer": 0.1956521739130435,
         "byTag": {
@@ -576,6 +667,7 @@
         "exact": 39,
         "exactRate": 0.203125,
         "altMatchRate": 0.3385416666666667,
+        "noVowelSignsRate": 0.203125,
         "skeletonRate": 0.265625,
         "cer": 0.20389805097451275,
         "byTag": {
@@ -610,7 +702,7 @@
         },
         "errors": {
           "other (consonant or lexical difference)": 30,
-          "diacritics (shadda / damma / kasra)": 12,
+          "shadda": 12,
           "vowel letters omitted or added (lexicalized spelling)": 40,
           "word-initial vowel spelling (ئ ؤ أ إ آ ا)": 54,
           "final -a as ة / ى": 12,
@@ -633,7 +725,7 @@
             "tifinagh": "ⵎⵕⵕⴰⴽⵛ",
             "reference": "مراكش",
             "predicted": "مرّاكش",
-            "category": "diacritics (shadda / damma / kasra)"
+            "category": "shadda"
           },
           {
             "tifinagh": "ⵟⴰⵏⵊⴰ",
@@ -697,6 +789,7 @@
         "exact": 29,
         "exactRate": 0.15104166666666666,
         "altMatchRate": 0.2864583333333333,
+        "noVowelSignsRate": 0.1875,
         "skeletonRate": 0.1875,
         "cer": 0.2646176911544228,
         "byTag": {
@@ -733,7 +826,7 @@
           "other (consonant or lexical difference)": 60,
           "vowel letters omitted or added (lexicalized spelling)": 37,
           "word-initial vowel spelling (ئ ؤ أ إ آ ا)": 43,
-          "diacritics (shadda / damma / kasra)": 7,
+          "vowel signs / sukun only (fatha, damma, kasra, sukun, U+065B)": 7,
           "final -a as ة / ى": 10,
           "letter choice for g/ẓ/ṛ (ڭ گ ك · ژ ظ ز · ڔ ر)": 6
         },
@@ -808,7 +901,7 @@
             "tifinagh": "ⵙⵍⵡⴰⵏ",
             "reference": "سلوان",
             "predicted": "سلوٛان",
-            "category": "diacritics (shadda / damma / kasra)"
+            "category": "vowel signs / sukun only (fatha, damma, kasra, sukun, U+065B)"
           }
         ]
       },
@@ -818,6 +911,7 @@
         "exact": 29,
         "exactRate": 0.15104166666666666,
         "altMatchRate": 0.2864583333333333,
+        "noVowelSignsRate": 0.1875,
         "skeletonRate": 0.234375,
         "cer": 0.2653673163418291,
         "byTag": {
@@ -855,8 +949,9 @@
           "letter choice for g/ẓ/ṛ (ڭ گ ك · ژ ظ ز · ڔ ر)": 11,
           "vowel letters omitted or added (lexicalized spelling)": 40,
           "word-initial vowel spelling (ئ ؤ أ إ آ ا)": 54,
-          "diacritics (shadda / damma / kasra)": 16,
-          "final -a as ة / ى": 12
+          "vowel signs / sukun only (fatha, damma, kasra, sukun, U+065B)": 7,
+          "final -a as ة / ى": 12,
+          "shadda": 9
         },
         "examples": [
           {
@@ -929,7 +1024,7 @@
             "tifinagh": "ⵙⵍⵡⴰⵏ",
             "reference": "سلوان",
             "predicted": "سلوٛان",
-            "category": "diacritics (shadda / damma / kasra)"
+            "category": "vowel signs / sukun only (fatha, damma, kasra, sukun, U+065B)"
           }
         ]
       },
@@ -939,6 +1034,7 @@
         "exact": 40,
         "exactRate": 0.20833333333333334,
         "altMatchRate": 0.3385416666666667,
+        "noVowelSignsRate": 0.20833333333333334,
         "skeletonRate": 0.2708333333333333,
         "cer": 0.20689655172413793,
         "byTag": {
@@ -973,7 +1069,7 @@
         },
         "errors": {
           "other (consonant or lexical difference)": 30,
-          "diacritics (shadda / damma / kasra)": 12,
+          "shadda": 12,
           "vowel letters omitted or added (lexicalized spelling)": 40,
           "word-initial vowel spelling (ئ ؤ أ إ آ ا)": 53,
           "final -a as ة / ى": 12,
@@ -996,7 +1092,7 @@
             "tifinagh": "ⵎⵕⵕⴰⴽⵛ",
             "reference": "مراكش",
             "predicted": "مرّاكش",
-            "category": "diacritics (shadda / damma / kasra)"
+            "category": "shadda"
           },
           {
             "tifinagh": "ⵟⴰⵏⵊⴰ",
@@ -1060,6 +1156,7 @@
         "exact": 39,
         "exactRate": 0.203125,
         "altMatchRate": 0.3385416666666667,
+        "noVowelSignsRate": 0.203125,
         "skeletonRate": 0.203125,
         "cer": 0.20314842578710646,
         "byTag": {
@@ -1180,6 +1277,7 @@
         "exact": 40,
         "exactRate": 0.20833333333333334,
         "altMatchRate": 0.3385416666666667,
+        "noVowelSignsRate": 0.20833333333333334,
         "skeletonRate": 0.20833333333333334,
         "cer": 0.20689655172413793,
         "byTag": {
@@ -1293,6 +1391,251 @@
             "category": "other (consonant or lexical difference)"
           }
         ]
+      },
+      {
+        "system": "variant: readable + hiatus=hamza-seat (earlier default)",
+        "n": 192,
+        "exact": 39,
+        "exactRate": 0.203125,
+        "altMatchRate": 0.3385416666666667,
+        "noVowelSignsRate": 0.203125,
+        "skeletonRate": 0.265625,
+        "cer": 0.20389805097451275,
+        "byTag": {
+          "vowel i/u": {
+            "n": 135,
+            "exact": 25
+          },
+          "semivowel": {
+            "n": 56,
+            "exact": 7
+          },
+          "gemination": {
+            "n": 36,
+            "exact": 0
+          },
+          "emphatic": {
+            "n": 34,
+            "exact": 5
+          },
+          "initial vowel": {
+            "n": 72,
+            "exact": 1
+          },
+          "g": {
+            "n": 27,
+            "exact": 0
+          },
+          "labialization": {
+            "n": 5,
+            "exact": 0
+          }
+        },
+        "errors": {
+          "other (consonant or lexical difference)": 30,
+          "shadda": 12,
+          "vowel letters omitted or added (lexicalized spelling)": 40,
+          "word-initial vowel spelling (ئ ؤ أ إ آ ا)": 54,
+          "final -a as ة / ى": 12,
+          "letter choice for g/ẓ/ṛ (ڭ گ ك · ژ ظ ز · ڔ ر)": 5
+        },
+        "examples": [
+          {
+            "tifinagh": "ⵍⵎⵖⵔⵉⴱ",
+            "reference": "المغرب",
+            "predicted": "لمغريب",
+            "category": "other (consonant or lexical difference)"
+          },
+          {
+            "tifinagh": "ⵍⵄⵢⵓⵏ",
+            "reference": "العيون",
+            "predicted": "لعيون",
+            "category": "other (consonant or lexical difference)"
+          },
+          {
+            "tifinagh": "ⵎⵕⵕⴰⴽⵛ",
+            "reference": "مراكش",
+            "predicted": "مرّاكش",
+            "category": "shadda"
+          },
+          {
+            "tifinagh": "ⵟⴰⵏⵊⴰ",
+            "reference": "طنجة",
+            "predicted": "طانجا",
+            "category": "vowel letters omitted or added (lexicalized spelling)"
+          },
+          {
+            "tifinagh": "ⴰⴳⴰⴷⵉⵔ",
+            "reference": "أكادير",
+            "predicted": "اڭادير",
+            "category": "word-initial vowel spelling (ئ ؤ أ إ آ ا)"
+          },
+          {
+            "tifinagh": "ⴰⵙⴼⵉ",
+            "reference": "آسفي",
+            "predicted": "اسفي",
+            "category": "word-initial vowel spelling (ئ ؤ أ إ آ ا)"
+          },
+          {
+            "tifinagh": "ⴰⵣⵖⴰⵏⵖⴰⵏ",
+            "reference": "أزغنغان",
+            "predicted": "ازغانغان",
+            "category": "vowel letters omitted or added (lexicalized spelling)"
+          },
+          {
+            "tifinagh": "ⵜⵉⵟⵟⴰⵡⵉⵏ",
+            "reference": "تطوان",
+            "predicted": "تيطّاوين",
+            "category": "vowel letters omitted or added (lexicalized spelling)"
+          },
+          {
+            "tifinagh": "ⵡⵓⵊⴷⴰ",
+            "reference": "وجدة",
+            "predicted": "ووجدا",
+            "category": "vowel letters omitted or added (lexicalized spelling)"
+          },
+          {
+            "tifinagh": "ⴰⴷⵉⵔⵀⴰⵎ ⴰⵎⵖⵔⵉⴱⵉ",
+            "reference": "درهم مغربي",
+            "predicted": "اديرهام امغريبي",
+            "category": "other (consonant or lexical difference)"
+          },
+          {
+            "tifinagh": "ⴰⵢⵜ ⵓⵔⵉⵔ",
+            "reference": "آيت أورير",
+            "predicted": "ايت ؤرير",
+            "category": "word-initial vowel spelling (ئ ؤ أ إ آ ا)"
+          },
+          {
+            "tifinagh": "ⵍⵃⵓⵙⵉⵎⴰ",
+            "reference": "الحسيمة",
+            "predicted": "لحوسيما",
+            "category": "other (consonant or lexical difference)"
+          }
+        ]
+      },
+      {
+        "system": "ours: readable + Tawalt conventions (initialVowels=hamza-all, g=gaf)",
+        "n": 192,
+        "exact": 50,
+        "exactRate": 0.2604166666666667,
+        "altMatchRate": 0.4010416666666667,
+        "noVowelSignsRate": 0.265625,
+        "skeletonRate": 0.34375,
+        "cer": 0.18140929535232383,
+        "byTag": {
+          "vowel i/u": {
+            "n": 135,
+            "exact": 32
+          },
+          "semivowel": {
+            "n": 56,
+            "exact": 10
+          },
+          "gemination": {
+            "n": 36,
+            "exact": 0
+          },
+          "emphatic": {
+            "n": 34,
+            "exact": 6
+          },
+          "initial vowel": {
+            "n": 72,
+            "exact": 12
+          },
+          "g": {
+            "n": 27,
+            "exact": 0
+          },
+          "labialization": {
+            "n": 5,
+            "exact": 0
+          }
+        },
+        "errors": {
+          "other (consonant or lexical difference)": 30,
+          "shadda": 15,
+          "vowel letters omitted or added (lexicalized spelling)": 40,
+          "letter choice for g/ẓ/ṛ (ڭ گ ك · ژ ظ ز · ڔ ر)": 18,
+          "word-initial vowel spelling (ئ ؤ أ إ آ ا)": 26,
+          "final -a as ة / ى": 12,
+          "vowel signs / sukun only (fatha, damma, kasra, sukun, U+065B)": 1
+        },
+        "examples": [
+          {
+            "tifinagh": "ⵍⵎⵖⵔⵉⴱ",
+            "reference": "المغرب",
+            "predicted": "لمغريب",
+            "category": "other (consonant or lexical difference)"
+          },
+          {
+            "tifinagh": "ⵍⵄⵢⵓⵏ",
+            "reference": "العيون",
+            "predicted": "لعيون",
+            "category": "other (consonant or lexical difference)"
+          },
+          {
+            "tifinagh": "ⵎⵕⵕⴰⴽⵛ",
+            "reference": "مراكش",
+            "predicted": "مرّاكش",
+            "category": "shadda"
+          },
+          {
+            "tifinagh": "ⵟⴰⵏⵊⴰ",
+            "reference": "طنجة",
+            "predicted": "طانجا",
+            "category": "vowel letters omitted or added (lexicalized spelling)"
+          },
+          {
+            "tifinagh": "ⴰⴳⴰⴷⵉⵔ",
+            "reference": "أكادير",
+            "predicted": "أگادير",
+            "category": "letter choice for g/ẓ/ṛ (ڭ گ ك · ژ ظ ز · ڔ ر)"
+          },
+          {
+            "tifinagh": "ⴰⵙⴼⵉ",
+            "reference": "آسفي",
+            "predicted": "أسفي",
+            "category": "word-initial vowel spelling (ئ ؤ أ إ آ ا)"
+          },
+          {
+            "tifinagh": "ⴰⵣⵖⴰⵏⵖⴰⵏ",
+            "reference": "أزغنغان",
+            "predicted": "أزغانغان",
+            "category": "vowel letters omitted or added (lexicalized spelling)"
+          },
+          {
+            "tifinagh": "ⵜⵉⵟⵟⴰⵡⵉⵏ",
+            "reference": "تطوان",
+            "predicted": "تيطّاوين",
+            "category": "vowel letters omitted or added (lexicalized spelling)"
+          },
+          {
+            "tifinagh": "ⵡⵓⵊⴷⴰ",
+            "reference": "وجدة",
+            "predicted": "ووجدا",
+            "category": "vowel letters omitted or added (lexicalized spelling)"
+          },
+          {
+            "tifinagh": "ⴰⴷⵉⵔⵀⴰⵎ ⴰⵎⵖⵔⵉⴱⵉ",
+            "reference": "درهم مغربي",
+            "predicted": "أديرهام أمغريبي",
+            "category": "other (consonant or lexical difference)"
+          },
+          {
+            "tifinagh": "ⴰⵢⵜ ⵓⵔⵉⵔ",
+            "reference": "آيت أورير",
+            "predicted": "أيت ؤرير",
+            "category": "word-initial vowel spelling (ئ ؤ أ إ آ ا)"
+          },
+          {
+            "tifinagh": "ⵍⵃⵓⵙⵉⵎⴰ",
+            "reference": "الحسيمة",
+            "predicted": "لحوسيما",
+            "category": "other (consonant or lexical difference)"
+          }
+        ]
       }
     ],
     "albane": [
@@ -1302,6 +1645,7 @@
         "exact": 0,
         "exactRate": 0,
         "altMatchRate": 0,
+        "noVowelSignsRate": 0,
         "skeletonRate": 0,
         "cer": 0.5384615384615384,
         "byTag": {
@@ -1357,6 +1701,7 @@
         "exact": 0,
         "exactRate": 0,
         "altMatchRate": 0,
+        "noVowelSignsRate": 0,
         "skeletonRate": 0,
         "cer": 0.6153846153846154,
         "byTag": {
@@ -1411,6 +1756,7 @@
         "exact": 0,
         "exactRate": 0,
         "altMatchRate": 0,
+        "noVowelSignsRate": 0,
         "skeletonRate": 0,
         "cer": 0.38461538461538464,
         "byTag": {
@@ -1466,6 +1812,7 @@
         "exact": 0,
         "exactRate": 0,
         "altMatchRate": 0,
+        "noVowelSignsRate": 0,
         "skeletonRate": 0,
         "cer": 0.38461538461538464,
         "byTag": {
@@ -1521,6 +1868,7 @@
         "exact": 0,
         "exactRate": 0,
         "altMatchRate": 0,
+        "noVowelSignsRate": 0,
         "skeletonRate": 0,
         "cer": 0.46153846153846156,
         "byTag": {
@@ -1576,6 +1924,7 @@
         "exact": 0,
         "exactRate": 0,
         "altMatchRate": 0,
+        "noVowelSignsRate": 0,
         "skeletonRate": 0,
         "cer": 0.38461538461538464,
         "byTag": {
@@ -1631,6 +1980,7 @@
         "exact": 0,
         "exactRate": 0,
         "altMatchRate": 0,
+        "noVowelSignsRate": 0,
         "skeletonRate": 0,
         "cer": 0.38461538461538464,
         "byTag": {
@@ -1686,6 +2036,7 @@
         "exact": 0,
         "exactRate": 0,
         "altMatchRate": 0,
+        "noVowelSignsRate": 0,
         "skeletonRate": 0,
         "cer": 0.38461538461538464,
         "byTag": {
@@ -1734,6 +2085,648 @@
             "category": "other (consonant or lexical difference)"
           }
         ]
+      },
+      {
+        "system": "variant: readable + hiatus=hamza-seat (earlier default)",
+        "n": 3,
+        "exact": 0,
+        "exactRate": 0,
+        "altMatchRate": 0,
+        "noVowelSignsRate": 0,
+        "skeletonRate": 0,
+        "cer": 0.38461538461538464,
+        "byTag": {
+          "schwa": {
+            "n": 1,
+            "exact": 0
+          },
+          "vowel i/u": {
+            "n": 2,
+            "exact": 0
+          },
+          "gemination": {
+            "n": 1,
+            "exact": 0
+          },
+          "initial vowel": {
+            "n": 1,
+            "exact": 0
+          },
+          "g": {
+            "n": 1,
+            "exact": 0
+          }
+        },
+        "errors": {
+          "vowel letters omitted or added (lexicalized spelling)": 2,
+          "other (consonant or lexical difference)": 1
+        },
+        "examples": [
+          {
+            "tifinagh": "ⴼⵉⵃⴻⵍ",
+            "reference": "فحل",
+            "predicted": "فيحل",
+            "category": "vowel letters omitted or added (lexicalized spelling)"
+          },
+          {
+            "tifinagh": "ⵝⴰⴱⴱⵓⵔⵝ",
+            "reference": "ثبورث",
+            "predicted": "ثابّورث",
+            "category": "vowel letters omitted or added (lexicalized spelling)"
+          },
+          {
+            "tifinagh": "ⴰⵔⴳⴰⵣ",
+            "reference": "أرڨاز",
+            "predicted": "ارڭاز",
+            "category": "other (consonant or lexical difference)"
+          }
+        ]
+      },
+      {
+        "system": "ours: readable + Tawalt conventions (initialVowels=hamza-all, g=gaf)",
+        "n": 3,
+        "exact": 0,
+        "exactRate": 0,
+        "altMatchRate": 0,
+        "noVowelSignsRate": 0,
+        "skeletonRate": 0,
+        "cer": 0.3076923076923077,
+        "byTag": {
+          "schwa": {
+            "n": 1,
+            "exact": 0
+          },
+          "vowel i/u": {
+            "n": 2,
+            "exact": 0
+          },
+          "gemination": {
+            "n": 1,
+            "exact": 0
+          },
+          "initial vowel": {
+            "n": 1,
+            "exact": 0
+          },
+          "g": {
+            "n": 1,
+            "exact": 0
+          }
+        },
+        "errors": {
+          "vowel letters omitted or added (lexicalized spelling)": 2,
+          "other (consonant or lexical difference)": 1
+        },
+        "examples": [
+          {
+            "tifinagh": "ⴼⵉⵃⴻⵍ",
+            "reference": "فحل",
+            "predicted": "فيحل",
+            "category": "vowel letters omitted or added (lexicalized spelling)"
+          },
+          {
+            "tifinagh": "ⵝⴰⴱⴱⵓⵔⵝ",
+            "reference": "ثبورث",
+            "predicted": "ثابّورث",
+            "category": "vowel letters omitted or added (lexicalized spelling)"
+          },
+          {
+            "tifinagh": "ⴰⵔⴳⴰⵣ",
+            "reference": "أرڨاز",
+            "predicted": "أرگاز",
+            "category": "other (consonant or lexical difference)"
+          }
+        ]
+      }
+    ],
+    "tawalt": [
+      {
+        "system": "baseline: naive Table I (1:1)",
+        "n": 27921,
+        "exact": 4226,
+        "exactRate": 0.15135561047240428,
+        "altMatchRate": 0.15135561047240428,
+        "noVowelSignsRate": 0.16876186383009203,
+        "skeletonRate": 0.16876186383009203,
+        "cer": 0.2208439007838604,
+        "byTag": {
+          "gemination": {
+            "n": 11256,
+            "exact": 22
+          },
+          "initial vowel": {
+            "n": 19203,
+            "exact": 8
+          },
+          "vowel i/u": {
+            "n": 19674,
+            "exact": 2719
+          },
+          "semivowel": {
+            "n": 5995,
+            "exact": 1312
+          },
+          "g": {
+            "n": 3891,
+            "exact": 634
+          },
+          "emphatic": {
+            "n": 5166,
+            "exact": 678
+          },
+          "schwa": {
+            "n": 720,
+            "exact": 81
+          },
+          "hiatus": {
+            "n": 117,
+            "exact": 3
+          }
+        },
+        "errors": {
+          "other (consonant or lexical difference)": 16992,
+          "word-initial vowel spelling (ئ ؤ أ إ آ ا)": 6082,
+          "vowel signs / sukun only (fatha, damma, kasra, sukun, U+065B)": 486,
+          "vowel letters omitted or added (lexicalized spelling)": 134,
+          "final -a as ة / ى": 1
+        },
+        "examples": []
+      },
+      {
+        "system": "baseline: dictionary-style 1:1 map",
+        "n": 27921,
+        "exact": 3860,
+        "exactRate": 0.13824719744994807,
+        "altMatchRate": 0.13824719744994807,
+        "noVowelSignsRate": 0.15439991404319328,
+        "skeletonRate": 0.15439991404319328,
+        "cer": 0.23963239649649476,
+        "byTag": {
+          "gemination": {
+            "n": 11256,
+            "exact": 23
+          },
+          "initial vowel": {
+            "n": 19203,
+            "exact": 7
+          },
+          "vowel i/u": {
+            "n": 19674,
+            "exact": 2489
+          },
+          "semivowel": {
+            "n": 5995,
+            "exact": 1186
+          },
+          "g": {
+            "n": 3891,
+            "exact": 0
+          },
+          "emphatic": {
+            "n": 5166,
+            "exact": 367
+          },
+          "schwa": {
+            "n": 720,
+            "exact": 0
+          },
+          "hiatus": {
+            "n": 117,
+            "exact": 3
+          }
+        },
+        "errors": {
+          "other (consonant or lexical difference)": 15503,
+          "word-initial vowel spelling (ئ ؤ أ إ آ ا)": 6955,
+          "vowel signs / sukun only (fatha, damma, kasra, sukun, U+065B)": 451,
+          "vowel letters omitted or added (lexicalized spelling)": 142,
+          "letter choice for g/ẓ/ṛ (ڭ گ ك · ژ ظ ز · ڔ ر)": 1007,
+          "final -a as ة / ى": 3
+        },
+        "examples": []
+      },
+      {
+        "system": "ours: readable (default)",
+        "n": 27921,
+        "exact": 12964,
+        "exactRate": 0.4643100175495147,
+        "altMatchRate": 0.8323842269259697,
+        "noVowelSignsRate": 0.5350094910640736,
+        "skeletonRate": 0.5350094910640736,
+        "cer": 0.10419649994536556,
+        "byTag": {
+          "gemination": {
+            "n": 11256,
+            "exact": 5703
+          },
+          "initial vowel": {
+            "n": 19203,
+            "exact": 6149
+          },
+          "vowel i/u": {
+            "n": 19674,
+            "exact": 10509
+          },
+          "semivowel": {
+            "n": 5995,
+            "exact": 2359
+          },
+          "g": {
+            "n": 3891,
+            "exact": 0
+          },
+          "emphatic": {
+            "n": 5166,
+            "exact": 2547
+          },
+          "schwa": {
+            "n": 720,
+            "exact": 413
+          },
+          "hiatus": {
+            "n": 117,
+            "exact": 76
+          }
+        },
+        "errors": {
+          "word-initial vowel spelling (ئ ؤ أ إ آ ا)": 10543,
+          "vowel signs / sukun only (fatha, damma, kasra, sukun, U+065B)": 1974,
+          "letter choice for g/ẓ/ṛ (ڭ گ ك · ژ ظ ز · ڔ ر)": 2349,
+          "other (consonant or lexical difference)": 36,
+          "vowel letters omitted or added (lexicalized spelling)": 43,
+          "final -a as ة / ى": 12
+        },
+        "examples": []
+      },
+      {
+        "system": "ours: ircam",
+        "n": 27921,
+        "exact": 6437,
+        "exactRate": 0.2305433186490455,
+        "altMatchRate": 0.4711149314136313,
+        "noVowelSignsRate": 0.29902224132373484,
+        "skeletonRate": 0.29902224132373484,
+        "cer": 0.19535549766222116,
+        "byTag": {
+          "gemination": {
+            "n": 11256,
+            "exact": 0
+          },
+          "initial vowel": {
+            "n": 19203,
+            "exact": 2885
+          },
+          "vowel i/u": {
+            "n": 19674,
+            "exact": 5307
+          },
+          "semivowel": {
+            "n": 5995,
+            "exact": 623
+          },
+          "g": {
+            "n": 3891,
+            "exact": 0
+          },
+          "emphatic": {
+            "n": 5166,
+            "exact": 1227
+          },
+          "schwa": {
+            "n": 720,
+            "exact": 186
+          },
+          "hiatus": {
+            "n": 117,
+            "exact": 33
+          }
+        },
+        "errors": {
+          "other (consonant or lexical difference)": 11054,
+          "word-initial vowel spelling (ئ ؤ أ إ آ ا)": 7049,
+          "vowel signs / sukun only (fatha, damma, kasra, sukun, U+065B)": 1912,
+          "vowel letters omitted or added (lexicalized spelling)": 201,
+          "letter choice for g/ẓ/ṛ (ڭ گ ك · ژ ظ ز · ڔ ر)": 1262,
+          "final -a as ة / ى": 6
+        },
+        "examples": []
+      },
+      {
+        "system": "ours: phonetic",
+        "n": 27921,
+        "exact": 10255,
+        "exactRate": 0.3672862719816625,
+        "altMatchRate": 0.7628666595035994,
+        "noVowelSignsRate": 0.5350094910640736,
+        "skeletonRate": 0.5350094910640736,
+        "cer": 0.13811010852124705,
+        "byTag": {
+          "gemination": {
+            "n": 11256,
+            "exact": 4597
+          },
+          "initial vowel": {
+            "n": 19203,
+            "exact": 5571
+          },
+          "vowel i/u": {
+            "n": 19674,
+            "exact": 8836
+          },
+          "semivowel": {
+            "n": 5995,
+            "exact": 0
+          },
+          "g": {
+            "n": 3891,
+            "exact": 0
+          },
+          "emphatic": {
+            "n": 5166,
+            "exact": 2114
+          },
+          "schwa": {
+            "n": 720,
+            "exact": 0
+          },
+          "hiatus": {
+            "n": 117,
+            "exact": 50
+          }
+        },
+        "errors": {
+          "word-initial vowel spelling (ئ ؤ أ إ آ ا)": 10543,
+          "vowel signs / sukun only (fatha, damma, kasra, sukun, U+065B)": 4683,
+          "letter choice for g/ẓ/ṛ (ڭ گ ك · ژ ظ ز · ڔ ر)": 2349,
+          "other (consonant or lexical difference)": 36,
+          "vowel letters omitted or added (lexicalized spelling)": 43,
+          "final -a as ة / ى": 12
+        },
+        "examples": []
+      },
+      {
+        "system": "ablation: readable − positional rules",
+        "n": 27921,
+        "exact": 6824,
+        "exactRate": 0.24440385373016726,
+        "altMatchRate": 0.7943125246230436,
+        "noVowelSignsRate": 0.27069231044733355,
+        "skeletonRate": 0.27069231044733355,
+        "cer": 0.20318259979411443,
+        "byTag": {
+          "gemination": {
+            "n": 11256,
+            "exact": 2614
+          },
+          "initial vowel": {
+            "n": 19203,
+            "exact": 9
+          },
+          "vowel i/u": {
+            "n": 19674,
+            "exact": 4369
+          },
+          "semivowel": {
+            "n": 5995,
+            "exact": 2035
+          },
+          "g": {
+            "n": 3891,
+            "exact": 0
+          },
+          "emphatic": {
+            "n": 5166,
+            "exact": 1272
+          },
+          "schwa": {
+            "n": 720,
+            "exact": 152
+          },
+          "hiatus": {
+            "n": 117,
+            "exact": 3
+          }
+        },
+        "errors": {
+          "word-initial vowel spelling (ئ ؤ أ إ آ ا)": 18989,
+          "vowel signs / sukun only (fatha, damma, kasra, sukun, U+065B)": 734,
+          "letter choice for g/ẓ/ṛ (ڭ گ ك · ژ ظ ز · ڔ ر)": 1126,
+          "other (consonant or lexical difference)": 36,
+          "vowel letters omitted or added (lexicalized spelling)": 200,
+          "final -a as ة / ى": 12
+        },
+        "examples": []
+      },
+      {
+        "system": "ablation: readable − gemination rule",
+        "n": 27921,
+        "exact": 7284,
+        "exactRate": 0.26087890834855487,
+        "altMatchRate": 0.499731384979048,
+        "noVowelSignsRate": 0.29902224132373484,
+        "skeletonRate": 0.29902224132373484,
+        "cer": 0.17219624690165225,
+        "byTag": {
+          "gemination": {
+            "n": 11256,
+            "exact": 23
+          },
+          "initial vowel": {
+            "n": 19203,
+            "exact": 3060
+          },
+          "vowel i/u": {
+            "n": 19674,
+            "exact": 5795
+          },
+          "semivowel": {
+            "n": 5995,
+            "exact": 1470
+          },
+          "g": {
+            "n": 3891,
+            "exact": 0
+          },
+          "emphatic": {
+            "n": 5166,
+            "exact": 1319
+          },
+          "schwa": {
+            "n": 720,
+            "exact": 188
+          },
+          "hiatus": {
+            "n": 117,
+            "exact": 54
+          }
+        },
+        "errors": {
+          "other (consonant or lexical difference)": 11054,
+          "word-initial vowel spelling (ئ ؤ أ إ آ ا)": 7049,
+          "vowel signs / sukun only (fatha, damma, kasra, sukun, U+065B)": 1065,
+          "vowel letters omitted or added (lexicalized spelling)": 201,
+          "letter choice for g/ẓ/ṛ (ڭ گ ك · ژ ظ ز · ڔ ر)": 1262,
+          "final -a as ة / ى": 6
+        },
+        "examples": []
+      },
+      {
+        "system": "ablation: readable − all context",
+        "n": 27921,
+        "exact": 4233,
+        "exactRate": 0.1516063178252928,
+        "altMatchRate": 0.4813939328820601,
+        "noVowelSignsRate": 0.16940653988037677,
+        "skeletonRate": 0.16940653988037677,
+        "cer": 0.2711075838351075,
+        "byTag": {
+          "gemination": {
+            "n": 11256,
+            "exact": 23
+          },
+          "initial vowel": {
+            "n": 19203,
+            "exact": 9
+          },
+          "vowel i/u": {
+            "n": 19674,
+            "exact": 2744
+          },
+          "semivowel": {
+            "n": 5995,
+            "exact": 1296
+          },
+          "g": {
+            "n": 3891,
+            "exact": 0
+          },
+          "emphatic": {
+            "n": 5166,
+            "exact": 671
+          },
+          "schwa": {
+            "n": 720,
+            "exact": 83
+          },
+          "hiatus": {
+            "n": 117,
+            "exact": 3
+          }
+        },
+        "errors": {
+          "other (consonant or lexical difference)": 11054,
+          "word-initial vowel spelling (ئ ؤ أ إ آ ا)": 11123,
+          "vowel signs / sukun only (fatha, damma, kasra, sukun, U+065B)": 497,
+          "vowel letters omitted or added (lexicalized spelling)": 318,
+          "letter choice for g/ẓ/ṛ (ڭ گ ك · ژ ظ ز · ڔ ر)": 690,
+          "final -a as ة / ى": 6
+        },
+        "examples": []
+      },
+      {
+        "system": "variant: readable + hiatus=hamza-seat (earlier default)",
+        "n": 27921,
+        "exact": 12893,
+        "exactRate": 0.4617671286845027,
+        "altMatchRate": 0.8296264460441961,
+        "noVowelSignsRate": 0.5321084488377923,
+        "skeletonRate": 0.5321084488377923,
+        "cer": 0.10469683637848438,
+        "byTag": {
+          "gemination": {
+            "n": 11256,
+            "exact": 5681
+          },
+          "initial vowel": {
+            "n": 19203,
+            "exact": 6078
+          },
+          "vowel i/u": {
+            "n": 19674,
+            "exact": 10438
+          },
+          "semivowel": {
+            "n": 5995,
+            "exact": 2342
+          },
+          "g": {
+            "n": 3891,
+            "exact": 0
+          },
+          "emphatic": {
+            "n": 5166,
+            "exact": 2533
+          },
+          "schwa": {
+            "n": 720,
+            "exact": 408
+          },
+          "hiatus": {
+            "n": 117,
+            "exact": 5
+          }
+        },
+        "errors": {
+          "word-initial vowel spelling (ئ ؤ أ إ آ ا)": 10543,
+          "vowel signs / sukun only (fatha, damma, kasra, sukun, U+065B)": 1964,
+          "letter choice for g/ẓ/ṛ (ڭ گ ك · ژ ظ ز · ڔ ر)": 2343,
+          "other (consonant or lexical difference)": 123,
+          "vowel letters omitted or added (lexicalized spelling)": 43,
+          "final -a as ة / ى": 12
+        },
+        "examples": []
+      },
+      {
+        "system": "ours: readable + Tawalt conventions (initialVowels=hamza-all, g=gaf)",
+        "n": 27921,
+        "exact": 24616,
+        "exactRate": 0.8816303141004979,
+        "altMatchRate": 0.8829196662010673,
+        "noVowelSignsRate": 0.9960603130260377,
+        "skeletonRate": 0.9960603130260377,
+        "cer": 0.019789168578872002,
+        "byTag": {
+          "gemination": {
+            "n": 11256,
+            "exact": 9784
+          },
+          "initial vowel": {
+            "n": 19203,
+            "exact": 16781
+          },
+          "vowel i/u": {
+            "n": 19674,
+            "exact": 17191
+          },
+          "semivowel": {
+            "n": 5995,
+            "exact": 3771
+          },
+          "g": {
+            "n": 3891,
+            "exact": 3491
+          },
+          "emphatic": {
+            "n": 5166,
+            "exact": 4605
+          },
+          "schwa": {
+            "n": 720,
+            "exact": 636
+          },
+          "hiatus": {
+            "n": 117,
+            "exact": 82
+          }
+        },
+        "errors": {
+          "vowel signs / sukun only (fatha, damma, kasra, sukun, U+065B)": 3195,
+          "other (consonant or lexical difference)": 36,
+          "word-initial vowel spelling (ئ ؤ أ إ آ ا)": 19,
+          "vowel letters omitted or added (lexicalized spelling)": 43,
+          "final -a as ة / ى": 12
+        },
+        "examples": []
       }
     ]
   },
@@ -1747,7 +2740,7 @@
       "unsupportedRate": 0,
       "wordsWithWarnings": 0,
       "warningCodes": {},
-      "ms": 91.724247
+      "ms": 118.471478
     }
   },
   "preservation": {

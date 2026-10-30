@@ -14,6 +14,7 @@ access in October 2026.
 | D | `mustapharajaa/tamazight-Transliterating-en-ar` @ `a1fb902` | cloned and analysed | audit only (not reused) |
 | E | `Tamazight-NLP/ircam-dglai` (Hugging Face) | downloaded locally | character statistics only (not shipped) |
 | F | Wikidata (lexemes and item labels) | SPARQL + entity API | independent reference spellings (CC0) |
+| G | Hugging Face survey (§9), notably the Tawalt Amazigh–Arabic dictionary | downloaded locally | largest independent Arabic-script reference (local evaluation only) |
 
 ## 2. IRCAM Tables I and II (source B)
 
@@ -191,9 +192,62 @@ Issues found (left as-is unless noted, to preserve upstream behaviour):
 | ⵕ | ر (readable); ڔ U+0694 (ircam, phonetic) | Table I mark has no Arabic code point; IRCAM rule 1 |
 | ⵡ ⵢ | plain و ي (readable); + U+065B (ircam, phonetic) | Wikidata (براير); Table I "^" mark |
 | labialization | damma | Table II |
-| initial vowels | ا / ئ / ؤ; options اي او, إي أو أ | Table II; Wikidata |
+| initial vowels | ا / ئ / ؤ; options أ ئ ؤ (Tawalt), اي او, إي أو أ | Table II; Wikidata; spec examples (ازول) |
+| vowel after vowel | plain و / ي (changed from ئ / ؤ after the Tawalt check) | Tawalt: 87/87 hiatus words |
+| ⴳ in `readable` | ڭ kept (Tawalt uses گ in 99 %) | Table II is explicit; گ is an option |
 | gemination | shadda (readable, phonetic); doubled letters (ircam) | Wikidata, IRCAM rule 4, Albane R2; Table I per-letter |
 | schwa | omitted (ircam, readable); kasra (phonetic, heuristic) | Table I empty cell |
 | final ⵜ | always ت (never ة) | Table I |
 | non-IRCAM letters | Albane Figure 2 values + warning | source C |
 | datasets D, E | not shipped | licenses |
+
+## 9. Hugging Face survey (October 2026)
+
+Searched for `tifinagh`, `amazigh`, `tamazight`, `tachelhit`, `tashelhit`,
+`tarifit`, `kabyle`, `berber`, and listed the `Tamazight-NLP` organization.
+The question for each dataset: does it contain *Amazigh written in Arabic
+script* next to Tifinagh (a transliteration), or only an Arabic
+*translation*?
+
+| Dataset | Content | License | Verdict |
+|---|---|---|---|
+| `abdelhaqueidali/Tawalt-Amazigh-Arabic-Dictionary` | 67,076 rows of the Tawalt dictionary app: `tifinagh`, **`tifinagh_in_arabic`** (Amazigh in Arabic script), plus an Arabic translation | "other" (unspecified) | **Transliteration pairs.** Used locally for evaluation; not shipped |
+| `abdelhaqueidali/Tawalt-Amazigh-French-Dictionary` | same app, French glosses | "other" | not needed |
+| `Tamazight-NLP/TAWNZA_TIFINAGH_ARABIC_DATASET` | TV subtitles: Arabic `source`, Tifinagh `target` (131,624 lines) | CC-BY-4.0 | Arabic side is a **translation**; Tifinagh side used as a real-text robustness corpus |
+| `Tamazight-NLP/Tamazight-Speech-to-Arabic-Text` (= `SoufianeDahimi/Tamazight-ASR-Dataset-v2`) | Tachelhit speech + OCR'd Arabic subtitles | Apache-2.0 | Arabic is MSA **translation** |
+| `Tamazight-NLP/1002-Amazigh-Proverbs` | Tifinagh proverbs + Arabic translation | other | translation |
+| `Tamazight-NLP/ircam-dglai`, `DGLAI`, `IRCAM-CORPUS`, `ircam-conjugations` | IRCAM lexicon / corpus | CC-BY-NC / unspecified | Tifinagh + Latin; Arabic meanings only |
+| `abdelhaqueidali/Amazigh-Quran-Translation-Jouhadi`, `Amazigh-Lyrics-Collection`, `Tashelhit-Tifinagh-Latin-Parallel-Tatoeba-Dataset`, Weblate/Pontoon/Tatoeba sets, OCR sets | Tifinagh (± Latin) text or images | various | no Arabic script; usable as robustness corpora |
+| `AnirDari/Arabic-Tifinagh` | empty repository | — | — |
+
+### Tawalt in detail
+
+* 31,251 unique (Tifinagh, Arabic-script) pairs; 28,764 single-word Tifinagh
+  forms, of which **27,921 have exactly one Arabic spelling** (used for
+  evaluation).
+* **Written by people, not generated from the Tifinagh**: the Arabic carries
+  information absent from the Tifinagh (damma marking labialization where the
+  Tifinagh has plain ⴳ, e.g. ⵉⴳⴳⴰ → ئگُّا; the Tifinagh contains no ⵯ at all),
+  and sukun is used irregularly (in 2,133 of 5,995 words with a semivowel).
+* Conventions (counts over the 27,921 pairs):
+  initial ⴰ → **أ** (10,558 vs 12 ا); initial ⵉ → **ئ** (8,151); initial ⵓ →
+  **ؤ** (482); ⴳ → **گ** (4,131 vs 41 ك); ⵥ → **ژ** (2,382 vs 232 ز);
+  geminates → **shadda** (11,225 of 11,256), including ⵡⵡ (87/111) and ⵢⵢ
+  (136/150); vowel after vowel → **plain و / ي** (87/87); schwa between
+  identical consonants → two letters without shadda (ⵢⵓⵏⴻⵏ → يونن).
+* What this confirmed independently: Table II initial ئ / ؤ, shadda,
+  ژ, the schwa-between-identical rule. What it changed: the hiatus default
+  (ئ / ؤ → plain letters) and runs of three identical consonants (now a plain
+  letter + shadda letter, as Tawalt writes them). What it differs on:
+  initial أ (the project specification's ازول / امغار use bare ا) and گ
+  (IRCAM Table II prefers ڭ) — both available as options
+  (`initialVowels: 'hamza-all'`, `g: 'gaf'`).
+
+### TAWNZA as a robustness corpus
+
+897,778 Tifinagh words (3.5 M Tifinagh characters) converted in 2.1 s with
+76 diagnostics, all genuine input anomalies: 54 vowel–vowel sequences (mostly
+loanwords such as ⵜⵉⵓⵔⵓⴱⵉⵢⵉⵏ), 17 triple consonants (typos such as ⴰⴳⴳⴳⵯⵏ),
+2 × U+2D36 ⴶ (Tuareg/Kabyle letter, probably a typo), 1 Arabic shadda typed
+inside a Tifinagh word and the ⵯ it orphaned. Only those 3 code points remain
+unconverted, by policy.

@@ -32,7 +32,7 @@ export interface LexiconConflict {
 
 const PROFILES: ProfileId[] = ['ircam', 'readable', 'phonetic']
 // Arabic letters & marks (Arabic, Arabic Supplement, Arabic Extended-A/B) — no spaces, no Latin.
-const ARABIC_WORD_RE = /^[؀-ۿݐ-ݿࡰ-ࣿ]+$/u
+const ARABIC_WORD_RE = /^[\u0600-ۿݐ-ݿࡰ-\u08FF]+$/u
 
 export class LexiconValidationError extends Error {
   constructor(message: string) {

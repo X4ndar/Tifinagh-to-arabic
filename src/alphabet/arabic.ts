@@ -45,15 +45,15 @@ export const AR = {
   GAF: 'گ', // گ
   HEH_DOACHASHMEE: 'ھ', // ھ
   // combining marks
-  FATHA: 'َ',
-  DAMMA: 'ُ',
-  KASRA: 'ِ',
-  SHADDA: 'ّ',
-  SUKUN: 'ْ',
-  INVERTED_SMALL_V_ABOVE: 'ٛ', // ◌ٛ  Arabic-block equivalent of IRCAM's "^" mark
+  FATHA: '\u064E',
+  DAMMA: '\u064F',
+  KASRA: '\u0650',
+  SHADDA: '\u0651',
+  SUKUN: '\u0652',
+  INVERTED_SMALL_V_ABOVE: '\u065B', // ◌\u065B  Arabic-block equivalent of IRCAM's "^" mark
   // non-Arabic marks found literally in the IRCAM PDF text layer
-  LATIN_COMBINING_CIRCUMFLEX: '̂',
-  HEBREW_SEGOL: 'ֶ',
+  LATIN_COMBINING_CIRCUMFLEX: '\u0302',
+  HEBREW_SEGOL: '\u05B6',
   LEFT_SINGLE_QUOTE: '‘',
   // punctuation
   COMMA: '،',

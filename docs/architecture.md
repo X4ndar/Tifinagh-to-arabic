@@ -99,8 +99,8 @@ overridden per call (`arabic: { gemination: 'double' }`) or on the CLI
 | `labialization` | **`damma`** · `ircam-table1` (‘) · `omit` |
 | `gemination` | **`shadda`** · `double` · `single` |
 | `schwa` | **`omit`** · `kasra` · `fatha` |
-| `initialVowels` | **`hamza-seat`** ا ئ ؤ · `alef` ا اي او · `hamza-alef` أ إي أو |
-| `hiatus` | **`hamza-seat`** · `plain` |
+| `initialVowels` | **`hamza-seat`** ا ئ ؤ · `hamza-all` أ ئ ؤ · `alef` ا اي او · `hamza-alef` أ إي أو |
+| `hiatus` | **`plain`** · `hamza-seat` |
 | `h` | **`heh`** ه · `heh-doachashmee` ھ |
 | `punctuation` | **`preserve`** · `arabic` |
 | `protectUrls`, `protectCode` | **`true`** · `false` |
@@ -138,7 +138,7 @@ Optional and empty by default. JSON format (array or `{ "entries": [...] }`):
 | `LEXICON_CONFLICT` | warning | conflicting lexicon spellings |
 | `FORMAT_CHAR_REMOVED` | info | ZWJ/bidi mark/etc. removed inside a word |
 | `MODIFIER_NORMALIZED` | info | ʷ read as ⵯ |
-| `VOWEL_HIATUS` | info | vowel after vowel |
+| `VOWEL_HIATUS` | info | vowel after vowel (spelled with plain letters by default) |
 | `SCHWA_BETWEEN_IDENTICAL` | info | schwa omission merges CeC with CC (`double` only) |
 | `SCHWA_OMITTED` | info | only with `reportSchwaOmission` |
 | `LEXICON_OVERRIDE` | info | lexicon replaced the rule output |

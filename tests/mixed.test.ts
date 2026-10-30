@@ -21,8 +21,8 @@ describe('mixed-script text', () => {
   })
 
   test('whitespace, tabs, CRLF, blank lines and paragraphs are preserved', () => {
-    const input = '  ⴰⵣⵓⵍ\t\tⴰⵎⴰⵏ  \r\n\r\n\nⵜⴰⵎⵓⵔⵜ ⵉⵖⵔⵎ\n'
-    expect(toArabic(input)).toBe('  ازول\t\tامان  \r\n\r\n\nتامورت ئغرم\n')
+    const input = '  ⴰⵣⵓⵍ\t\tⴰⵎⴰⵏ  \r\n\r\n\nⵜⴰⵎⵓⵔⵜ\u00A0ⵉⵖⵔⵎ\n'
+    expect(toArabic(input)).toBe('  ازول\t\tامان  \r\n\r\n\nتامورت\u00A0ئغرم\n')
   })
 
   test('URLs and e-mail addresses are protected (even with Tifinagh inside)', () => {
@@ -55,17 +55,17 @@ describe('mixed-script text', () => {
   })
 
   test('bidi controls outside words are preserved; inside a word they are removed with a diagnostic', () => {
-    expect(toArabic('⁧ⴰⵣⵓⵍ⁩')).toBe('⁧ازول⁩')
-    expect(toArabic('ⴰⵣⵓⵍ‏')).toBe('ازول‏')
-    const r = transliterate('ⴰⵣ‏ⵓⵍ')
+    expect(toArabic('\u2067ⴰⵣⵓⵍ\u2069')).toBe('\u2067ازول\u2069')
+    expect(toArabic('ⴰⵣⵓⵍ\u200F')).toBe('ازول\u200F')
+    const r = transliterate('ⴰⵣ\u200Fⵓⵍ')
     expect(r.output).toBe('ازول')
-    expect(r.warnings).toMatchObject([{ code: 'FORMAT_CHAR_REMOVED', position: 2, source: '‏' }])
+    expect(r.warnings).toMatchObject([{ code: 'FORMAT_CHAR_REMOVED', position: 2, source: '\u200F' }])
   })
 
   test('zero-width characters and the Tifinagh joiner inside words', () => {
-    expect(toArabic('ⴰ‍ⵣⵓⵍ')).toBe('ازول')
+    expect(toArabic('ⴰ\u200Dⵣⵓⵍ')).toBe('ازول')
     expect(toArabic('ⴰⵣ⵿ⵣ')).toBe('ازّ')
-    expect(toArabic('ⴰ­ⵣⵓⵍ')).toBe('ازول')
+    expect(toArabic('ⴰ\u00ADⵣⵓⵍ')).toBe('ازول')
   })
 
   test('warning positions refer to the original input', () => {

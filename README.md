@@ -36,8 +36,9 @@ plus the Tifinagh ↔ Latin conversion of the upstream
   Tarifit texts written in that orthography). All 33 IRCAM units are
   supported; six Algerian/Kabyle letters are accepted with a warning.
 * **Conventions:** IRCAM Table I as amended by Table II (Ataa Allah et al.,
-  IRCAM 2013), confirmed where possible by independent Arabic-script
-  Tachelhit data (Wikidata). Details: [docs/linguistic-rules.md](docs/linguistic-rules.md).
+  IRCAM 2013), checked against independent Arabic-script Amazigh data
+  (Wikidata lexemes; the 27,921-word Tawalt dictionary). Details:
+  [docs/linguistic-rules.md](docs/linguistic-rules.md).
 
 ## Install
 
@@ -47,7 +48,7 @@ Requires Node.js ≥ 18.
 git clone https://github.com/x4ndar/tifinagh-to-arabic.git
 cd tifinagh-to-arabic
 npm install        # also builds dist/ (prepare script)
-npm test           # 287 tests
+npm test           # 290 tests
 ```
 
 Or as a dependency straight from GitHub: `npm install github:x4ndar/tifinagh-to-arabic`.
@@ -137,7 +138,10 @@ streams through the CLI. Example: [examples/python_batch.py](examples/python_bat
 | ⵜⴰⵎⴻⵣⴳⵉⴷⴰ | تامزڭيدا | تامزڭيدا | تامِزڭيدا |
 
 Every choice can be overridden individually (see
-[docs/architecture.md](docs/architecture.md#profiles-and-options)).
+[docs/architecture.md](docs/architecture.md#profiles-and-options)). For the
+spelling used by the Tawalt dictionary (أ ئ ؤ word-initially, گ for ⴳ), use
+`{ arabic: { initialVowels: 'hamza-all', g: 'gaf' } }` or
+`--option initialVowels=hamza-all --option g=gaf`.
 
 ## Examples
 
@@ -160,22 +164,26 @@ A small offline demo page: `npm run build`, then open
 
 Full report: [docs/evaluation.md](docs/evaluation.md). In short:
 
+* **Tawalt dictionary (27,921 independent Arabic-script Amazigh words; used
+  locally, not shipped):** with Tawalt's two spelling preferences (أ, گ) the
+  engine matches **88.2 % exactly and 99.6 % ignoring short-vowel signs**;
+  the gap is Tawalt's irregular sukun/damma. The default `readable` gets
+  46.4 % exact (83.2 % counting its listed alternatives); the naive 1:1
+  baselines get 13.8–15.1 %. Removing the context rules drops accuracy to
+  baseline level.
+* **Specification + Wikidata examples (n = 7):** `readable` 7/7.
+* **Official Arabic toponyms (n = 192, different convention):** 20.3 % exact,
+  33.9 % with alternatives (baselines 17.7–20.3 %); differences are
+  lexicalized Arabic spellings (أكادير, وجدة, الحسيمة), analysed per cause.
 * **Coverage:** 33/33 IRCAM units mapped and tested in every profile; 0
-  unsupported characters on IRCAM's 18,846-word DGLAI lexicon (checked
-  locally; not shipped).
-* **Moroccan Arabic-script references (n = 7):** `readable` 7/7 exact;
-  naive 1:1 baselines 5/7. This set is tiny and was partly used to choose
-  rules — it shows consistency, not generalization.
-* **Official Arabic toponyms (n = 192, held out, different convention):**
-  `readable` 20.3 % exact, 33.9 % counting its listed alternatives
-  (baselines 17.7–20.3 %). Most differences are convention (أ/إ initial
-  vowels, omitted vowels, ة, ال), analysed per cause in the report.
-* **No held-out Moroccan gold standard exists yet**, so real-world accuracy
-  is not established. A review-sheet generator is provided to build one.
+  unsupported characters on IRCAM's 18,846-word lexicon; 3 (input typos) in
+  897,778 words of TV subtitles.
 * **Robustness:** 0 preservation failures on 2,000 mixed documents; property
   tests for preservation, determinism, Unicode validity, idempotent
   normalization and the unknown-character policy.
 * **Speed:** ≈ 7 MiB/s (≈ 330,000 words/s) single-threaded; ~1.6 µs per word.
+* **Not yet established:** a licensed, linguist-reviewed gold standard, and
+  any reference for running text in context.
 
 ## Limitations
 
@@ -207,6 +215,8 @@ MIT — see [LICENSE](LICENSE). Forked from
 
 Linguistic sources: IRCAM, *Amazigh Language Desktop Converter* (SITACAM 2013,
 Tables I–II); Albane, Slimani & Kheddouci (2025); Wikidata (CC0). The
-`mustapharajaa/tamazight-Transliterating-en-ar` dictionary (no license) and
-the IRCAM DGLAI scrape (CC-BY-NC) were audited but **not** included. Full
-attributions: [NOTICE.md](NOTICE.md).
+`mustapharajaa/tamazight-Transliterating-en-ar` dictionary (no license), the
+Tawalt dictionary on Hugging Face (license unspecified), the IRCAM DGLAI scrape
+(CC-BY-NC) and the TAWNZA subtitles (CC-BY-4.0) were used for audit or local
+evaluation only and are **not** included. Full attributions:
+[NOTICE.md](NOTICE.md).

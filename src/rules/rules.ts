@@ -90,6 +90,36 @@ export const LETTER_RULES: readonly Rule[] = [
     ],
   },
   {
+    id: 'vowel.initial.hamza-all.a',
+    description: 'Option initialVowels=hamza-all: word-initial ⴰ is written أ (every initial vowel carries hamza on its seat: أ ئ ؤ).',
+    priority: 100,
+    when: { letters: [A], prev: ['boundary'], options: { initialVowels: 'hamza-all' } },
+    action: { type: 'emit', text: AR.ALEF_HAMZA_ABOVE },
+    sources: ['TAWALT'],
+    status: 'documented',
+    examples: [],
+  },
+  {
+    id: 'vowel.initial.hamza-all.i',
+    description: 'Option initialVowels=hamza-all: word-initial ⵉ is written ئ.',
+    priority: 100,
+    when: { letters: [I], prev: ['boundary'], options: { initialVowels: 'hamza-all' } },
+    action: { type: 'emit', text: AR.YEH_HAMZA },
+    sources: ['TAWALT', 'IRCAM-T2'],
+    status: 'documented',
+    examples: [],
+  },
+  {
+    id: 'vowel.initial.hamza-all.u',
+    description: 'Option initialVowels=hamza-all: word-initial ⵓ is written ؤ.',
+    priority: 100,
+    when: { letters: [U], prev: ['boundary'], options: { initialVowels: 'hamza-all' } },
+    action: { type: 'emit', text: AR.WAW_HAMZA },
+    sources: ['TAWALT', 'IRCAM-T2'],
+    status: 'documented',
+    examples: [],
+  },
+  {
     id: 'vowel.initial.alef.i',
     description: 'Option initialVowels=alef: word-initial ⵉ is written اي.',
     priority: 100,
@@ -150,25 +180,28 @@ export const LETTER_RULES: readonly Rule[] = [
     examples: [],
   },
   // ── Vowel hiatus ───────────────────────────────────────────────────────────
+  // Default (hiatus=plain) is the base letter: Tawalt writes all 87 of its
+  // vowel–vowel words with plain و / ي (e.g. ⵉⵓⵙⵔ → ئوسر). The hamza-seat
+  // variant below is an option only.
   {
     id: 'vowel.hiatus.hamza-seat.i',
-    description: 'ⵉ directly after another vowel starts a new syllable: written ئ (extends Table II’s syllable-initial logic).',
+    description: 'Option hiatus=hamza-seat: ⵉ directly after another vowel is written ئ (extends Table II’s syllable-initial logic; not attested in Tawalt).',
     priority: 90,
     when: { letters: [I], prev: ['vowel'], options: { hiatus: 'hamza-seat' } },
     action: { type: 'emit', text: AR.YEH_HAMZA },
     sources: ['IRCAM-T2', 'PROJECT'],
-    status: 'derived',
-    examples: [{ profile: 'readable', input: 'ⵜⴰⵉ', output: 'تائ' }],
+    status: 'heuristic',
+    examples: [],
   },
   {
     id: 'vowel.hiatus.hamza-seat.u',
-    description: 'ⵓ directly after another vowel: written ؤ.',
+    description: 'Option hiatus=hamza-seat: ⵓ directly after another vowel is written ؤ.',
     priority: 90,
     when: { letters: [U], prev: ['vowel'], options: { hiatus: 'hamza-seat' } },
     action: { type: 'emit', text: AR.WAW_HAMZA },
     sources: ['IRCAM-T2', 'PROJECT'],
-    status: 'derived',
-    examples: [{ profile: 'readable', input: 'ⵜⴰⵓ', output: 'تاؤ' }],
+    status: 'heuristic',
+    examples: [],
   },
   // ── Semivowels ─────────────────────────────────────────────────────────────
   {
@@ -184,7 +217,7 @@ export const LETTER_RULES: readonly Rule[] = [
   // ── Defaults ───────────────────────────────────────────────────────────────
   {
     id: 'letter.base',
-    description: 'Any other letter: the base correspondence of IRCAM Table I/II under the active options.',
+    description: 'Any other letter (including a vowel after a vowel, by default): the base correspondence of IRCAM Table I/II under the active options.',
     priority: 0,
     when: { classes: ['vowel', 'semivowel', 'consonant'] },
     action: { type: 'base' },
@@ -194,6 +227,7 @@ export const LETTER_RULES: readonly Rule[] = [
       { profile: 'readable', input: 'ⵜⴰⵎⴰⵣⵉⵖⵜ', output: 'تامازيغت' },
       { profile: 'readable', input: 'ⴰⵎⵖⴰⵔ', output: 'امغار' },
       { profile: 'readable', input: 'ⴱⵔⴰⵢⵔ', output: 'براير' },
+      { profile: 'readable', input: 'ⵉⵓⵙⵔ', output: 'ئوسر' },
     ],
   },
   {
@@ -223,12 +257,13 @@ export interface ModifierRule {
 export const MODIFIER_RULES: readonly ModifierRule[] = [
   {
     id: 'gemination.shadda',
-    description: 'A geminate consonant (same letter repeated) is written once with shadda ّ.',
-    sources: ['WIKIDATA-SHI', 'IRCAM-RULES', 'ALBANE-2025'],
+    description: 'A geminate consonant (same letter repeated) is written once with shadda \u0651; a run of three is written as a plain letter followed by the letter with shadda.',
+    sources: ['WIKIDATA-SHI', 'IRCAM-RULES', 'ALBANE-2025', 'TAWALT'],
     status: 'documented',
     examples: [
       { profile: 'readable', input: 'ⵉⴼⴰⵙⵙⵏ', output: 'ئفاسّن' },
       { profile: 'readable', input: 'ⴰⴳⴳⵯⴰ', output: 'اڭُّا' },
+      { profile: 'readable', input: 'ⵜⴰⵖⵓⵢⵢⵢⵜ', output: 'تاغوييّت' },
     ],
   },
   {
@@ -247,7 +282,7 @@ export const MODIFIER_RULES: readonly ModifierRule[] = [
   },
   {
     id: 'labialization.damma',
-    description: 'Labialization ⵯ is written as damma ُ on the consonant (Table II).',
+    description: 'Labialization ⵯ is written as damma \u064F on the consonant (Table II).',
     sources: ['IRCAM-T2'],
     status: 'documented',
     examples: [
@@ -279,11 +314,12 @@ export const MODIFIER_RULES: readonly ModifierRule[] = [
   {
     id: 'schwa.between-identical',
     description: 'A schwa between two identical consonants blocks gemination: the two letters stay separate (no shadda), so ⵣⴻⵣ ≠ ⵣⵣ.',
-    sources: ['IRCAM-INVENTORY', 'PROJECT'],
-    status: 'derived',
+    sources: ['IRCAM-INVENTORY', 'TAWALT'],
+    status: 'documented',
     examples: [
       { profile: 'readable', input: 'ⴰⵣⴻⵣ', output: 'ازز' },
       { profile: 'readable', input: 'ⴰⵣⵣ', output: 'ازّ' },
+      { profile: 'readable', input: 'ⵢⵓⵏⴻⵏ', output: 'يونن' },
     ],
   },
   {

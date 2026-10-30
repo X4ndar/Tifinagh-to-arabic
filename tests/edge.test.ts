@@ -63,7 +63,7 @@ describe('edge cases', () => {
   })
 
   test('BOM at the start of a file is preserved', () => {
-    expect(toArabic('﻿ⴰⵣⵓⵍ')).toBe('﻿ازول')
+    expect(toArabic('\uFEFFⴰⵣⵓⵍ')).toBe('\uFEFFازول')
   })
 
   test('paragraph of real text', () => {
@@ -93,7 +93,7 @@ describe('strict mode', () => {
   })
 
   test('info diagnostics do not fail strict mode', () => {
-    expect(() => transliterate('ⵜⴰⵉ ⴰ‍ⴱ', { strict: true })).not.toThrow()
+    expect(() => transliterate('ⵜⴰⵉ ⴰ\u200Dⴱ', { strict: true })).not.toThrow()
   })
 
   test('convert() supports strict', () => {

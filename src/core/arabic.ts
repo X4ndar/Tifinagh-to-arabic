@@ -40,6 +40,7 @@ export interface ArabicResult {
  * source (see docs/linguistic-rules.md §Alternatives).
  */
 export const ALTERNATIVE_VARIANTS: ReadonlyArray<{ label: string; options: Partial<ArabicOptions> }> = [
+  { label: 'initial vowels all with hamza (أ / ئ / ؤ, Tawalt dictionary)', options: { initialVowels: 'hamza-all' } },
   { label: 'initial vowels with alef (اي / او / ا)', options: { initialVowels: 'alef' } },
   { label: 'initial vowels with hamza on alef (إي / أو / أ)', options: { initialVowels: 'hamza-alef' } },
   { label: 'gemination as doubled letters', options: { gemination: 'double' } },

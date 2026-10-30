@@ -18,6 +18,7 @@ export type SourceId =
   | 'UNICODE'
   | 'WIKIDATA-SHI'
   | 'ALBANE-2025'
+  | 'TAWALT'
   | 'PROJECT'
 
 export const SOURCES: Record<SourceId, SourceRef> = {
@@ -70,6 +71,14 @@ export const SOURCES: Record<SourceId, SourceRef> = {
     url: 'https://asjp.cerist.dz/en/downArticle/397/17/1/284878',
     note:
       'Algerian/Kabyle-oriented table (Figure 2) and rules R1/R2. R2 (geminate → shadda) adopted; R1 (full vowels → short-vowel diacritics) rejected for Moroccan Amazigh.',
+  },
+  TAWALT: {
+    id: 'TAWALT',
+    title: 'Tawalt Amazigh–Arabic dictionary (field `tifinagh_in_arabic`), as published on Hugging Face: abdelhaqueidali/Tawalt-Amazigh-Arabic-Dictionary',
+    url: 'https://huggingface.co/datasets/abdelhaqueidali/Tawalt-Amazigh-Arabic-Dictionary',
+    note:
+      '27,921 unambiguous single-word Tifinagh/Arabic-script pairs, written by people (the Arabic carries information absent from the Tifinagh). ' +
+      'License unspecified → used locally for evaluation only, never shipped. Conventions: أ ئ ؤ word-initially, گ for ⴳ, ژ for ⵥ, shadda, plain و/ي in hiatus.',
   },
   PROJECT: {
     id: 'PROJECT',

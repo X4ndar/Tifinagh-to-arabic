@@ -17,7 +17,7 @@ const ircamWord = fc.array(ircamUnit, { minLength: 1, maxLength: 12 }).map((a) =
 
 /** Any sequence of Tifinagh-block code points plus some marks — malformed input welcome. */
 const tifinaghNoise = fc
-  .array(fc.oneof(fc.integer({ min: 0x2d30, max: 0x2d7f }).map((c) => String.fromCodePoint(c)), fc.constantFrom('‍', '́', 'ʷ', ' ', '-')), {
+  .array(fc.oneof(fc.integer({ min: 0x2d30, max: 0x2d7f }).map((c) => String.fromCodePoint(c)), fc.constantFrom('\u200D', '\u0301', 'ʷ', ' ', '-')), {
     maxLength: 30,
   })
   .map((a) => a.join(''))
@@ -80,7 +80,7 @@ describe('property-based invariants', () => {
       RUNS,
     )
     fc.assert(
-      fc.property(fc.array(fc.constantFrom('َ', 'ُ', 'ِ', 'ّ', 'ْ', 'ٛ'), { maxLength: 6 }), (marks) => {
+      fc.property(fc.array(fc.constantFrom('\u064E', '\u064F', '\u0650', '\u0651', '\u0652', '\u065B'), { maxLength: 6 }), (marks) => {
         const m = marks.join('')
         return canonicalMarkOrder(canonicalMarkOrder(m)) === canonicalMarkOrder(m)
       }),

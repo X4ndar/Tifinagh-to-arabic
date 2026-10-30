@@ -43,7 +43,7 @@ describe('lexicon', () => {
   })
 
   test('lookup uses the normalized word (format characters removed)', () => {
-    expect(toArabic('ⴰⴳⴰ‍ⴷⵉⵔ', { lexicon: new Lexicon([verified]) })).toBe('أكادير')
+    expect(toArabic('ⴰⴳⴰ\u200Dⴷⵉⵔ', { lexicon: new Lexicon([verified]) })).toBe('أكادير')
   })
 
   test.each([

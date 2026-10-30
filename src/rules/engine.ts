@@ -15,6 +15,8 @@ interface Piece {
   marks: string
   /** How many times to write `base` (the run length for the `double` gemination style). */
   repeat: number
+  /** Plain copies of `base` written before the marked letter (runs of 3+ with shadda). */
+  prefixRepeat?: number
   /** Text written after the letter(s) and marks (e.g. Table I quote mark, extra marks). */
   suffix: string
   rules: string[]
@@ -99,7 +101,7 @@ function baseArabicMemo(m: Memo, ch: string, o: ArabicOptions): { text: string; 
 /** Split "letter(s)+marks" into the part before trailing combining marks and those marks. */
 function splitTrailingMarks(s: string): [string, string] {
   let i = s.length
-  while (i > 0 && /[ؐ-ًؚ-ٰٟۖ-ۭ̀-֑ͯ-ׇ]/.test(s[i - 1])) i--
+  while (i > 0 && /[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06ED\u0300-\u036F\u0591-\u05C7]/.test(s[i - 1])) i--
   return [s.slice(0, i), s.slice(i)]
 }
 
@@ -108,8 +110,8 @@ function render(p: Piece): string {
   if (p.marks === '' && p.repeat === 1) return p.base + p.suffix // fast path: nothing to reorder
   const [letters, own] = splitTrailingMarks(p.base)
   const marks = canonicalMarkOrder(own + p.marks)
-  if (p.repeat > 1) return (letters + own).repeat(p.repeat - 1) + letters + marks + p.suffix
-  return letters + marks + p.suffix
+  const copies = p.repeat > 1 ? p.repeat - 1 : (p.prefixRepeat ?? 0)
+  return (letters + own).repeat(copies) + letters + marks + p.suffix
 }
 
 /**
@@ -213,6 +215,8 @@ export function convertUnits(units: Unit[], o: ArabicOptions, wantTrace = true):
     if (u.length >= 2) {
       if (o.gemination === 'shadda') {
         piece.marks += AR.SHADDA
+        // a run of n ≥ 3: (n − 2) plain letters, then the geminate (as in Tawalt: ⵢⵢⵢ → ييّ)
+        if (u.length > 2) piece.prefixRepeat = u.length - 2
         piece.rules.push('gemination.shadda')
       } else if (o.gemination === 'double') {
         piece.repeat = u.length

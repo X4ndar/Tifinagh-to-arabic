@@ -12,7 +12,7 @@ const { CORRESPONDENCES } = lib
 const TABLE1 = new Map()
 for (const c of CORRESPONDENCES) {
   if ([...c.tifinagh].length !== 1) continue
-  const cell = (c.ircamTable1 ?? '').replace(/[ֶ̂‘]/g, '')
+  const cell = (c.ircamTable1 ?? '').replace(/[\u0302\u05B6‘]/g, '')
   TABLE1.set(c.tifinagh, cell)
 }
 TABLE1.set('ⵯ', '‘')

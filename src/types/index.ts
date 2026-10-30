@@ -108,7 +108,7 @@ export type GeminationStyle = 'shadda' | 'double' | 'single'
 /** How the neutral vowel ⴻ is written. */
 export type SchwaStyle = 'omit' | 'kasra' | 'fatha'
 /** How word-initial vowels are written. */
-export type InitialVowelStyle = 'hamza-seat' | 'alef' | 'hamza-alef'
+export type InitialVowelStyle = 'hamza-seat' | 'hamza-all' | 'alef' | 'hamza-alef'
 /** How a vowel directly following another vowel is written. */
 export type HiatusStyle = 'hamza-seat' | 'plain'
 /** How ⵀ is written. */

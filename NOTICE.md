@@ -39,3 +39,9 @@ verbatim in [`LICENSE.upstream`](LICENSE.upstream); the combined work is MIT
 - `Tamazight-NLP/ircam-dglai` (Hugging Face) — CC-BY-NC-4.0, scraped from
   IRCAM's DGLAI. Used locally for coverage statistics only
   (`node benchmarks/evaluate.mjs --dglai <file>`); never bundled.
+- `abdelhaqueidali/Tawalt-Amazigh-Arabic-Dictionary` (Hugging Face) — license
+  unspecified. Used locally for evaluation only
+  (`node benchmarks/evaluate.mjs --tawalt <tawalt_ar.json>`); only aggregate
+  scores and convention counts appear in this repository.
+- `Tamazight-NLP/TAWNZA_TIFINAGH_ARABIC_DATASET` (CC-BY-4.0) — Tifinagh
+  subtitles used locally as a robustness corpus; not bundled.

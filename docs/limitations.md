@@ -4,10 +4,12 @@ Read this before relying on the output.
 
 ## Linguistic
 
-1. **No held-out Moroccan gold standard.** The default profile matches the 7
-   available Moroccan Arabic-script references, but those were partly used to
-   choose rules. Real-world accuracy is unmeasured (see
-   [evaluation.md](evaluation.md) §6).
+1. **Reference data is limited and convention-dependent.** The largest
+   independent reference (Tawalt dictionary, 27,921 words) cannot be shipped
+   (no license) and follows its own editorial choices (أ, گ, irregular sukun).
+   There is still no published, licensed, reviewed Moroccan gold standard;
+   running text (sentences, inflected forms in context) is not covered by any
+   reference set (see [evaluation.md](evaluation.md)).
 2. **Arabic script loses distinctions.** In `readable`: ⵔ/ⵕ → ر, ⵓ/ⵡ → و,
    ⵉ/ⵢ → ي, and the schwa disappears. Use `phonetic` (or `ircam`) to keep
    them, at the cost of rarer characters.
@@ -19,22 +21,25 @@ Read this before relying on the output.
    convention.
 4. **Schwa as kasra (`phonetic`)** is a project proposal.
 5. **Word-initial geminates** (ⵍⵍⵓⵖⵎ, ⵎⵎⵓⵎⵎⵉ) get a shadda on the first letter
-   (لّوغم). Arabic orthography rarely puts shadda word-initially; readers may
-   find it unusual. `gemination: 'double'` or `'single'` are alternatives.
-6. **Vowel hiatus** (ئ/ؤ after a vowel) is derived from Table II's logic; such
-   sequences do not occur in IRCAM's lexicon, so it is rarely exercised.
-7. **Lexicalized spellings** (official place names: أكادير, وجدة, الحسيمة)
+   (لّوغم), as in Tawalt (يّزيمّر). Readers of Arabic may find it unusual;
+   `gemination: 'double'` or `'single'` are alternatives.
+6. **Labialization not written in the Tifinagh** cannot be recovered: Tawalt
+   writes damma for labialized consonants that its Tifinagh spells plainly
+   (ⵉⴳⴳⴰ → ئگُّا); the converter only marks what the input marks (ⵯ).
+7. **Vowel hiatus** is written with plain letters (ئوسر), as Tawalt does;
+   such sequences are rare (none in IRCAM's lexicon, 87 in Tawalt).
+8. **Lexicalized spellings** (official place names: أكادير, وجدة, الحسيمة)
    are not reproduced by rules. Add them through a lexicon if you need them;
    none is shipped.
-8. **Varieties.** The converter writes what the Tifinagh says, following
+9. **Varieties.** The converter writes what the Tifinagh says, following
    IRCAM standard orthography. It does not model Tarifit, Central Atlas or
    Tachelhit pronunciation differences, nor Kabyle conventions (ⵝ ⴸ ⵞ are
    accepted with a warning).
-9. **Not a translator.** Output is the same Amazigh words in another script.
+10. **Not a translator.** Output is the same Amazigh words in another script.
    It does not check that the input is real Amazigh.
-10. **Latin → Arabic** goes through upstream's Latin → Tifinagh converter,
+11. **Latin → Arabic** goes through upstream's Latin → Tifinagh converter,
     which guesses digraphs (`gh`, `ch`, `kh`); prefer Tifinagh input.
-11. **Arabic → Tifinagh** is not implemented: Arabic script does not encode
+12. **Arabic → Tifinagh** is not implemented: Arabic script does not encode
     vowels/schwa/emphasis reliably.
 
 ## Technical

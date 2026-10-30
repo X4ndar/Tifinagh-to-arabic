@@ -102,11 +102,22 @@ describe('word-initial vowels', () => {
 })
 
 describe('vowel hiatus', () => {
-  test('hamza seats and diagnostic', () => {
-    const r = transliterate('ⵜⴰⵉⵔⵉ')
-    expect(r.output).toBe('تائري')
+  test('default: plain letters (Tawalt writes all 87 hiatus words this way), with a diagnostic', () => {
+    const r = transliterate('ⵉⵓⵙⵔ')
+    expect(r.output).toBe('ئوسر')
     expect(r.warnings.map((w) => w.code)).toEqual(['VOWEL_HIATUS'])
-    expect(toArabic('ⵜⴰⵉⵔⵉ', { arabic: { hiatus: 'plain' } })).toBe('تايري')
+    expect(toArabic('ⵓⵉⵡⵔ')).toBe('ؤيور')
+  })
+  test('option hiatus=hamza-seat', () => {
+    expect(toArabic('ⵜⴰⵉⵔⵉ', { arabic: { hiatus: 'hamza-seat' } })).toBe('تائري')
+    expect(toArabic('ⵉⵓⵙⵔ', { arabic: { hiatus: 'hamza-seat' } })).toBe('ئؤسر')
+  })
+})
+
+describe('initialVowels=hamza-all (Tawalt convention)', () => {
+  test('أ / ئ / ؤ', () => {
+    const o = { arabic: { initialVowels: 'hamza-all' as const, g: 'gaf' as const } }
+    expect(toArabic('ⴰⵙⴰⴳⴳⴰⵍ ⵉⵙⵏⴱⴰⵔ ⵓⵎⴰⵙ', o)).toBe('أساگّال ئسنبار ؤماس')
   })
 })
 
@@ -137,9 +148,9 @@ describe('gemination', () => {
     expect(out.normalize('NFC')).toBe(out)
   })
 
-  test('three identical consonants are flagged', () => {
+  test('three identical consonants: plain letter + geminate, and flagged', () => {
     const r = transliterate('ⴰⵎⵎⵎⴰ')
-    expect(r.output).toBe('امّا')
+    expect(r.output).toBe('اممّا')
     expect(r.warnings.map((w) => w.code)).toEqual(['LONG_CONSONANT_RUN'])
     expect(r.warnings[0].source).toBe('ⵎⵎⵎ')
   })

@@ -14,7 +14,9 @@ executable examples that the test suite checks) and `src/profiles/profiles.ts`
 
 Sources: `IRCAM-T1`/`IRCAM-T2`/`IRCAM-RULES` = Tables I, II and §III.B.2 of
 the IRCAM SITACAM 2013 paper; `WIKIDATA-SHI` = Wikidata Tachelhit lexemes;
-`ALBANE-2025` = Albane et al. 2025. Details: [research.md](research.md).
+`ALBANE-2025` = Albane et al. 2025; `TAWALT` = the Tawalt Amazigh–Arabic
+dictionary (27,921 pairs, used for local evaluation). Details:
+[research.md](research.md).
 
 ## 1. Units
 
@@ -91,8 +93,10 @@ enumerates all combinations to guarantee this.
 | `vowel.initial.hamza-seat.u` | ⵓ at word start | ؤ | documented | T2, Wikidata | ⵓⴽⵙⵓⵎ → ؤكسوم |
 | `vowel.initial.hamza-seat.a` | ⴰ at word start | ا (no hamza) | documented | T1, Wikidata, spec | ⴰⵣⵓⵍ → ازول |
 | `vowel.initial.alef.*` | option `initialVowels: alef` | اي / او / ا | heuristic | — | ⵉⵎⵉ → ايمي |
+| `vowel.initial.hamza-all.*` | option `initialVowels: hamza-all` | أ / ئ / ؤ | documented | Tawalt | ⴰⵙⴰⴳⴳⴰⵍ → أساڭّال |
 | `vowel.initial.hamza-alef.*` | option `initialVowels: hamza-alef` | إي / أو / أ | documented | Albane 2025 | ⵉⵎⵉ → إيمي |
-| `vowel.hiatus.hamza-seat.i/u` | ⵉ/ⵓ right after a vowel | ئ / ؤ | derived | T2 logic (vowel at syllable start) | ⵜⴰⵉⵔⵉ → تائري |
+| (default) vowel after a vowel | ⵉ/ⵓ right after a vowel | plain ي / و (`letter.base`), `VOWEL_HIATUS` info | documented | Tawalt (87/87) | ⵉⵓⵙⵔ → ئوسر |
+| `vowel.hiatus.hamza-seat.i/u` | option `hiatus: hamza-seat` | ئ / ؤ | heuristic | T2 logic; not attested | ⵜⴰⵉⵔⵉ → تائري |
 | `semivowel.initial.plain-y` | ⵢ at word start, `plainInitialY` | ي (no mark) | documented | T2 | ircam: ⵢⴰⵏ → يان |
 | `letter.base` | anything else | §2 | documented | T1/T2 | ⵜⴰⵎⴰⵣⵉⵖⵜ → تامازيغت |
 | `schwa.letter` | ⴻ | nothing | documented | T1 | ⵜⴰⵎⴻⵣⴳⵉⴷⴰ → تامزڭيدا |
@@ -106,14 +110,14 @@ Table II: the seat (ا / ي / و) shows the quality of the initial vowel, so
 
 | Rule id | Effect | Profiles | Status | Source |
 |---|---|---|---|---|
-| `gemination.shadda` | geminate → one letter + ّ | readable, phonetic | documented | Wikidata (ئفاسّن), IRCAM rule 4, Albane R2 |
+| `gemination.shadda` | geminate → one letter + ّ; a run of 3 → plain letter + letter with ّ | readable, phonetic | documented | Wikidata (ئفاسّن), IRCAM rule 4, Albane R2, Tawalt (99.7 %) |
 | `gemination.double` | geminate → letter repeated (as many times as in Tifinagh) | ircam | derived | T1 is per letter |
 | `gemination.single` | geminate → one letter, no mark (lossy) | option | heuristic | — |
 | `labialization.damma` | ⵯ → ُ on the consonant | all | documented | T2 |
 | `labialization.ircam-table1` | ⵯ → ‘ (U+2018) after the consonant | option | documented | T1 (breaks joining) |
 | `labialization.omit` | ⵯ not written (lossy) | option | heuristic | — |
 | `schwa.mark` | ⴻ → kasra (or fatha) on the previous consonant; alef carrier after a vowel or word-initially | phonetic | heuristic | — |
-| `schwa.between-identical` | C ⴻ C keeps two separate letters, no shadda | all | derived | IRCAM writes ⴻ precisely to separate identical consonants (all 227 DGLAI schwa words) |
+| `schwa.between-identical` | C ⴻ C keeps two separate letters, no shadda | all | documented | IRCAM writes ⴻ precisely to separate identical consonants (all 227 DGLAI schwa words); Tawalt spells them this way (ⵢⵓⵏⴻⵏ → يونن) |
 | `mark.canonical-order` | marks are emitted in Unicode canonical order (damma 31 < kasra 32 < shadda 33 < U+065B 230) | all | documented | Unicode |
 | `ta.final-no-marbuta` | ⵜ is ت everywhere | all | documented | T1 |
 
@@ -167,3 +171,5 @@ pronunciation.
 | final ⵜ → ة | imports Arabic morphology |
 | Arabic article detection (ⵍ… → ال…) | would change the Amazigh word |
 | ⵥ → ظ by default | not documented by IRCAM; offered as an alternative |
+| hamza seats in hiatus (ئ / ؤ) by default | refuted by Tawalt (0 of 87 words); kept as option |
+| أ for initial ⴰ in `readable` | contradicts the specification examples (ازول, امغار) and Wikidata (افوس); kept as option `hamza-all` |

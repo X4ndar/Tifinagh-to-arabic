@@ -45,7 +45,7 @@ async function lexemes() {
     for (const rep of reps) {
       const vals = Object.values(rep)
       const tif = vals.find((v) => /[ⴰ-⵿]/.test(v.value))
-      const ar = vals.find((v) => /[؀-ۿ]/.test(v.value))
+      const ar = vals.find((v) => /[\u0600-ۿ]/.test(v.value))
       const lat = vals.find((v) => /latn$/i.test(v.language))
       if (tif && ar) {
         out.push({ tifinagh: tif.value, arabic: ar.value, latin: lat?.value, lexeme: id, arabicLanguageCode: ar.language })
@@ -58,7 +58,7 @@ async function lexemes() {
 
 // ── Toponyms / entities ────────────────────────────────────────────────────
 const T = { 'ⴱ': 'B', 'ⴳ': 'K', 'ⴽ': 'K', 'ⵇ': 'K', 'ⴷ': 'D', 'ⴹ': 'D', 'ⴼ': 'F', 'ⵀ': 'H', 'ⵃ': 'H', 'ⵄ': 'E', 'ⵅ': 'X', 'ⵊ': 'J', 'ⵍ': 'L', 'ⵎ': 'M', 'ⵏ': 'N', 'ⵔ': 'R', 'ⵕ': 'R', 'ⵖ': 'G', 'ⵙ': 'S', 'ⵚ': 'S', 'ⵛ': 'C', 'ⵜ': 'T', 'ⵟ': 'T', 'ⵣ': 'Z', 'ⵥ': 'Z', 'ⵡ': '', 'ⵢ': '', 'ⴰ': '', 'ⵉ': '', 'ⵓ': '', 'ⴻ': '', 'ⵯ': '' }
-const A = { 'ب': 'B', 'ك': 'K', 'ڭ': 'K', 'گ': 'K', 'ق': 'K', 'ج': 'J', 'د': 'D', 'ض': 'D', 'ف': 'F', 'ه': 'H', 'ح': 'H', 'ع': 'E', 'خ': 'X', 'ل': 'L', 'م': 'M', 'ن': 'N', 'ر': 'R', 'غ': 'G', 'س': 'S', 'ص': 'S', 'ش': 'C', 'ت': 'T', 'ط': 'T', 'ة': '', 'ز': 'Z', 'ظ': 'Z', 'ژ': 'Z', 'و': '', 'ي': '', 'ى': '', 'ا': '', 'أ': '', 'إ': '', 'آ': '', 'ؤ': '', 'ئ': '', 'ء': '', 'ّ': '' }
+const A = { 'ب': 'B', 'ك': 'K', 'ڭ': 'K', 'گ': 'K', 'ق': 'K', 'ج': 'J', 'د': 'D', 'ض': 'D', 'ف': 'F', 'ه': 'H', 'ح': 'H', 'ع': 'E', 'خ': 'X', 'ل': 'L', 'م': 'M', 'ن': 'N', 'ر': 'R', 'غ': 'G', 'س': 'S', 'ص': 'S', 'ش': 'C', 'ت': 'T', 'ط': 'T', 'ة': '', 'ز': 'Z', 'ظ': 'Z', 'ژ': 'Z', 'و': '', 'ي': '', 'ى': '', 'ا': '', 'أ': '', 'إ': '', 'آ': '', 'ؤ': '', 'ئ': '', 'ء': '', '\u0651': '' }
 function skeleton(s, map) {
   const out = []
   for (const c of s) {
@@ -83,7 +83,7 @@ async function toponyms() {
     const t = r.zgh.value.trim()
     const a = r.ar.value.trim()
     const st = skeleton(t, T)
-    const sa = skeleton(a.replace(/[ً-ْ]/g, ''), A)
+    const sa = skeleton(a.replace(/[\u064B-\u0652]/g, ''), A)
     if (st && sa && st === sa) keep.push({ qid: r.item.value.split('/').pop(), tifinagh: t, arabic: a, french: r.fr?.value })
   }
   keep.sort((x, y) => x.qid.localeCompare(y.qid, 'en', { numeric: true }))
