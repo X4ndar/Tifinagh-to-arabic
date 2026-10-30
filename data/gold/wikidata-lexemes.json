@@ -1,0 +1,37 @@
+{
+  "description": "Amazigh lexeme forms on Wikidata having both a Tifinagh and an Arabic-script representation.",
+  "license": "CC0-1.0 (Wikidata)",
+  "retrieved": "2026-10-30",
+  "sourceType": "community lexicographic data (independent of this project)",
+  "profile": "arabic-script Tachelhit (compared against `readable`)",
+  "entries": [
+    {
+      "tifinagh": "ⴰⴼⵓⵙ",
+      "arabic": "افوس",
+      "latin": "afus",
+      "lexeme": "L1215185",
+      "arabicLanguageCode": "shi-x-Q1828555"
+    },
+    {
+      "tifinagh": "ⵉⴼⴰⵙⵙⵏ",
+      "arabic": "ئفاسّن",
+      "latin": "ifassn",
+      "lexeme": "L1215185",
+      "arabicLanguageCode": "shi-x-Q1828555"
+    },
+    {
+      "tifinagh": "ⵓⴽⵙⵓⵎ",
+      "arabic": "ؤكسوم",
+      "latin": "uksum",
+      "lexeme": "L309611",
+      "arabicLanguageCode": "shi-x-Q1828555"
+    },
+    {
+      "tifinagh": "ⴱⵔⴰⵢⵔ",
+      "arabic": "براير",
+      "latin": "brayr",
+      "lexeme": "L675101",
+      "arabicLanguageCode": "shi-x-Q1828555"
+    }
+  ]
+}

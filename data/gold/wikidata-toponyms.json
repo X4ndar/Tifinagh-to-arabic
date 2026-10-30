@@ -1,0 +1,1148 @@
+{
+  "description": "Moroccan Wikidata items whose Standard Moroccan Tamazight (zgh, Tifinagh) and Arabic (ar) labels spell the same name. Arabic labels are official/lexicalized Arabic spellings, i.e. a different orthographic convention from Arabic-script Amazigh.",
+  "license": "CC0-1.0 (Wikidata)",
+  "retrieved": "2026-10-30",
+  "sourceType": "official Arabic spellings of (mostly) Amazigh-origin names",
+  "filter": "equal coarse consonant skeletons (see build-gold.mjs); candidates: 2486",
+  "entries": [
+    {
+      "qid": "Q1028",
+      "tifinagh": "ⵍⵎⵖⵔⵉⴱ",
+      "arabic": "المغرب",
+      "french": "Maroc"
+    },
+    {
+      "qid": "Q47837",
+      "tifinagh": "ⵍⵄⵢⵓⵏ",
+      "arabic": "العيون",
+      "french": "Laâyoune"
+    },
+    {
+      "qid": "Q80985",
+      "tifinagh": "ⴼⴰⵙ",
+      "arabic": "فاس",
+      "french": "Fès"
+    },
+    {
+      "qid": "Q101625",
+      "tifinagh": "ⵎⵕⵕⴰⴽⵛ",
+      "arabic": "مراكش",
+      "french": "Marrakech"
+    },
+    {
+      "qid": "Q126148",
+      "tifinagh": "ⵟⴰⵏⵊⴰ",
+      "arabic": "طنجة",
+      "french": "Tanger"
+    },
+    {
+      "qid": "Q170525",
+      "tifinagh": "ⴰⴳⴰⴷⵉⵔ",
+      "arabic": "أكادير",
+      "french": "Agadir"
+    },
+    {
+      "qid": "Q178663",
+      "tifinagh": "ⵎⴽⵏⴰⵙ",
+      "arabic": "مكناس",
+      "french": "Meknès"
+    },
+    {
+      "qid": "Q183405",
+      "tifinagh": "ⴰⵙⴼⵉ",
+      "arabic": "آسفي",
+      "french": "Safi"
+    },
+    {
+      "qid": "Q184459",
+      "tifinagh": "ⴰⵣⵖⴰⵏⵖⴰⵏ",
+      "arabic": "أزغنغان",
+      "french": "Zeghanghane"
+    },
+    {
+      "qid": "Q185157",
+      "tifinagh": "ⵜⵉⵟⵟⴰⵡⵉⵏ",
+      "arabic": "تطوان",
+      "french": "Tétouan"
+    },
+    {
+      "qid": "Q193802",
+      "tifinagh": "ⵡⵓⵊⴷⴰ",
+      "arabic": "وجدة",
+      "french": "Oujda"
+    },
+    {
+      "qid": "Q200192",
+      "tifinagh": "ⴰⴷⵉⵔⵀⴰⵎ ⴰⵎⵖⵔⵉⴱⵉ",
+      "arabic": "درهم مغربي",
+      "french": "Dirham marocain"
+    },
+    {
+      "qid": "Q260908",
+      "tifinagh": "ⴰⵢⵜ ⵓⵔⵉⵔ",
+      "arabic": "آيت أورير",
+      "french": "Aït Ourir"
+    },
+    {
+      "qid": "Q280853",
+      "tifinagh": "ⵙⵍⵡⴰⵏ",
+      "arabic": "سلوان",
+      "french": "Selouane"
+    },
+    {
+      "qid": "Q310350",
+      "tifinagh": "ⵍⵃⵓⵙⵉⵎⴰ",
+      "arabic": "الحسيمة",
+      "french": "Al Hoceïma"
+    },
+    {
+      "qid": "Q335141",
+      "tifinagh": "ⵜⵉⵏⵖⵉⵔ",
+      "arabic": "تنغير",
+      "french": "Tinghir"
+    },
+    {
+      "qid": "Q391215",
+      "tifinagh": "ⵡⴰⵍⵉⵍⵉ",
+      "arabic": "وليلي",
+      "french": "Oualili"
+    },
+    {
+      "qid": "Q466046",
+      "tifinagh": "ⵙⵍⴰ",
+      "arabic": "سلا",
+      "french": "Salé"
+    },
+    {
+      "qid": "Q505208",
+      "tifinagh": "ⵡⴰⵔⵣⴰⵣⴰⵜ",
+      "arabic": "ورزازات",
+      "french": "Ouarzazate"
+    },
+    {
+      "qid": "Q574469",
+      "tifinagh": "ⵜⴰⵣⴰ",
+      "arabic": "تازة",
+      "french": "Taza"
+    },
+    {
+      "qid": "Q587068",
+      "tifinagh": "ⵜⴰⵥⵏⴰⵅⵜ",
+      "arabic": "تازناخت",
+      "french": "Taznakht"
+    },
+    {
+      "qid": "Q587107",
+      "tifinagh": "ⵜⵉⵣⵏⵉⵜ",
+      "arabic": "تزنيت",
+      "french": "Tiznit"
+    },
+    {
+      "qid": "Q595974",
+      "tifinagh": "ⵅⵔⵉⴱⴳⴰ",
+      "arabic": "خريبكة",
+      "french": "Khouribga"
+    },
+    {
+      "qid": "Q621472",
+      "tifinagh": "ⵜⴰⵖⴰⵣⵓⵜ",
+      "arabic": "تغازوت",
+      "french": "Taghazout"
+    },
+    {
+      "qid": "Q632361",
+      "tifinagh": "ⵙⵉⴷⵉ ⵉⴼⵏⵉ",
+      "arabic": "سيدي إفني",
+      "french": "Sidi Ifni"
+    },
+    {
+      "qid": "Q648987",
+      "tifinagh": "ⴰⵔⴼⵓⴷ",
+      "arabic": "أرفود",
+      "french": "Arfoud"
+    },
+    {
+      "qid": "Q662659",
+      "tifinagh": "ⴱⵉⵢⴳⵯⵔⴰ",
+      "arabic": "بيوكرة",
+      "french": "Biougra"
+    },
+    {
+      "qid": "Q676778",
+      "tifinagh": "ⵛⴼⵛⴰⵡⵏ",
+      "arabic": "شفشاون",
+      "french": "Chefchaouen"
+    },
+    {
+      "qid": "Q762727",
+      "tifinagh": "ⵜⴰⵔⵓⴷⴰⵏⵜ",
+      "arabic": "تارودانت",
+      "french": "Taroudant"
+    },
+    {
+      "qid": "Q785945",
+      "tifinagh": "ⵡⵍⴰⴷ ⵜⴰⵢⵎⴰ",
+      "arabic": "أولاد تايمة",
+      "french": "Oulad Teïma"
+    },
+    {
+      "qid": "Q786763",
+      "tifinagh": "ⴰⵢⵜ ⴷⴰⵡⴷ",
+      "arabic": "آيت داوود",
+      "french": "Ait Daoud"
+    },
+    {
+      "qid": "Q794128",
+      "tifinagh": "ⴰⵥⵕⵓ",
+      "arabic": "أزرو",
+      "french": "Azrou"
+    },
+    {
+      "qid": "Q820813",
+      "tifinagh": "ⴱⵔⴽⴰⵏ",
+      "arabic": "بركان",
+      "french": "Berkane"
+    },
+    {
+      "qid": "Q894941",
+      "tifinagh": "ⴱⵓⴽⵔⴰⵄ",
+      "arabic": "بوكراع",
+      "french": "Boukraa"
+    },
+    {
+      "qid": "Q966350",
+      "tifinagh": "ⵍⵇⵉⵍⵄⴰ",
+      "arabic": "القليعة",
+      "french": "Lqliâa"
+    },
+    {
+      "qid": "Q990115",
+      "tifinagh": "ⵅⵏⵉⴼⵔⴰ",
+      "arabic": "خنيفرة",
+      "french": "Khénifra"
+    },
+    {
+      "qid": "Q1001873",
+      "tifinagh": "ⵜⴰⵍⵉⵡⵉⵏ",
+      "arabic": "تالوين",
+      "french": "Taliouine"
+    },
+    {
+      "qid": "Q1001887",
+      "tifinagh": "ⵉⴼⵔⴰⵏ",
+      "arabic": "إفران",
+      "french": "Ifrane"
+    },
+    {
+      "qid": "Q1009308",
+      "tifinagh": "ⵚⴼⵕⵓ",
+      "arabic": "صفرو",
+      "french": "Séfrou"
+    },
+    {
+      "qid": "Q1009868",
+      "tifinagh": "ⵜⵉⵏⵊⴷⴰⴷ",
+      "arabic": "تنجداد",
+      "french": "Tinejdad"
+    },
+    {
+      "qid": "Q1158785",
+      "tifinagh": "ⴰⴼⵓⵔⴰⵔ",
+      "arabic": "أفورار",
+      "french": "Afourar"
+    },
+    {
+      "qid": "Q1780997",
+      "tifinagh": "ⵟⴰⵟⴰ",
+      "arabic": "طاطا",
+      "french": "Tata"
+    },
+    {
+      "qid": "Q1799331",
+      "tifinagh": "ⵍⵄⵏⵓⵚⵕ",
+      "arabic": "العنوصر",
+      "french": "Laanoussar"
+    },
+    {
+      "qid": "Q1934167",
+      "tifinagh": "ⴰⵣⵉⵍⴰⵍ",
+      "arabic": "أزيلال",
+      "french": "Azilal"
+    },
+    {
+      "qid": "Q1936239",
+      "tifinagh": "ⵜⴰⴼⵔⴰⵡⵜ",
+      "arabic": "تفراوت",
+      "french": "Tafraout"
+    },
+    {
+      "qid": "Q2026640",
+      "tifinagh": "ⴰⵡⵙⵔⴷ",
+      "arabic": "أوسرد",
+      "french": "Aousserd"
+    },
+    {
+      "qid": "Q2189469",
+      "tifinagh": "ⵜⴰⵃⵏⵏⴰⵡⵜ",
+      "arabic": "تحناوت",
+      "french": "Tahannaout"
+    },
+    {
+      "qid": "Q2191860",
+      "tifinagh": "ⴱⵕⵛⵉⴷ",
+      "arabic": "برشيد",
+      "french": "Berrechid"
+    },
+    {
+      "qid": "Q2291564",
+      "tifinagh": "ⵎⵔⵉⵔⵜ",
+      "arabic": "مريرت",
+      "french": "M'rirt"
+    },
+    {
+      "qid": "Q2314811",
+      "tifinagh": "ⵛⴰⵍⴰ",
+      "arabic": "شالة",
+      "french": "Chellah"
+    },
+    {
+      "qid": "Q2319740",
+      "tifinagh": "ⵍⵎⵏⵣⵍ",
+      "arabic": "المنزل",
+      "french": "El Menzel"
+    },
+    {
+      "qid": "Q2364324",
+      "tifinagh": "ⴰⵢⵜ ⵄⵟⵟⴰ",
+      "arabic": "آيت عطا",
+      "french": "Aït Atta"
+    },
+    {
+      "qid": "Q2384142",
+      "tifinagh": "ⴰⵢⵜ ⵎⵍⵍⵓⵍ",
+      "arabic": "أيت ملول",
+      "french": "Aït Melloul"
+    },
+    {
+      "qid": "Q2501786",
+      "tifinagh": "ⵜⵉⴼⴼⵍⵜ",
+      "arabic": "تيفلت",
+      "french": "Tiflet"
+    },
+    {
+      "qid": "Q2501809",
+      "tifinagh": "ⵎⵉⴷⵍⵜ",
+      "arabic": "ميدلت",
+      "french": "Midelt"
+    },
+    {
+      "qid": "Q2540234",
+      "tifinagh": "ⴷⵎⵏⴰⵜ",
+      "arabic": "دمنات",
+      "french": "Demnate"
+    },
+    {
+      "qid": "Q2544597",
+      "tifinagh": "ⴰⵡⵔⵉⵔ",
+      "arabic": "أورير",
+      "french": "Aourir"
+    },
+    {
+      "qid": "Q2548730",
+      "tifinagh": "ⵜⴰⵡⵏⴰⵜ",
+      "arabic": "تاونات",
+      "french": "Taounate"
+    },
+    {
+      "qid": "Q2556989",
+      "tifinagh": "ⵉⵎⵓⵣⵣⴰⵔ ⴽⵏⴹⵕ",
+      "arabic": "إيموزار كندر",
+      "french": "Imouzzer Kandar"
+    },
+    {
+      "qid": "Q2579094",
+      "tifinagh": "ⵜⴰⵎⴰⵏⴰⵔ",
+      "arabic": "تمنار",
+      "french": "Tamanar"
+    },
+    {
+      "qid": "Q2626422",
+      "tifinagh": "ⴰⵇⵇⴰ",
+      "arabic": "أقا",
+      "french": "Akka"
+    },
+    {
+      "qid": "Q2676569",
+      "tifinagh": "ⵉⵎⵉⵍⵛⵉⵍ",
+      "arabic": "إملشيل",
+      "french": "Imilchil"
+    },
+    {
+      "qid": "Q2683149",
+      "tifinagh": "ⴰⵢⵜ ⵙⵄⵉⴷ",
+      "arabic": "آيت سعيد",
+      "french": "Aït Saïd"
+    },
+    {
+      "qid": "Q2717415",
+      "tifinagh": "ⴰⴳⴷⵣ",
+      "arabic": "أكدز",
+      "french": "Agdz"
+    },
+    {
+      "qid": "Q2717813",
+      "tifinagh": "ⴰⵎⵥⵎⵉⵥ",
+      "arabic": "أمزميز",
+      "french": "Amizmiz"
+    },
+    {
+      "qid": "Q2736030",
+      "tifinagh": "ⵉⵏⵣⴳⴳⴰⵏ",
+      "arabic": "إنزكان",
+      "french": "Inezgane"
+    },
+    {
+      "qid": "Q2745175",
+      "tifinagh": "ⴱⵓⵍⵎⴰⵏ",
+      "arabic": "بولمان",
+      "french": "Boulemane"
+    },
+    {
+      "qid": "Q2827113",
+      "tifinagh": "ⴰⴳⵓⵔⴰⵢ",
+      "arabic": "أكوراي",
+      "french": "Agouraï"
+    },
+    {
+      "qid": "Q2844501",
+      "tifinagh": "ⴰⵎⵙⴽⵔⵓⴷ",
+      "arabic": "أمسكرود",
+      "french": "Amskroud"
+    },
+    {
+      "qid": "Q2858000",
+      "tifinagh": "ⴰⵡⵍⵓⵥ",
+      "arabic": "أولوز",
+      "french": "Aoulouz"
+    },
+    {
+      "qid": "Q2859111",
+      "tifinagh": "ⴰⵇⵚⵔⵉ",
+      "arabic": "اقصري",
+      "french": "Aqesri"
+    },
+    {
+      "qid": "Q2875129",
+      "tifinagh": "ⴰⵣⵢⴰⵔ",
+      "arabic": "أزيار",
+      "french": "Aziar"
+    },
+    {
+      "qid": "Q2876468",
+      "tifinagh": "ⴰⵢⵜ ⴱⴰⵀⴰ",
+      "arabic": "آيت باها",
+      "french": "Aït Baha"
+    },
+    {
+      "qid": "Q2876490",
+      "tifinagh": "ⴰⵢⵜ ⵉⵄⵣⵣⴰ",
+      "arabic": "أيت إيعزة",
+      "french": "Aït Iaâza"
+    },
+    {
+      "qid": "Q2877663",
+      "tifinagh": "ⴱⴰⴱ ⴱⵔⵔⴷ",
+      "arabic": "باب برد",
+      "french": "Bab Berred"
+    },
+    {
+      "qid": "Q2929225",
+      "tifinagh": "ⴱⵣⵓ",
+      "arabic": "بزو",
+      "french": "Bzou"
+    },
+    {
+      "qid": "Q3055244",
+      "tifinagh": "ⵙⵓⵙ",
+      "arabic": "سوس",
+      "french": "Souss"
+    },
+    {
+      "qid": "Q3111760",
+      "tifinagh": "ⴳⵯⵔⵔⴰⵎⴰ",
+      "arabic": "كرامة",
+      "french": "Gourrama"
+    },
+    {
+      "qid": "Q3141700",
+      "tifinagh": "ⵃⵔⴰⵔⴰ",
+      "arabic": "حرارة",
+      "french": "Hrara"
+    },
+    {
+      "qid": "Q3147885",
+      "tifinagh": "ⵉⴹⵎⵉⵏ",
+      "arabic": "إضمين",
+      "french": "Idmine"
+    },
+    {
+      "qid": "Q3149573",
+      "tifinagh": "ⵉⵎⵙⵡⴰⵏ",
+      "arabic": "إمسوان",
+      "french": "Imsouane"
+    },
+    {
+      "qid": "Q3156016",
+      "tifinagh": "ⵉⵜⵣⵔ",
+      "arabic": "إيتزر",
+      "french": "Itzer"
+    },
+    {
+      "qid": "Q3215229",
+      "tifinagh": "ⵜⵉⴳⵍⵎⴰⵎⵉⵏ",
+      "arabic": "تڭلمامين",
+      "french": "lac Tiguelmamine"
+    },
+    {
+      "qid": "Q3357934",
+      "tifinagh": "ⵡⴰⵡⵉⵣⵖⵜ",
+      "arabic": "واويزغت",
+      "french": "Ouaouizeght"
+    },
+    {
+      "qid": "Q3358157",
+      "tifinagh": "ⵡⵍⴰⴷ ⴱⴰⵔⵃⵉⵍ",
+      "arabic": "أولاد برحيل",
+      "french": "Oulad Berhil"
+    },
+    {
+      "qid": "Q3358330",
+      "tifinagh": "ⵓⵏⴰⵖⴰ",
+      "arabic": "اوناغا",
+      "french": "Ounagha"
+    },
+    {
+      "qid": "Q3419779",
+      "tifinagh": "ⵔⴰⵙ ⵜⴱⵓⴷⴰ",
+      "arabic": "راس تابودا",
+      "french": "Ras Tabouda"
+    },
+    {
+      "qid": "Q3476951",
+      "tifinagh": "ⵙⴱⵅⴰ ⵟⴰⵃ",
+      "arabic": "سبخة طاح",
+      "french": "Sebkha Tah"
+    },
+    {
+      "qid": "Q3483281",
+      "tifinagh": "ⵙⵉⴷⵉ ⵕⵃⵃⴰⵍ",
+      "arabic": "سيدي رحال",
+      "french": "Sidi Rahhal"
+    },
+    {
+      "qid": "Q3486986",
+      "tifinagh": "ⵙⵎⵉⵎⵓ",
+      "arabic": "سميمو",
+      "french": "Smimou"
+    },
+    {
+      "qid": "Q3513777",
+      "tifinagh": "ⵜⴰⴼⵊⵊⵉⵖⵜ",
+      "arabic": "تافجيغت",
+      "french": "Tafajight"
+    },
+    {
+      "qid": "Q3514885",
+      "tifinagh": "ⵜⴰⵎⵔⵉ",
+      "arabic": "تامري",
+      "french": "Tamri"
+    },
+    {
+      "qid": "Q3514940",
+      "tifinagh": "ⵜⴰⵏⴰⵍⵜ",
+      "arabic": "تانالت",
+      "french": "Tanalt"
+    },
+    {
+      "qid": "Q3515253",
+      "tifinagh": "ⵜⴰⵏⵓⵔⴷⵉ",
+      "arabic": "تنوردي",
+      "french": "Tanourdi"
+    },
+    {
+      "qid": "Q3516517",
+      "tifinagh": "ⵜⴰⵥⵕⵡⴰⵍⵜ",
+      "arabic": "تازروالت",
+      "french": "Tazeroualt"
+    },
+    {
+      "qid": "Q3519548",
+      "tifinagh": "ⵜⴰⵎⵓⵙⵉⴷⴰ",
+      "arabic": "تاموسيدا",
+      "french": "Thamusida"
+    },
+    {
+      "qid": "Q3528320",
+      "tifinagh": "ⵜⵉⵖⵙⵙⴰⵍⵉⵏ",
+      "arabic": "تيغسالين",
+      "french": "Tighassaline"
+    },
+    {
+      "qid": "Q3529288",
+      "tifinagh": "ⵜⵉⵇⵇⵉ",
+      "arabic": "تيقي",
+      "french": "Tiqqi"
+    },
+    {
+      "qid": "Q3529467",
+      "tifinagh": "ⵜⵉⵟⵟ ⵎⵍⵍⵉⵍ",
+      "arabic": "تيط مليل",
+      "french": "Tit Mellil"
+    },
+    {
+      "qid": "Q3532967",
+      "tifinagh": "ⵜⵓⵏⴼⵉⵜ",
+      "arabic": "تونفيت",
+      "french": "Tounfite"
+    },
+    {
+      "qid": "Q3574981",
+      "tifinagh": "ⵣⴰⵢⴷⴰ",
+      "arabic": "زايدة",
+      "french": "Zaïda"
+    },
+    {
+      "qid": "Q3784300",
+      "tifinagh": "ⵙⵉⴷⵉ ⴽⴰⵡⴽⵉ",
+      "arabic": "سيدي كاوكي",
+      "french": "Sidi Kaouki"
+    },
+    {
+      "qid": "Q4418748",
+      "tifinagh": "ⵙⵉⴷⵉ ⴱⵏⵏⵓⵕ",
+      "arabic": "سيدي بنور",
+      "french": "Sidi Bennour"
+    },
+    {
+      "qid": "Q4663230",
+      "tifinagh": "ⴰⴱⴰⴷⵓ",
+      "arabic": "أبادو",
+      "french": "Abadou"
+    },
+    {
+      "qid": "Q4690968",
+      "tifinagh": "ⴰⴳⴰⴷⵉⵔ ⵎⵍⵍⵓⵍ",
+      "arabic": "أڭادير ملول",
+      "french": "Agadir Melloul"
+    },
+    {
+      "qid": "Q4692883",
+      "tifinagh": "ⴰⴳⵍⵉⴼ",
+      "arabic": "أكليف",
+      "french": "Aglif"
+    },
+    {
+      "qid": "Q4699226",
+      "tifinagh": "ⴰⵢⵜ ⵄⴱⴱⴰⵙ",
+      "arabic": "آيت عباس",
+      "french": "Ait Abbas"
+    },
+    {
+      "qid": "Q4699228",
+      "tifinagh": "ⴰⵢⵜ ⵄⵎⵉⵔⴰ",
+      "arabic": "آيت اعميرة",
+      "french": "Ait Amira"
+    },
+    {
+      "qid": "Q4699231",
+      "tifinagh": "ⴰⵢⵜ ⴱⵍⴰⵍ",
+      "arabic": "آيت بلال",
+      "french": "Ait Blal"
+    },
+    {
+      "qid": "Q4699253",
+      "tifinagh": "ⴰⵢⵜ ⵎⴰⵣⵉⵖ",
+      "arabic": "آيت مزيغ",
+      "french": "Ait Mazigh"
+    },
+    {
+      "qid": "Q4699254",
+      "tifinagh": "ⴰⵢⵜ ⵎⵉⵍⴽ",
+      "arabic": "آيت ميلك",
+      "french": "Aït Milk"
+    },
+    {
+      "qid": "Q4699267",
+      "tifinagh": "ⴰⵢⵜ ⵙⵖⵔⵓⵛⵛⵏ",
+      "arabic": "آيت سغروشن",
+      "french": "Aït Seghrouchen"
+    },
+    {
+      "qid": "Q4761709",
+      "tifinagh": "ⴰⵏⵔⴳⵉ",
+      "arabic": "أنركي",
+      "french": "Anergui"
+    },
+    {
+      "qid": "Q4782866",
+      "tifinagh": "ⴰⵇⵕⵎⵓⴷ",
+      "arabic": "أقرمود"
+    },
+    {
+      "qid": "Q4808362",
+      "tifinagh": "ⴰⵙⴰⴽⵯⵉ",
+      "arabic": "أساكي",
+      "french": "Assaki"
+    },
+    {
+      "qid": "Q4832907",
+      "tifinagh": "ⴰⵥⵕⴰⵕ",
+      "arabic": "أزرار",
+      "french": "Azrar"
+    },
+    {
+      "qid": "Q5987152",
+      "tifinagh": "ⵉⴷⴰ ⵓ ⴳⵍⵍⵓⵍ",
+      "arabic": "إدا وكلول",
+      "french": "Ida Ou Guelloul"
+    },
+    {
+      "qid": "Q5987155",
+      "tifinagh": "ⵉⴷⴰ ⵓ ⴽⴰⵣⵣⵓ",
+      "arabic": "إدا وكازو",
+      "french": "Ida Ou Kazzou"
+    },
+    {
+      "qid": "Q5994457",
+      "tifinagh": "ⵉⴳⵉⴷⵉ",
+      "arabic": "إيڭيدي",
+      "french": "Iguidi"
+    },
+    {
+      "qid": "Q6004235",
+      "tifinagh": "ⵉⵎⵍⵉⵍ",
+      "arabic": "إمليل",
+      "french": "Imlil"
+    },
+    {
+      "qid": "Q6395311",
+      "tifinagh": "ⴽⵯⵜⴰⵎⴰ",
+      "arabic": "كتامة",
+      "french": "Ketama"
+    },
+    {
+      "qid": "Q7110423",
+      "tifinagh": "ⴰⵡⵍⴰⴷ ⵙⵄⵉⴷ ⵍⵡⴰⴷ",
+      "arabic": "أولاد سعيد الواد",
+      "french": "Oulad Said L'Oued"
+    },
+    {
+      "qid": "Q7508668",
+      "tifinagh": "ⵙⵉⴷⵉ ⴱⵉⴱⵉ",
+      "arabic": "سيدي بيبي",
+      "french": "Sidi Bibi"
+    },
+    {
+      "qid": "Q7508692",
+      "tifinagh": "ⵙⵉⴷⵉ ⴱⵓⵙⵃⴰⴱ",
+      "arabic": "سيدي بوسحاب",
+      "french": "Sidi Boushab"
+    },
+    {
+      "qid": "Q7508725",
+      "tifinagh": "ⵙⵉⴷⵉ ⵖⴰⵏⵎ",
+      "arabic": "سيدي غانم"
+    },
+    {
+      "qid": "Q7508739",
+      "tifinagh": "ⵙⵉⴷⵉ ⵃⵙⴰⵢⵏ",
+      "arabic": "سيدي احساين",
+      "french": "Sidi Hsaïne"
+    },
+    {
+      "qid": "Q7508752",
+      "tifinagh": "ⵙⵉⴷⵉ ⵍⵄⵕⵓⵙⵉ",
+      "arabic": "سيدي لعروسي",
+      "french": "Sidi Laaroussi"
+    },
+    {
+      "qid": "Q7672893",
+      "tifinagh": "ⵜⴰⴱⴰⵏⵜ",
+      "arabic": "تبانت",
+      "french": "Tabant"
+    },
+    {
+      "qid": "Q7678486",
+      "tifinagh": "ⵜⴰⴽⵓⵛⵜ",
+      "arabic": "تاكوشت",
+      "french": "Takoucht"
+    },
+    {
+      "qid": "Q7681104",
+      "tifinagh": "ⵜⴰⵎⴷⴷⵓⵍⵜ",
+      "arabic": "تامدولت",
+      "french": "Tamdoult"
+    },
+    {
+      "qid": "Q7682288",
+      "tifinagh": "ⵜⴰⵏⴰⵏⵜ",
+      "arabic": "تنانت",
+      "french": "Tanant"
+    },
+    {
+      "qid": "Q7684334",
+      "tifinagh": "ⵜⴰⵡⵏⵣⴰ",
+      "arabic": "تاونزا",
+      "french": "Taounza"
+    },
+    {
+      "qid": "Q7684342",
+      "tifinagh": "ⵜⴰⵡⵢⵢⴰⵍⵜ",
+      "arabic": "تاويالت",
+      "french": "Taouyalte"
+    },
+    {
+      "qid": "Q7685836",
+      "tifinagh": "ⵜⴰⵔⴳⴰⵏⵜ",
+      "arabic": "تاركانت",
+      "french": "Targante"
+    },
+    {
+      "qid": "Q7687659",
+      "tifinagh": "ⵜⴰⵙⵓⵙⴼⵉ",
+      "arabic": "تسوسفي",
+      "french": "Tassousfi"
+    },
+    {
+      "qid": "Q7801293",
+      "tifinagh": "ⵜⵉⴼⵏⵉ",
+      "arabic": "تفني",
+      "french": "Tifni"
+    },
+    {
+      "qid": "Q7802949",
+      "tifinagh": "ⵜⵉⵍⵓⴳⴳⵯⵉⵜ",
+      "arabic": "تيلوكيت",
+      "french": "Tilougguite"
+    },
+    {
+      "qid": "Q7807629",
+      "tifinagh": "ⵜⵉⵎⵓⵎⵉⵍⵜ",
+      "arabic": "تيموليلت",
+      "french": "Timoulilt"
+    },
+    {
+      "qid": "Q7809623",
+      "tifinagh": "ⵜⵉⵙⵔⴰⵙ",
+      "arabic": "تيسراس",
+      "french": "Tisrasse"
+    },
+    {
+      "qid": "Q7810517",
+      "tifinagh": "ⵜⵉⵣⴳⵣⴰⵡⵉⵏ",
+      "arabic": "تزكزاوين",
+      "french": "Tizgzaouine"
+    },
+    {
+      "qid": "Q8064399",
+      "tifinagh": "ⵣⴰⴳⵎⵓⵣⵏ",
+      "arabic": "زڭموزن",
+      "french": "Zagmouzen"
+    },
+    {
+      "qid": "Q11921634",
+      "tifinagh": "ⴼⴰⵣⴰⵣ",
+      "arabic": "فازاز",
+      "french": "Fazaz"
+    },
+    {
+      "qid": "Q12180876",
+      "tifinagh": "ⴰⵏⵎⵥⵉ",
+      "arabic": "أنمزي",
+      "french": "Anemzi"
+    },
+    {
+      "qid": "Q12181179",
+      "tifinagh": "ⵡⵍⴰⴷ ⴷⴰⵃⵃⵓ",
+      "arabic": "أولاد داحو",
+      "french": "Oulad Dahou"
+    },
+    {
+      "qid": "Q12182367",
+      "tifinagh": "ⵉⵖⵣⵔⴰⵏ",
+      "arabic": "إغزران",
+      "french": "Ighzrane"
+    },
+    {
+      "qid": "Q12184310",
+      "tifinagh": "ⵍⴱⴷⵓⵣⴰ",
+      "arabic": "البدوزة"
+    },
+    {
+      "qid": "Q12195133",
+      "tifinagh": "ⵎⵥⵉⵥⵍ",
+      "arabic": "أمزيزل"
+    },
+    {
+      "qid": "Q12195486",
+      "tifinagh": "ⴱⵉⵔ ⵟⵎⵟⵎ",
+      "arabic": "بئر طمطم",
+      "french": "Bir Tam Tam"
+    },
+    {
+      "qid": "Q12202960",
+      "tifinagh": "ⵜⴰⴽⴰⵟ",
+      "arabic": "تكاط"
+    },
+    {
+      "qid": "Q12217738",
+      "tifinagh": "ⵙⵉⴷⵉ ⵡⴰⵙⵙⴰⵢ",
+      "arabic": "سيدي وساي",
+      "french": "Sidi Ouassay"
+    },
+    {
+      "qid": "Q12236295",
+      "tifinagh": "ⴽⵏⴹⵕ ⵙⵉⴷⵉ ⵅⵢⴰⵔ",
+      "arabic": "كندر سيدي خيار",
+      "french": "Kandar Sidi Khiar"
+    },
+    {
+      "qid": "Q12246427",
+      "tifinagh": "ⵎⵉⴱⵍⴰⴷⵏ",
+      "arabic": "ميبلادن",
+      "french": "Mibladen"
+    },
+    {
+      "qid": "Q12247408",
+      "tifinagh": "ⴰⵎⴰⵍ ⵜⵉⵣⵏⵉⵜ",
+      "arabic": "أمل تزنيت",
+      "french": "Amal Tiznit"
+    },
+    {
+      "qid": "Q13420293",
+      "tifinagh": "ⵜⴰⵣⵏⴰⵅⵜ",
+      "arabic": "تازناخت",
+      "french": "Tazenakht"
+    },
+    {
+      "qid": "Q14218995",
+      "tifinagh": "ⵉⵎⵓⵣⵣⴰⵔ ⵉⴷⴰ ⵡⵜⴰⵏⴰⵏ",
+      "arabic": "إموزار إدا وتنان",
+      "french": "Imouzzar Ida Ou Tanane"
+    },
+    {
+      "qid": "Q16825974",
+      "tifinagh": "ⴰⵖⴱⴰⵍⵓ ⴰⵇⵓⵔⴰⵔ",
+      "arabic": "أغبالو أقرار",
+      "french": "Aghbalou Aqorar"
+    },
+    {
+      "qid": "Q16826207",
+      "tifinagh": "ⴰⴳⵍⵎⴰⵎ ⴰⵣⴳⵣⴰ",
+      "arabic": "أڭلمام أزڭزا",
+      "french": "Aguelmam Azegza"
+    },
+    {
+      "qid": "Q16826379",
+      "tifinagh": "ⴰⵢⵜ ⴱⵏ ⵢⵄⵇⵓⴱ",
+      "arabic": "آيت بن يعقوب",
+      "french": "Ait Ben Yacoub"
+    },
+    {
+      "qid": "Q16826433",
+      "tifinagh": "ⴰⵢⵜ ⵣⵉⵏⴱ",
+      "arabic": "آيت زينب",
+      "french": "Aït Zineb"
+    },
+    {
+      "qid": "Q16827966",
+      "tifinagh": "ⴰⵎⵕⵚⵉⴷ",
+      "arabic": "أمرصيد",
+      "french": "Amersid"
+    },
+    {
+      "qid": "Q17005873",
+      "tifinagh": "ⵉⵎⴳⵔⴰⴷ",
+      "arabic": "إمكراد",
+      "french": "Imgrade"
+    },
+    {
+      "qid": "Q17013241",
+      "tifinagh": "ⵡⵍⴰⴷ ⵎⴽⵓⴷⵓ",
+      "arabic": "أولاد مكودو",
+      "french": "Oulad Mkoudou"
+    },
+    {
+      "qid": "Q17019366",
+      "tifinagh": "ⵙⵉⴷⵉ ⵢⵓⵙⴼ ⴱⵏ ⵃⵎⴷ",
+      "arabic": "سيدي يوسف بن أحمد",
+      "french": "Sidi Youssef Ben Ahmed"
+    },
+    {
+      "qid": "Q20389498",
+      "tifinagh": "ⵙⵉⴷⵉ ⵃⵎⴰⴷ ⵓ ⵃⴰⵎⴷ",
+      "arabic": "سيدي أحمد أوحامد",
+      "french": "Sidi Hmad Ou Hamed"
+    },
+    {
+      "qid": "Q20389544",
+      "tifinagh": "ⵙⵉⴷⵉ ⵍⵊⴰⵣⵓⵍⵉ",
+      "arabic": "سيدي الجزولي",
+      "french": "Sidi El Jazouli"
+    },
+    {
+      "qid": "Q20389756",
+      "tifinagh": "ⵙⵉⴷⵉ ⵜⵉⵊⵉ",
+      "arabic": "سيدي تيجي"
+    },
+    {
+      "qid": "Q20391836",
+      "tifinagh": "ⵓⵜⵜⵔⴱⴰⵜ",
+      "arabic": "أوتربات",
+      "french": "Outerbat"
+    },
+    {
+      "qid": "Q20395392",
+      "tifinagh": "ⵄⵉⵏ ⵜⵉⵎⴳⵏⵏⴰⵢ",
+      "arabic": "عين تمكناي",
+      "french": "Ain Timguenai"
+    },
+    {
+      "qid": "Q20398353",
+      "tifinagh": "ⵜⵉⴷⵣⵉ",
+      "arabic": "تدزي",
+      "french": "Tidzi"
+    },
+    {
+      "qid": "Q20399373",
+      "tifinagh": "ⵎⵟⵕⵏⴰⵖⴰ",
+      "arabic": "امطرناغة",
+      "french": "Mtarnagha"
+    },
+    {
+      "qid": "Q20405984",
+      "tifinagh": "ⴹⴰⵕ ⵍⵃⵎⵕⴰ",
+      "arabic": "دار الحمراء",
+      "french": "Dar El Hamra"
+    },
+    {
+      "qid": "Q20406159",
+      "tifinagh": "ⵜⵉⴽⵉⵡⵉⵏ",
+      "arabic": "تيكوين",
+      "french": "Tikiouine"
+    },
+    {
+      "qid": "Q20418480",
+      "tifinagh": "ⵜⴰⵀⵍⵡⴰⵏⵜ",
+      "arabic": "تاهلوانت",
+      "french": "Tahelouante"
+    },
+    {
+      "qid": "Q20421355",
+      "tifinagh": "ⵚⵄⴰⴷⵍⴰ",
+      "arabic": "اصعادلا",
+      "french": "Saadla"
+    },
+    {
+      "qid": "Q20422283",
+      "tifinagh": "ⵎⵊⵊⵉ",
+      "arabic": "مجي",
+      "french": "Mejji"
+    },
+    {
+      "qid": "Q20422693",
+      "tifinagh": "ⵎⵙⴽⴰⵍⴰ",
+      "arabic": "مسكالة"
+    },
+    {
+      "qid": "Q20423107",
+      "tifinagh": "ⵎⵓⵍ ⵍⴱⵔⴳⵉ",
+      "arabic": "مول البركي",
+      "french": "Moul El Bergui"
+    },
+    {
+      "qid": "Q22934475",
+      "tifinagh": "ⵡⴰⵔⴳⴳⵉ",
+      "arabic": "واركي",
+      "french": "Ouargui"
+    },
+    {
+      "qid": "Q23011118",
+      "tifinagh": "ⴰⵖⴱⴰⵍ",
+      "arabic": "أغبال",
+      "french": "Aghbal"
+    },
+    {
+      "qid": "Q25454432",
+      "tifinagh": "ⵜⴰⵙⵍⵟⴰⵏⵜ",
+      "arabic": "تسلطانت",
+      "french": "Tassoultante"
+    },
+    {
+      "qid": "Q27533449",
+      "tifinagh": "ⴰⵢⵢⵉⵔ",
+      "arabic": "أيير",
+      "french": "Ayir"
+    },
+    {
+      "qid": "Q27538808",
+      "tifinagh": "ⴰⵎⵓⴳⴳⵔ",
+      "arabic": "أموڭر",
+      "french": "Amouguer"
+    },
+    {
+      "qid": "Q28879764",
+      "tifinagh": "ⴰⵎⵙⵍⴰⵏ",
+      "arabic": "أمسلان"
+    },
+    {
+      "qid": "Q28881140",
+      "tifinagh": "ⴰⵢⵜ ⵉⵎⵉ",
+      "arabic": "آيت إيمي"
+    },
+    {
+      "qid": "Q28881619",
+      "tifinagh": "ⴰⴳⴰⴷⵉⵔ ⴱⵓⵄⵛⵉⴱⴰ",
+      "arabic": "أكادير بوعشيبة",
+      "french": "Agadir Bouachiba"
+    },
+    {
+      "qid": "Q28897262",
+      "tifinagh": "ⵉⵎⴳⵓⵏⵏ",
+      "arabic": "إمكون"
+    },
+    {
+      "qid": "Q28900491",
+      "tifinagh": "ⵍⴼⵕⴼⴰⵕ",
+      "arabic": "الفرفار"
+    },
+    {
+      "qid": "Q28903371",
+      "tifinagh": "ⵜⴰⵎⵙⵓⵍⵜ",
+      "arabic": "تامسولت",
+      "french": "Tamsoult"
+    },
+    {
+      "qid": "Q28904767",
+      "tifinagh": "ⵜⵉⵏⴳⴰⵔⴼ",
+      "arabic": "تنكارف"
+    },
+    {
+      "qid": "Q28904784",
+      "tifinagh": "ⵜⴰⵏⵓⵎⵉ",
+      "arabic": "تنومي"
+    },
+    {
+      "qid": "Q63107977",
+      "tifinagh": "ⴰⴳⴰⴷⵉⵔ ⵉⵎⵛⴳⵉⴳⵉⵍⵏ",
+      "arabic": "أكادير إيمشكيكلن",
+      "french": "Agadir Imchguiguilne"
+    },
+    {
+      "qid": "Q109256330",
+      "tifinagh": "ⵜⵉⵏⴼⴰⵜ",
+      "arabic": "تنفات",
+      "french": "Tinfat"
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [18, 20, 22]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm test -- --ci
+      - run: npm run build
+      - name: CLI smoke test
+        run: |
+          out=$(node dist/cli/bin.js --text "ⵜⴰⵎⴰⵣⵉⵖⵜ")
+          test "$out" = "تامازيغت"
+          printf 'ⴰⵣⵓⵍ\n\nⴰⵎⵖⴰⵔ' | node dist/cli/bin.js > out.txt
+          printf 'ازول\n\nامغار' | cmp - out.txt
+      - name: Package exports
+        run: |
+          node -e "const m=require('./dist/index.js'); if (m.toArabic('ⴰⵣⵓⵍ')!=='ازول') process.exit(1)"
+          node --input-type=module -e "import m from './dist/index.js'; if (m.convert('ⴰⵎⵖⴰⵔ',{to:'arabic'}).output!=='امغار') process.exit(1)"
+          npm pack --dry-run
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Python bridge
+        run: python -m unittest discover -s python/tests -v
+      - name: Evaluation (shipped datasets)
+        run: node benchmarks/evaluate.mjs

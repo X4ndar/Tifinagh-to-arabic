@@ -1,0 +1,10 @@
+{
+  "description": "Worked examples printed in Albane, Slimani & Kheddouci (2025), Figures 3–5. Algerian (Kabyle) conventions: Rule R1 turns full vowels after a single consonant into (unprinted) diacritics, ⴳ is ڨ, ⵝ is ث, initial a is أ.",
+  "source": "Revue Iles d Imesli 17(1), 2025, pp. 97 — https://asjp.cerist.dz/en/downArticle/397/17/1/284878",
+  "sourceType": "published paper; different (Algerian) convention — used only to document convention differences, never as gold for Moroccan output",
+  "entries": [
+    { "tifinagh": "ⴼⵉⵃⴻⵍ", "arabic": "فحل", "latin": "fiḥel", "figure": 3, "note": "Text says kasra on ف and sukun on ل; the printed figure shows no diacritics." },
+    { "tifinagh": "ⵝⴰⴱⴱⵓⵔⵝ", "arabic": "ثبورث", "latin": "ṯabburṯ", "figure": 4, "note": "Text says ⴱⴱ → ب with shadda; the printed figure shows no shadda." },
+    { "tifinagh": "ⴰⵔⴳⴰⵣ", "arabic": "أرڨاز", "latin": "argaz", "figure": 5 }
+  ]
+}

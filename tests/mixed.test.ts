@@ -1,0 +1,100 @@
+import { convert, toArabic, transliterate } from '../src/index'
+import { BIDI_CONTROLS_RE } from './helpers'
+
+describe('mixed-script text', () => {
+  test('specification example', () => {
+    expect(toArabic('ⴰⵣⵓⵍ, bonjour! 2026 ⵜⴰⵎⴰⵣⵉⵖⵜ')).toBe('ازول, bonjour! 2026 تامازيغت')
+    expect(convert('ⴰⵣⵓⵍ, bonjour! 2026 ⵜⴰⵎⴰⵣⵉⵖⵜ', { to: 'arabic' }).from).toBe('tifinagh')
+  })
+
+  test('Arabic, Latin, French, digits and emoji are preserved byte-for-byte', () => {
+    const others = 'مرحبا بكم — Ça va? 3,14 % 🇲🇦 👍🏽 𝔸𝔹 ٠١٢'
+    expect(toArabic(others)).toBe(others)
+    expect(toArabic(`${others} ⴰⵎⴰⵏ ${others}`)).toBe(`${others} امان ${others}`)
+  })
+
+  test('Tifinagh directly adjacent to other scripts', () => {
+    expect(toArabic('(ⴰⵣⵓⵍ)')).toBe('(ازول)')
+    expect(toArabic('abcⴰⵣⵓⵍ123')).toBe('abcازول123')
+    expect(toArabic('«ⵜⴰⵎⴰⵣⵉⵖⵜ»')).toBe('«تامازيغت»')
+    expect(toArabic('ⴰⵣⵓⵍ😀ⴰⵣⵓⵍ')).toBe('ازول😀ازول')
+  })
+
+  test('whitespace, tabs, CRLF, blank lines and paragraphs are preserved', () => {
+    const input = '  ⴰⵣⵓⵍ\t\tⴰⵎⴰⵏ  \r\n\r\n\nⵜⴰⵎⵓⵔⵜ ⵉⵖⵔⵎ\n'
+    expect(toArabic(input)).toBe('  ازول\t\tامان  \r\n\r\n\nتامورت ئغرم\n')
+  })
+
+  test('URLs and e-mail addresses are protected (even with Tifinagh inside)', () => {
+    expect(toArabic('ⴰⵣⵓⵍ https://ⵜⴰⵎⴰ.ma/ⴰⵣⵓⵍ?q=1 ⴰⵣⵓⵍ')).toBe('ازول https://ⵜⴰⵎⴰ.ma/ⴰⵣⵓⵍ?q=1 ازول')
+    expect(toArabic('www.ⴰⵣⵓⵍ.ma')).toBe('www.ⴰⵣⵓⵍ.ma')
+    expect(toArabic('ⵙⵙⵓⴼⵖ:http://x.y/ⴰ')).toBe('سّوفغ:http://x.y/ⴰ')
+    expect(toArabic('mail ⴰⵣⵓⵍ@ircam.ma ok')).toBe('mail ⴰⵣⵓⵍ@ircam.ma ok')
+    expect(toArabic('https://ⴰ', { arabic: { protectUrls: false } })).toBe('https://ا')
+  })
+
+  test('Markdown code spans and fenced blocks are protected', () => {
+    expect(toArabic('ⴰⵣⵓⵍ `ⴰⵣⵓⵍ` **ⴰⵣⵓⵍ**')).toBe('ازول `ⴰⵣⵓⵍ` **ازول**')
+    expect(toArabic('a ``x ` ⴰ`` ⴰ')).toBe('a ``x ` ⴰ`` ا')
+    const md = '# ⴰⵣⵓⵍ\n```js\nconst s = "ⴰⵣⵓⵍ"\n```\n- ⴰⵎⴰⵏ\n~~~\nⴰ\n~~~\nⵓ'
+    expect(toArabic(md)).toBe('# ازول\n```js\nconst s = "ⴰⵣⵓⵍ"\n```\n- امان\n~~~\nⴰ\n~~~\nؤ')
+    expect(toArabic('`ⴰ', {})).toBe('`ا') // unmatched backtick is not code
+    expect(toArabic('`ⴰ`', { arabic: { protectCode: false } })).toBe('`ا`')
+  })
+
+  test('Arabic punctuation option converts only punctuation following Tifinagh', () => {
+    const o = { arabic: { punctuation: 'arabic' as const } }
+    expect(toArabic('ⴰⵣⵓⵍ, ⵎⴰⵏⵣⴰⴽⵉⵏ? Hello, world; 3,5', o)).toBe('ازول، مانزاكين؟ Hello, world; 3,5')
+    expect(toArabic('ⴰⵣⵓⵍ ; ⴰⵣⵓⵍ', o)).toBe('ازول ؛ ازول')
+  })
+
+  test('no bidi control characters are introduced', () => {
+    for (const s of ['ⴰⵣⵓⵍ abc', 'abc ⴰⵣⵓⵍ 123', 'ⵜⴰⵎⴰⵣⵉⵖⵜ (2026)']) {
+      expect(toArabic(s)).not.toMatch(BIDI_CONTROLS_RE)
+    }
+  })
+
+  test('bidi controls outside words are preserved; inside a word they are removed with a diagnostic', () => {
+    expect(toArabic('⁧ⴰⵣⵓⵍ⁩')).toBe('⁧ازول⁩')
+    expect(toArabic('ⴰⵣⵓⵍ‏')).toBe('ازول‏')
+    const r = transliterate('ⴰⵣ‏ⵓⵍ')
+    expect(r.output).toBe('ازول')
+    expect(r.warnings).toMatchObject([{ code: 'FORMAT_CHAR_REMOVED', position: 2, source: '‏' }])
+  })
+
+  test('zero-width characters and the Tifinagh joiner inside words', () => {
+    expect(toArabic('ⴰ‍ⵣⵓⵍ')).toBe('ازول')
+    expect(toArabic('ⴰⵣ⵿ⵣ')).toBe('ازّ')
+    expect(toArabic('ⴰ­ⵣⵓⵍ')).toBe('ازول')
+  })
+
+  test('warning positions refer to the original input', () => {
+    const input = 'abc ⵜⴰⵯ 😀 ⴰⵞ'
+    const r = transliterate(input)
+    for (const w of r.warnings) expect(input.slice(w.position, w.position + (w.length ?? 0))).toBe(w.source)
+  })
+})
+
+describe('convert() with Arabic target', () => {
+  test('rich result', () => {
+    const r = convert('ⵜⴰⵎⴰⵣⵉⵖⵜ', { from: 'tifinagh', to: 'arabic', profile: 'readable' })
+    expect(r).toMatchObject({ output: 'تامازيغت', from: 'tifinagh', to: 'arabic', profile: 'readable', warnings: [] })
+  })
+
+  test('auto-detects Tifinagh even when other scripts dominate', () => {
+    const r = convert('Hello everyone, ⴰⵣⵓⵍ', { to: 'arabic' })
+    expect(r.from).toBe('tifinagh')
+    expect(r.output).toBe('Hello everyone, ازول')
+  })
+
+  test('latin → arabic goes through Tifinagh', () => {
+    expect(convert('tamazight', { from: 'latin', to: 'arabic' }).output).toBe('تامازيغت')
+    expect(convert('ifassn', { from: 'latin', to: 'arabic' }).output).toBe('ئفاسّن')
+  })
+
+  test('alternatives and trace are passed through', () => {
+    const r = convert('ⴰⴳⵔ', { to: 'arabic', alternatives: true, trace: true })
+    expect(r.alternatives).toHaveLength(1)
+    expect(r.trace!.length).toBe(3)
+  })
+})

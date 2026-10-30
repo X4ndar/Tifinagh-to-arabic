@@ -1,0 +1,35 @@
+{
+  "node": "v22.22.0",
+  "inputMiB": 20,
+  "tifinaghWords": 931402,
+  "profiles": {
+    "readable": {
+      "seconds": 2.8,
+      "MiBperSec": 7.1,
+      "wordsPerSec": 332520,
+      "outputChars": 8629036
+    },
+    "ircam": {
+      "seconds": 2.79,
+      "MiBperSec": 7.2,
+      "wordsPerSec": 333866,
+      "outputChars": 8969723
+    },
+    "phonetic": {
+      "seconds": 3.67,
+      "MiBperSec": 5.4,
+      "wordsPerSec": 253523,
+      "outputChars": 9198289
+    }
+  },
+  "shortInputLatencyMicroseconds": {
+    "p50": 1.6,
+    "p99": 6.9
+  },
+  "cliStreaming": {
+    "seconds": 6.28,
+    "MiBperSec": 3.2,
+    "outputMiB": 14.3
+  },
+  "memoryRssMiB": 718
+}

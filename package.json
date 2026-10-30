@@ -1,0 +1,88 @@
+{
+  "name": "amazigh-transliterate",
+  "version": "0.2.0",
+  "description": "Rule-based, linguistically documented Tifinagh → Arabic-script transliteration for Moroccan Amazigh (Tamazight), plus Tifinagh ↔ Latin conversion. Fork of tifinagh-convert.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "amazigh-transliterate": "dist/cli/bin.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "LICENSE.upstream",
+    "NOTICE.md",
+    "python/amazigh_transliterate.py",
+    "docs"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "npm run clean && tsc -p tsconfig.build.json && node scripts/postbuild.mjs && npm run build:browser",
+    "build:browser": "esbuild src/browser.ts --bundle --format=iife --global-name=AmazighTransliterate --target=es2019 --minify --outfile=dist/browser/amazigh-transliterate.min.js",
+    "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "eslint .",
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "evaluate": "node benchmarks/evaluate.mjs",
+    "bench": "node benchmarks/performance.mjs",
+    "gold:build": "node benchmarks/scripts/build-gold.mjs",
+    "prepublishOnly": "npm run build && npm test",
+    "prepare": "npm run build"
+  },
+  "keywords": [
+    "tifinagh",
+    "amazigh",
+    "tamazight",
+    "berber",
+    "arabic",
+    "latin",
+    "script",
+    "transliteration",
+    "ircam",
+    "morocco",
+    "unicode"
+  ],
+  "author": "Hamza BOUQSSIM (original tifinagh-convert); amazigh-transliterate contributors",
+  "license": "MIT",
+  "devDependencies": {
+    "@eslint/js": "^9.17.0",
+    "@types/jest": "^29.5.12",
+    "@types/node": "^20.11.5",
+    "esbuild": "^0.24.2",
+    "eslint": "^9.17.0",
+    "fast-check": "^3.23.2",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.2",
+    "typescript": "^5.3.3",
+    "typescript-eslint": "^8.18.2"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "testMatch": [
+      "**/tests/**/*.test.ts"
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.ts",
+      "!src/cli/bin.ts",
+      "!src/browser.ts"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/x4ndar/tifinagh-to-arabic.git"
+  },
+  "homepage": "https://github.com/x4ndar/tifinagh-to-arabic#readme"
+}

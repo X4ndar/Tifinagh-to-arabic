@@ -1,0 +1,1757 @@
+{
+  "results": {
+    "moroccan": [
+      {
+        "system": "baseline: naive Table I (1:1)",
+        "n": 7,
+        "exact": 5,
+        "exactRate": 0.7142857142857143,
+        "altMatchRate": 0.7142857142857143,
+        "skeletonRate": 0.7142857142857143,
+        "cer": 0.10810810810810811,
+        "byTag": {
+          "initial vowel": {
+            "n": 5,
+            "exact": 3
+          },
+          "vowel i/u": {
+            "n": 5,
+            "exact": 3
+          },
+          "gemination": {
+            "n": 1,
+            "exact": 0
+          },
+          "semivowel": {
+            "n": 1,
+            "exact": 1
+          }
+        },
+        "errors": {
+          "other (consonant or lexical difference)": 2
+        },
+        "examples": [
+          {
+            "tifinagh": "ⵉⴼⴰⵙⵙⵏ",
+            "reference": "ئفاسّن",
+            "predicted": "يفاسسن",
+            "category": "other (consonant or lexical difference)"
+          },
+          {
+            "tifinagh": "ⵓⴽⵙⵓⵎ",
+            "reference": "ؤكسوم",
+            "predicted": "وکسوم",
+            "category": "other (consonant or lexical difference)"
+          }
+        ]
+      },
+      {
+        "system": "baseline: dictionary-style 1:1 map",
+        "n": 7,
+        "exact": 5,
+        "exactRate": 0.7142857142857143,
+        "altMatchRate": 0.7142857142857143,
+        "skeletonRate": 0.7142857142857143,
+        "cer": 0.08108108108108109,
+        "byTag": {
+          "initial vowel": {
+            "n": 5,
+            "exact": 3
+          },
+          "vowel i/u": {
+            "n": 5,
+            "exact": 3
+          },
+          "gemination": {
+            "n": 1,
+            "exact": 0
+          },
+          "semivowel": {
+            "n": 1,
+            "exact": 1
+          }
+        },
+        "errors": {
+          "other (consonant or lexical difference)": 2
+        },
+        "examples": [
+          {
+            "tifinagh": "ⵉⴼⴰⵙⵙⵏ",
+            "reference": "ئفاسّن",
+            "predicted": "يفاسسن",
+            "category": "other (consonant or lexical difference)"
+          },
+          {
+            "tifinagh": "ⵓⴽⵙⵓⵎ",
+            "reference": "ؤكسوم",
+            "predicted": "وكسوم",
+            "category": "other (consonant or lexical difference)"
+          }
+        ]
+      },
+      {
+        "system": "ours: readable (default)",
+        "n": 7,
+        "exact": 7,
+        "exactRate": 1,
+        "altMatchRate": 1,
+        "skeletonRate": 1,
+        "cer": 0,
+        "byTag": {
+          "initial vowel": {
+            "n": 5,
+            "exact": 5
+          },
+          "vowel i/u": {
+            "n": 5,
+            "exact": 5
+          },
+          "gemination": {
+            "n": 1,
+            "exact": 1
+          },
+          "semivowel": {
+            "n": 1,
+            "exact": 1
+          }
+        },
+        "errors": {},
+        "examples": []
+      },
+      {
+        "system": "ours: ircam",
+        "n": 7,
+        "exact": 5,
+        "exactRate": 0.7142857142857143,
+        "altMatchRate": 0.8571428571428571,
+        "skeletonRate": 0.8571428571428571,
+        "cer": 0.05405405405405406,
+        "byTag": {
+          "initial vowel": {
+            "n": 5,
+            "exact": 4
+          },
+          "vowel i/u": {
+            "n": 5,
+            "exact": 4
+          },
+          "gemination": {
+            "n": 1,
+            "exact": 0
+          },
+          "semivowel": {
+            "n": 1,
+            "exact": 0
+          }
+        },
+        "errors": {
+          "other (consonant or lexical difference)": 1,
+          "diacritics (shadda / damma / kasra)": 1
+        },
+        "examples": [
+          {
+            "tifinagh": "ⵉⴼⴰⵙⵙⵏ",
+            "reference": "ئفاسّن",
+            "predicted": "ئفاسسن",
+            "category": "other (consonant or lexical difference)"
+          },
+          {
+            "tifinagh": "ⴱⵔⴰⵢⵔ",
+            "reference": "براير",
+            "predicted": "برايٛر",
+            "category": "diacritics (shadda / damma / kasra)"
+          }
+        ]
+      },
+      {
+        "system": "ours: phonetic",
+        "n": 7,
+        "exact": 6,
+        "exactRate": 0.8571428571428571,
+        "altMatchRate": 1,
+        "skeletonRate": 1,
+        "cer": 0.02702702702702703,
+        "byTag": {
+          "initial vowel": {
+            "n": 5,
+            "exact": 5
+          },
+          "vowel i/u": {
+            "n": 5,
+            "exact": 5
+          },
+          "gemination": {
+            "n": 1,
+            "exact": 1
+          },
+          "semivowel": {
+            "n": 1,
+            "exact": 0
+          }
+        },
+        "errors": {
+          "diacritics (shadda / damma / kasra)": 1
+        },
+        "examples": [
+          {
+            "tifinagh": "ⴱⵔⴰⵢⵔ",
+            "reference": "براير",
+            "predicted": "برايٛر",
+            "category": "diacritics (shadda / damma / kasra)"
+          }
+        ]
+      },
+      {
+        "system": "ablation: readable − positional rules",
+        "n": 7,
+        "exact": 5,
+        "exactRate": 0.7142857142857143,
+        "altMatchRate": 0.7142857142857143,
+        "skeletonRate": 0.7142857142857143,
+        "cer": 0.10810810810810811,
+        "byTag": {
+          "initial vowel": {
+            "n": 5,
+            "exact": 3
+          },
+          "vowel i/u": {
+            "n": 5,
+            "exact": 3
+          },
+          "gemination": {
+            "n": 1,
+            "exact": 0
+          },
+          "semivowel": {
+            "n": 1,
+            "exact": 1
+          }
+        },
+        "errors": {
+          "word-initial vowel spelling (ئ ؤ أ إ آ ا)": 2
+        },
+        "examples": [
+          {
+            "tifinagh": "ⵉⴼⴰⵙⵙⵏ",
+            "reference": "ئفاسّن",
+            "predicted": "ايفاسّن",
+            "category": "word-initial vowel spelling (ئ ؤ أ إ آ ا)"
+          },
+          {
+            "tifinagh": "ⵓⴽⵙⵓⵎ",
+            "reference": "ؤكسوم",
+            "predicted": "اوكسوم",
+            "category": "word-initial vowel spelling (ئ ؤ أ إ آ ا)"
+          }
+        ]
+      },
+      {
+        "system": "ablation: readable − gemination rule",
+        "n": 7,
+        "exact": 6,
+        "exactRate": 0.8571428571428571,
+        "altMatchRate": 0.8571428571428571,
+        "skeletonRate": 0.8571428571428571,
+        "cer": 0.02702702702702703,
+        "byTag": {
+          "initial vowel": {
+            "n": 5,
+            "exact": 4
+          },
+          "vowel i/u": {
+            "n": 5,
+            "exact": 4
+          },
+          "gemination": {
+            "n": 1,
+            "exact": 0
+          },
+          "semivowel": {
+            "n": 1,
+            "exact": 1
+          }
+        },
+        "errors": {
+          "other (consonant or lexical difference)": 1
+        },
+        "examples": [
+          {
+            "tifinagh": "ⵉⴼⴰⵙⵙⵏ",
+            "reference": "ئفاسّن",
+            "predicted": "ئفاسسن",
+            "category": "other (consonant or lexical difference)"
+          }
+        ]
+      },
+      {
+        "system": "ablation: readable − all context",
+        "n": 7,
+        "exact": 5,
+        "exactRate": 0.7142857142857143,
+        "altMatchRate": 0.7142857142857143,
+        "skeletonRate": 0.7142857142857143,
+        "cer": 0.13513513513513514,
+        "byTag": {
+          "initial vowel": {
+            "n": 5,
+            "exact": 3
+          },
+          "vowel i/u": {
+            "n": 5,
+            "exact": 3
+          },
+          "gemination": {
+            "n": 1,
+            "exact": 0
+          },
+          "semivowel": {
+            "n": 1,
+            "exact": 1
+          }
+        },
+        "errors": {
+          "other (consonant or lexical difference)": 1,
+          "word-initial vowel spelling (ئ ؤ أ إ آ ا)": 1
+        },
+        "examples": [
+          {
+            "tifinagh": "ⵉⴼⴰⵙⵙⵏ",
+            "reference": "ئفاسّن",
+            "predicted": "ايفاسسن",
+            "category": "other (consonant or lexical difference)"
+          },
+          {
+            "tifinagh": "ⵓⴽⵙⵓⵎ",
+            "reference": "ؤكسوم",
+            "predicted": "اوكسوم",
+            "category": "word-initial vowel spelling (ئ ؤ أ إ آ ا)"
+          }
+        ]
+      }
+    ],
+    "toponyms": [
+      {
+        "system": "baseline: naive Table I (1:1)",
+        "n": 192,
+        "exact": 34,
+        "exactRate": 0.17708333333333334,
+        "altMatchRate": 0.17708333333333334,
+        "skeletonRate": 0.17708333333333334,
+        "cer": 0.2143928035982009,
+        "byTag": {
+          "vowel i/u": {
+            "n": 135,
+            "exact": 22
+          },
+          "semivowel": {
+            "n": 56,
+            "exact": 6
+          },
+          "gemination": {
+            "n": 36,
+            "exact": 0
+          },
+          "emphatic": {
+            "n": 34,
+            "exact": 5
+          },
+          "initial vowel": {
+            "n": 72,
+            "exact": 1
+          },
+          "g": {
+            "n": 27,
+            "exact": 0
+          },
+          "labialization": {
+            "n": 5,
+            "exact": 0
+          }
+        },
+        "errors": {
+          "other (consonant or lexical difference)": 87,
+          "vowel letters omitted or added (lexicalized spelling)": 32,
+          "word-initial vowel spelling (ئ ؤ أ إ آ ا)": 28,
+          "final -a as ة / ى": 8,
+          "letter choice for g/ẓ/ṛ (ڭ گ ك · ژ ظ ز · ڔ ر)": 3
+        },
+        "examples": [
+          {
+            "tifinagh": "ⵍⵎⵖⵔⵉⴱ",
+            "reference": "المغرب",
+            "predicted": "لمغريب",
+            "category": "other (consonant or lexical difference)"
+          },
+          {
+            "tifinagh": "ⵍⵄⵢⵓⵏ",
+            "reference": "العيون",
+            "predicted": "لعيون",
+            "category": "other (consonant or lexical difference)"
+          },
+          {
+            "tifinagh": "ⵎⵕⵕⴰⴽⵛ",
+            "reference": "مراكش",
+            "predicted": "مرراکش",
+            "category": "other (consonant or lexical difference)"
+          },
+          {
+            "tifinagh": "ⵟⴰⵏⵊⴰ",
+            "reference": "طنجة",
+            "predicted": "طانجا",
+            "category": "vowel letters omitted or added (lexicalized spelling)"
+          },
+          {
+            "tifinagh": "ⴰⴳⴰⴷⵉⵔ",
+            "reference": "أكادير",
+            "predicted": "اگادير",
+            "category": "word-initial vowel spelling (ئ ؤ أ إ آ ا)"
+          },
+          {
+            "tifinagh": "ⵎⴽⵏⴰⵙ",
+            "reference": "مكناس",
+            "predicted": "مکناس",
+            "category": "other (consonant or lexical difference)"
+          },
+          {
+            "tifinagh": "ⴰⵙⴼⵉ",
+            "reference": "آسفي",
+            "predicted": "اسفي",
+            "category": "word-initial vowel spelling (ئ ؤ أ إ آ ا)"
+          },
+          {
+            "tifinagh": "ⴰⵣⵖⴰⵏⵖⴰⵏ",
+            "reference": "أزغنغان",
+            "predicted": "ازغانغان",
+            "category": "vowel letters omitted or added (lexicalized spelling)"
+          },
+          {
+            "tifinagh": "ⵜⵉⵟⵟⴰⵡⵉⵏ",
+            "reference": "تطوان",
+            "predicted": "تيططاوين",
+            "category": "other (consonant or lexical difference)"
+          },
+          {
+            "tifinagh": "ⵡⵓⵊⴷⴰ",
+            "reference": "وجدة",
+            "predicted": "ووجدا",
+            "category": "vowel letters omitted or added (lexicalized spelling)"
+          },
+          {
+            "tifinagh": "ⴰⴷⵉⵔⵀⴰⵎ ⴰⵎⵖⵔⵉⴱⵉ",
+            "reference": "درهم مغربي",
+            "predicted": "اديرهام امغريبي",
+            "category": "other (consonant or lexical difference)"
+          },
+          {
+            "tifinagh": "ⴰⵢⵜ ⵓⵔⵉⵔ",
+            "reference": "آيت أورير",
+            "predicted": "ايت ورير",
+            "category": "other (consonant or lexical difference)"
+          }
+        ]
+      },
+      {
+        "system": "baseline: dictionary-style 1:1 map",
+        "n": 192,
+        "exact": 39,
+        "exactRate": 0.203125,
+        "altMatchRate": 0.203125,
+        "skeletonRate": 0.203125,
+        "cer": 0.1956521739130435,
+        "byTag": {
+          "vowel i/u": {
+            "n": 135,
+            "exact": 25
+          },
+          "semivowel": {
+            "n": 56,
+            "exact": 7
+          },
+          "gemination": {
+            "n": 36,
+            "exact": 0
+          },
+          "emphatic": {
+            "n": 34,
+            "exact": 5
+          },
+          "initial vowel": {
+            "n": 72,
+            "exact": 1
+          },
+          "g": {
+            "n": 27,
+            "exact": 0
+          },
+          "labialization": {
+            "n": 5,
+            "exact": 0
+          }
+        },
+        "errors": {
+          "other (consonant or lexical difference)": 77,
+          "vowel letters omitted or added (lexicalized spelling)": 34,
+          "word-initial vowel spelling (ئ ؤ أ إ آ ا)": 30,
+          "final -a as ة / ى": 9,
+          "letter choice for g/ẓ/ṛ (ڭ گ ك · ژ ظ ز · ڔ ر)": 3
+        },
+        "examples": [
+          {
+            "tifinagh": "ⵍⵎⵖⵔⵉⴱ",
+            "reference": "المغرب",
+            "predicted": "لمغريب",
+            "category": "other (consonant or lexical difference)"
+          },
+          {
+            "tifinagh": "ⵍⵄⵢⵓⵏ",
+            "reference": "العيون",
+            "predicted": "لعيون",
+            "category": "other (consonant or lexical difference)"
+          },
+          {
+            "tifinagh": "ⵎⵕⵕⴰⴽⵛ",
+            "reference": "مراكش",
+            "predicted": "مرراكش",
+            "category": "other (consonant or lexical difference)"
+          },
+          {
+            "tifinagh": "ⵟⴰⵏⵊⴰ",
+            "reference": "طنجة",
+            "predicted": "طانجا",
+            "category": "vowel letters omitted or added (lexicalized spelling)"
+          },
+          {
+            "tifinagh": "ⴰⴳⴰⴷⵉⵔ",
+            "reference": "أكادير",
+            "predicted": "اڭادير",
+            "category": "word-initial vowel spelling (ئ ؤ أ إ آ ا)"
+          },
+          {
+            "tifinagh": "ⴰⵙⴼⵉ",
+            "reference": "آسفي",
+            "predicted": "اسفي",
+            "category": "word-initial vowel spelling (ئ ؤ أ إ آ ا)"
+          },
+          {
+            "tifinagh": "ⴰⵣⵖⴰⵏⵖⴰⵏ",
+            "reference": "أزغنغان",
+            "predicted": "ازغانغان",
+            "category": "vowel letters omitted or added (lexicalized spelling)"
+          },
+          {
+            "tifinagh": "ⵜⵉⵟⵟⴰⵡⵉⵏ",
+            "reference": "تطوان",
+            "predicted": "تيططاوين",
+            "category": "other (consonant or lexical difference)"
+          },
+          {
+            "tifinagh": "ⵡⵓⵊⴷⴰ",
+            "reference": "وجدة",
+            "predicted": "ووجدا",
+            "category": "vowel letters omitted or added (lexicalized spelling)"
+          },
+          {
+            "tifinagh": "ⴰⴷⵉⵔⵀⴰⵎ ⴰⵎⵖⵔⵉⴱⵉ",
+            "reference": "درهم مغربي",
+            "predicted": "اديرهام امغريبي",
+            "category": "other (consonant or lexical difference)"
+          },
+          {
+            "tifinagh": "ⴰⵢⵜ ⵓⵔⵉⵔ",
+            "reference": "آيت أورير",
+            "predicted": "ايت ورير",
+            "category": "other (consonant or lexical difference)"
+          },
+          {
+            "tifinagh": "ⵍⵃⵓⵙⵉⵎⴰ",
+            "reference": "الحسيمة",
+            "predicted": "لحوسيما",
+            "category": "other (consonant or lexical difference)"
+          }
+        ]
+      },
+      {
+        "system": "ours: readable (default)",
+        "n": 192,
+        "exact": 39,
+        "exactRate": 0.203125,
+        "altMatchRate": 0.3385416666666667,
+        "skeletonRate": 0.265625,
+        "cer": 0.20389805097451275,
+        "byTag": {
+          "vowel i/u": {
+            "n": 135,
+            "exact": 25
+          },
+          "semivowel": {
+            "n": 56,
+            "exact": 7
+          },
+          "gemination": {
+            "n": 36,
+            "exact": 0
+          },
+          "emphatic": {
+            "n": 34,
+            "exact": 5
+          },
+          "initial vowel": {
+            "n": 72,
+            "exact": 1
+          },
+          "g": {
+            "n": 27,
+            "exact": 0
+          },
+          "labialization": {
+            "n": 5,
+            "exact": 0
+          }
+        },
+        "errors": {
+          "other (consonant or lexical difference)": 30,
+          "diacritics (shadda / damma / kasra)": 12,
+          "vowel letters omitted or added (lexicalized spelling)": 40,
+          "word-initial vowel spelling (ئ ؤ أ إ آ ا)": 54,
+          "final -a as ة / ى": 12,
+          "letter choice for g/ẓ/ṛ (ڭ گ ك · ژ ظ ز · ڔ ر)": 5
+        },
+        "examples": [
+          {
+            "tifinagh": "ⵍⵎⵖⵔⵉⴱ",
+            "reference": "المغرب",
+            "predicted": "لمغريب",
+            "category": "other (consonant or lexical difference)"
+          },
+          {
+            "tifinagh": "ⵍⵄⵢⵓⵏ",
+            "reference": "العيون",
+            "predicted": "لعيون",
+            "category": "other (consonant or lexical difference)"
+          },
+          {
+            "tifinagh": "ⵎⵕⵕⴰⴽⵛ",
+            "reference": "مراكش",
+            "predicted": "مرّاكش",
+            "category": "diacritics (shadda / damma / kasra)"
+          },
+          {
+            "tifinagh": "ⵟⴰⵏⵊⴰ",
+            "reference": "طنجة",
+            "predicted": "طانجا",
+            "category": "vowel letters omitted or added (lexicalized spelling)"
+          },
+          {
+            "tifinagh": "ⴰⴳⴰⴷⵉⵔ",
+            "reference": "أكادير",
+            "predicted": "اڭادير",
+            "category": "word-initial vowel spelling (ئ ؤ أ إ آ ا)"
+          },
+          {
+            "tifinagh": "ⴰⵙⴼⵉ",
+            "reference": "آسفي",
+            "predicted": "اسفي",
+            "category": "word-initial vowel spelling (ئ ؤ أ إ آ ا)"
+          },
+          {
+            "tifinagh": "ⴰⵣⵖⴰⵏⵖⴰⵏ",
+            "reference": "أزغنغان",
+            "predicted": "ازغانغان",
+            "category": "vowel letters omitted or added (lexicalized spelling)"
+          },
+          {
+            "tifinagh": "ⵜⵉⵟⵟⴰⵡⵉⵏ",
+            "reference": "تطوان",
+            "predicted": "تيطّاوين",
+            "category": "vowel letters omitted or added (lexicalized spelling)"
+          },
+          {
+            "tifinagh": "ⵡⵓⵊⴷⴰ",
+            "reference": "وجدة",
+            "predicted": "ووجدا",
+            "category": "vowel letters omitted or added (lexicalized spelling)"
+          },
+          {
+            "tifinagh": "ⴰⴷⵉⵔⵀⴰⵎ ⴰⵎⵖⵔⵉⴱⵉ",
+            "reference": "درهم مغربي",
+            "predicted": "اديرهام امغريبي",
+            "category": "other (consonant or lexical difference)"
+          },
+          {
+            "tifinagh": "ⴰⵢⵜ ⵓⵔⵉⵔ",
+            "reference": "آيت أورير",
+            "predicted": "ايت ؤرير",
+            "category": "word-initial vowel spelling (ئ ؤ أ إ آ ا)"
+          },
+          {
+            "tifinagh": "ⵍⵃⵓⵙⵉⵎⴰ",
+            "reference": "الحسيمة",
+            "predicted": "لحوسيما",
+            "category": "other (consonant or lexical difference)"
+          }
+        ]
+      },
+      {
+        "system": "ours: ircam",
+        "n": 192,
+        "exact": 29,
+        "exactRate": 0.15104166666666666,
+        "altMatchRate": 0.2864583333333333,
+        "skeletonRate": 0.1875,
+        "cer": 0.2646176911544228,
+        "byTag": {
+          "vowel i/u": {
+            "n": 135,
+            "exact": 20
+          },
+          "semivowel": {
+            "n": 56,
+            "exact": 0
+          },
+          "gemination": {
+            "n": 36,
+            "exact": 0
+          },
+          "emphatic": {
+            "n": 34,
+            "exact": 2
+          },
+          "initial vowel": {
+            "n": 72,
+            "exact": 1
+          },
+          "g": {
+            "n": 27,
+            "exact": 0
+          },
+          "labialization": {
+            "n": 5,
+            "exact": 0
+          }
+        },
+        "errors": {
+          "other (consonant or lexical difference)": 60,
+          "vowel letters omitted or added (lexicalized spelling)": 37,
+          "word-initial vowel spelling (ئ ؤ أ إ آ ا)": 43,
+          "diacritics (shadda / damma / kasra)": 7,
+          "final -a as ة / ى": 10,
+          "letter choice for g/ẓ/ṛ (ڭ گ ك · ژ ظ ز · ڔ ر)": 6
+        },
+        "examples": [
+          {
+            "tifinagh": "ⵍⵎⵖⵔⵉⴱ",
+            "reference": "المغرب",
+            "predicted": "لمغريب",
+            "category": "other (consonant or lexical difference)"
+          },
+          {
+            "tifinagh": "ⵍⵄⵢⵓⵏ",
+            "reference": "العيون",
+            "predicted": "لعيٛون",
+            "category": "other (consonant or lexical difference)"
+          },
+          {
+            "tifinagh": "ⵎⵕⵕⴰⴽⵛ",
+            "reference": "مراكش",
+            "predicted": "مڔڔاكش",
+            "category": "other (consonant or lexical difference)"
+          },
+          {
+            "tifinagh": "ⵟⴰⵏⵊⴰ",
+            "reference": "طنجة",
+            "predicted": "طانجا",
+            "category": "vowel letters omitted or added (lexicalized spelling)"
+          },
+          {
+            "tifinagh": "ⴰⴳⴰⴷⵉⵔ",
+            "reference": "أكادير",
+            "predicted": "اڭادير",
+            "category": "word-initial vowel spelling (ئ ؤ أ إ آ ا)"
+          },
+          {
+            "tifinagh": "ⴰⵙⴼⵉ",
+            "reference": "آسفي",
+            "predicted": "اسفي",
+            "category": "word-initial vowel spelling (ئ ؤ أ إ آ ا)"
+          },
+          {
+            "tifinagh": "ⴰⵣⵖⴰⵏⵖⴰⵏ",
+            "reference": "أزغنغان",
+            "predicted": "ازغانغان",
+            "category": "vowel letters omitted or added (lexicalized spelling)"
+          },
+          {
+            "tifinagh": "ⵜⵉⵟⵟⴰⵡⵉⵏ",
+            "reference": "تطوان",
+            "predicted": "تيططاوٛين",
+            "category": "other (consonant or lexical difference)"
+          },
+          {
+            "tifinagh": "ⵡⵓⵊⴷⴰ",
+            "reference": "وجدة",
+            "predicted": "وٛوجدا",
+            "category": "vowel letters omitted or added (lexicalized spelling)"
+          },
+          {
+            "tifinagh": "ⴰⴷⵉⵔⵀⴰⵎ ⴰⵎⵖⵔⵉⴱⵉ",
+            "reference": "درهم مغربي",
+            "predicted": "اديرهام امغريبي",
+            "category": "other (consonant or lexical difference)"
+          },
+          {
+            "tifinagh": "ⴰⵢⵜ ⵓⵔⵉⵔ",
+            "reference": "آيت أورير",
+            "predicted": "ايٛت ؤرير",
+            "category": "word-initial vowel spelling (ئ ؤ أ إ آ ا)"
+          },
+          {
+            "tifinagh": "ⵙⵍⵡⴰⵏ",
+            "reference": "سلوان",
+            "predicted": "سلوٛان",
+            "category": "diacritics (shadda / damma / kasra)"
+          }
+        ]
+      },
+      {
+        "system": "ours: phonetic",
+        "n": 192,
+        "exact": 29,
+        "exactRate": 0.15104166666666666,
+        "altMatchRate": 0.2864583333333333,
+        "skeletonRate": 0.234375,
+        "cer": 0.2653673163418291,
+        "byTag": {
+          "vowel i/u": {
+            "n": 135,
+            "exact": 20
+          },
+          "semivowel": {
+            "n": 56,
+            "exact": 0
+          },
+          "gemination": {
+            "n": 36,
+            "exact": 0
+          },
+          "emphatic": {
+            "n": 34,
+            "exact": 2
+          },
+          "initial vowel": {
+            "n": 72,
+            "exact": 1
+          },
+          "g": {
+            "n": 27,
+            "exact": 0
+          },
+          "labialization": {
+            "n": 5,
+            "exact": 0
+          }
+        },
+        "errors": {
+          "other (consonant or lexical difference)": 30,
+          "letter choice for g/ẓ/ṛ (ڭ گ ك · ژ ظ ز · ڔ ر)": 11,
+          "vowel letters omitted or added (lexicalized spelling)": 40,
+          "word-initial vowel spelling (ئ ؤ أ إ آ ا)": 54,
+          "diacritics (shadda / damma / kasra)": 16,
+          "final -a as ة / ى": 12
+        },
+        "examples": [
+          {
+            "tifinagh": "ⵍⵎⵖⵔⵉⴱ",
+            "reference": "المغرب",
+            "predicted": "لمغريب",
+            "category": "other (consonant or lexical difference)"
+          },
+          {
+            "tifinagh": "ⵍⵄⵢⵓⵏ",
+            "reference": "العيون",
+            "predicted": "لعيٛون",
+            "category": "other (consonant or lexical difference)"
+          },
+          {
+            "tifinagh": "ⵎⵕⵕⴰⴽⵛ",
+            "reference": "مراكش",
+            "predicted": "مڔّاكش",
+            "category": "letter choice for g/ẓ/ṛ (ڭ گ ك · ژ ظ ز · ڔ ر)"
+          },
+          {
+            "tifinagh": "ⵟⴰⵏⵊⴰ",
+            "reference": "طنجة",
+            "predicted": "طانجا",
+            "category": "vowel letters omitted or added (lexicalized spelling)"
+          },
+          {
+            "tifinagh": "ⴰⴳⴰⴷⵉⵔ",
+            "reference": "أكادير",
+            "predicted": "اڭادير",
+            "category": "word-initial vowel spelling (ئ ؤ أ إ آ ا)"
+          },
+          {
+            "tifinagh": "ⴰⵙⴼⵉ",
+            "reference": "آسفي",
+            "predicted": "اسفي",
+            "category": "word-initial vowel spelling (ئ ؤ أ إ آ ا)"
+          },
+          {
+            "tifinagh": "ⴰⵣⵖⴰⵏⵖⴰⵏ",
+            "reference": "أزغنغان",
+            "predicted": "ازغانغان",
+            "category": "vowel letters omitted or added (lexicalized spelling)"
+          },
+          {
+            "tifinagh": "ⵜⵉⵟⵟⴰⵡⵉⵏ",
+            "reference": "تطوان",
+            "predicted": "تيطّاوٛين",
+            "category": "vowel letters omitted or added (lexicalized spelling)"
+          },
+          {
+            "tifinagh": "ⵡⵓⵊⴷⴰ",
+            "reference": "وجدة",
+            "predicted": "وٛوجدا",
+            "category": "vowel letters omitted or added (lexicalized spelling)"
+          },
+          {
+            "tifinagh": "ⴰⴷⵉⵔⵀⴰⵎ ⴰⵎⵖⵔⵉⴱⵉ",
+            "reference": "درهم مغربي",
+            "predicted": "اديرهام امغريبي",
+            "category": "other (consonant or lexical difference)"
+          },
+          {
+            "tifinagh": "ⴰⵢⵜ ⵓⵔⵉⵔ",
+            "reference": "آيت أورير",
+            "predicted": "ايٛت ؤرير",
+            "category": "word-initial vowel spelling (ئ ؤ أ إ آ ا)"
+          },
+          {
+            "tifinagh": "ⵙⵍⵡⴰⵏ",
+            "reference": "سلوان",
+            "predicted": "سلوٛان",
+            "category": "diacritics (shadda / damma / kasra)"
+          }
+        ]
+      },
+      {
+        "system": "ablation: readable − positional rules",
+        "n": 192,
+        "exact": 40,
+        "exactRate": 0.20833333333333334,
+        "altMatchRate": 0.3385416666666667,
+        "skeletonRate": 0.2708333333333333,
+        "cer": 0.20689655172413793,
+        "byTag": {
+          "vowel i/u": {
+            "n": 135,
+            "exact": 26
+          },
+          "semivowel": {
+            "n": 56,
+            "exact": 7
+          },
+          "gemination": {
+            "n": 36,
+            "exact": 0
+          },
+          "emphatic": {
+            "n": 34,
+            "exact": 5
+          },
+          "initial vowel": {
+            "n": 72,
+            "exact": 2
+          },
+          "g": {
+            "n": 27,
+            "exact": 0
+          },
+          "labialization": {
+            "n": 5,
+            "exact": 0
+          }
+        },
+        "errors": {
+          "other (consonant or lexical difference)": 30,
+          "diacritics (shadda / damma / kasra)": 12,
+          "vowel letters omitted or added (lexicalized spelling)": 40,
+          "word-initial vowel spelling (ئ ؤ أ إ آ ا)": 53,
+          "final -a as ة / ى": 12,
+          "letter choice for g/ẓ/ṛ (ڭ گ ك · ژ ظ ز · ڔ ر)": 5
+        },
+        "examples": [
+          {
+            "tifinagh": "ⵍⵎⵖⵔⵉⴱ",
+            "reference": "المغرب",
+            "predicted": "لمغريب",
+            "category": "other (consonant or lexical difference)"
+          },
+          {
+            "tifinagh": "ⵍⵄⵢⵓⵏ",
+            "reference": "العيون",
+            "predicted": "لعيون",
+            "category": "other (consonant or lexical difference)"
+          },
+          {
+            "tifinagh": "ⵎⵕⵕⴰⴽⵛ",
+            "reference": "مراكش",
+            "predicted": "مرّاكش",
+            "category": "diacritics (shadda / damma / kasra)"
+          },
+          {
+            "tifinagh": "ⵟⴰⵏⵊⴰ",
+            "reference": "طنجة",
+            "predicted": "طانجا",
+            "category": "vowel letters omitted or added (lexicalized spelling)"
+          },
+          {
+            "tifinagh": "ⴰⴳⴰⴷⵉⵔ",
+            "reference": "أكادير",
+            "predicted": "اڭادير",
+            "category": "word-initial vowel spelling (ئ ؤ أ إ آ ا)"
+          },
+          {
+            "tifinagh": "ⴰⵙⴼⵉ",
+            "reference": "آسفي",
+            "predicted": "اسفي",
+            "category": "word-initial vowel spelling (ئ ؤ أ إ آ ا)"
+          },
+          {
+            "tifinagh": "ⴰⵣⵖⴰⵏⵖⴰⵏ",
+            "reference": "أزغنغان",
+            "predicted": "ازغانغان",
+            "category": "vowel letters omitted or added (lexicalized spelling)"
+          },
+          {
+            "tifinagh": "ⵜⵉⵟⵟⴰⵡⵉⵏ",
+            "reference": "تطوان",
+            "predicted": "تيطّاوين",
+            "category": "vowel letters omitted or added (lexicalized spelling)"
+          },
+          {
+            "tifinagh": "ⵡⵓⵊⴷⴰ",
+            "reference": "وجدة",
+            "predicted": "ووجدا",
+            "category": "vowel letters omitted or added (lexicalized spelling)"
+          },
+          {
+            "tifinagh": "ⴰⴷⵉⵔⵀⴰⵎ ⴰⵎⵖⵔⵉⴱⵉ",
+            "reference": "درهم مغربي",
+            "predicted": "اديرهام امغريبي",
+            "category": "other (consonant or lexical difference)"
+          },
+          {
+            "tifinagh": "ⴰⵢⵜ ⵓⵔⵉⵔ",
+            "reference": "آيت أورير",
+            "predicted": "ايت اورير",
+            "category": "word-initial vowel spelling (ئ ؤ أ إ آ ا)"
+          },
+          {
+            "tifinagh": "ⵍⵃⵓⵙⵉⵎⴰ",
+            "reference": "الحسيمة",
+            "predicted": "لحوسيما",
+            "category": "other (consonant or lexical difference)"
+          }
+        ]
+      },
+      {
+        "system": "ablation: readable − gemination rule",
+        "n": 192,
+        "exact": 39,
+        "exactRate": 0.203125,
+        "altMatchRate": 0.3385416666666667,
+        "skeletonRate": 0.203125,
+        "cer": 0.20314842578710646,
+        "byTag": {
+          "vowel i/u": {
+            "n": 135,
+            "exact": 25
+          },
+          "semivowel": {
+            "n": 56,
+            "exact": 7
+          },
+          "gemination": {
+            "n": 36,
+            "exact": 0
+          },
+          "emphatic": {
+            "n": 34,
+            "exact": 5
+          },
+          "initial vowel": {
+            "n": 72,
+            "exact": 1
+          },
+          "g": {
+            "n": 27,
+            "exact": 0
+          },
+          "labialization": {
+            "n": 5,
+            "exact": 0
+          }
+        },
+        "errors": {
+          "other (consonant or lexical difference)": 60,
+          "vowel letters omitted or added (lexicalized spelling)": 37,
+          "word-initial vowel spelling (ئ ؤ أ إ آ ا)": 43,
+          "final -a as ة / ى": 10,
+          "letter choice for g/ẓ/ṛ (ڭ گ ك · ژ ظ ز · ڔ ر)": 3
+        },
+        "examples": [
+          {
+            "tifinagh": "ⵍⵎⵖⵔⵉⴱ",
+            "reference": "المغرب",
+            "predicted": "لمغريب",
+            "category": "other (consonant or lexical difference)"
+          },
+          {
+            "tifinagh": "ⵍⵄⵢⵓⵏ",
+            "reference": "العيون",
+            "predicted": "لعيون",
+            "category": "other (consonant or lexical difference)"
+          },
+          {
+            "tifinagh": "ⵎⵕⵕⴰⴽⵛ",
+            "reference": "مراكش",
+            "predicted": "مرراكش",
+            "category": "other (consonant or lexical difference)"
+          },
+          {
+            "tifinagh": "ⵟⴰⵏⵊⴰ",
+            "reference": "طنجة",
+            "predicted": "طانجا",
+            "category": "vowel letters omitted or added (lexicalized spelling)"
+          },
+          {
+            "tifinagh": "ⴰⴳⴰⴷⵉⵔ",
+            "reference": "أكادير",
+            "predicted": "اڭادير",
+            "category": "word-initial vowel spelling (ئ ؤ أ إ آ ا)"
+          },
+          {
+            "tifinagh": "ⴰⵙⴼⵉ",
+            "reference": "آسفي",
+            "predicted": "اسفي",
+            "category": "word-initial vowel spelling (ئ ؤ أ إ آ ا)"
+          },
+          {
+            "tifinagh": "ⴰⵣⵖⴰⵏⵖⴰⵏ",
+            "reference": "أزغنغان",
+            "predicted": "ازغانغان",
+            "category": "vowel letters omitted or added (lexicalized spelling)"
+          },
+          {
+            "tifinagh": "ⵜⵉⵟⵟⴰⵡⵉⵏ",
+            "reference": "تطوان",
+            "predicted": "تيططاوين",
+            "category": "other (consonant or lexical difference)"
+          },
+          {
+            "tifinagh": "ⵡⵓⵊⴷⴰ",
+            "reference": "وجدة",
+            "predicted": "ووجدا",
+            "category": "vowel letters omitted or added (lexicalized spelling)"
+          },
+          {
+            "tifinagh": "ⴰⴷⵉⵔⵀⴰⵎ ⴰⵎⵖⵔⵉⴱⵉ",
+            "reference": "درهم مغربي",
+            "predicted": "اديرهام امغريبي",
+            "category": "other (consonant or lexical difference)"
+          },
+          {
+            "tifinagh": "ⴰⵢⵜ ⵓⵔⵉⵔ",
+            "reference": "آيت أورير",
+            "predicted": "ايت ؤرير",
+            "category": "word-initial vowel spelling (ئ ؤ أ إ آ ا)"
+          },
+          {
+            "tifinagh": "ⵍⵃⵓⵙⵉⵎⴰ",
+            "reference": "الحسيمة",
+            "predicted": "لحوسيما",
+            "category": "other (consonant or lexical difference)"
+          }
+        ]
+      },
+      {
+        "system": "ablation: readable − all context",
+        "n": 192,
+        "exact": 40,
+        "exactRate": 0.20833333333333334,
+        "altMatchRate": 0.3385416666666667,
+        "skeletonRate": 0.20833333333333334,
+        "cer": 0.20689655172413793,
+        "byTag": {
+          "vowel i/u": {
+            "n": 135,
+            "exact": 26
+          },
+          "semivowel": {
+            "n": 56,
+            "exact": 7
+          },
+          "gemination": {
+            "n": 36,
+            "exact": 0
+          },
+          "emphatic": {
+            "n": 34,
+            "exact": 5
+          },
+          "initial vowel": {
+            "n": 72,
+            "exact": 2
+          },
+          "g": {
+            "n": 27,
+            "exact": 0
+          },
+          "labialization": {
+            "n": 5,
+            "exact": 0
+          }
+        },
+        "errors": {
+          "other (consonant or lexical difference)": 60,
+          "vowel letters omitted or added (lexicalized spelling)": 37,
+          "word-initial vowel spelling (ئ ؤ أ إ آ ا)": 42,
+          "final -a as ة / ى": 10,
+          "letter choice for g/ẓ/ṛ (ڭ گ ك · ژ ظ ز · ڔ ر)": 3
+        },
+        "examples": [
+          {
+            "tifinagh": "ⵍⵎⵖⵔⵉⴱ",
+            "reference": "المغرب",
+            "predicted": "لمغريب",
+            "category": "other (consonant or lexical difference)"
+          },
+          {
+            "tifinagh": "ⵍⵄⵢⵓⵏ",
+            "reference": "العيون",
+            "predicted": "لعيون",
+            "category": "other (consonant or lexical difference)"
+          },
+          {
+            "tifinagh": "ⵎⵕⵕⴰⴽⵛ",
+            "reference": "مراكش",
+            "predicted": "مرراكش",
+            "category": "other (consonant or lexical difference)"
+          },
+          {
+            "tifinagh": "ⵟⴰⵏⵊⴰ",
+            "reference": "طنجة",
+            "predicted": "طانجا",
+            "category": "vowel letters omitted or added (lexicalized spelling)"
+          },
+          {
+            "tifinagh": "ⴰⴳⴰⴷⵉⵔ",
+            "reference": "أكادير",
+            "predicted": "اڭادير",
+            "category": "word-initial vowel spelling (ئ ؤ أ إ آ ا)"
+          },
+          {
+            "tifinagh": "ⴰⵙⴼⵉ",
+            "reference": "آسفي",
+            "predicted": "اسفي",
+            "category": "word-initial vowel spelling (ئ ؤ أ إ آ ا)"
+          },
+          {
+            "tifinagh": "ⴰⵣⵖⴰⵏⵖⴰⵏ",
+            "reference": "أزغنغان",
+            "predicted": "ازغانغان",
+            "category": "vowel letters omitted or added (lexicalized spelling)"
+          },
+          {
+            "tifinagh": "ⵜⵉⵟⵟⴰⵡⵉⵏ",
+            "reference": "تطوان",
+            "predicted": "تيططاوين",
+            "category": "other (consonant or lexical difference)"
+          },
+          {
+            "tifinagh": "ⵡⵓⵊⴷⴰ",
+            "reference": "وجدة",
+            "predicted": "ووجدا",
+            "category": "vowel letters omitted or added (lexicalized spelling)"
+          },
+          {
+            "tifinagh": "ⴰⴷⵉⵔⵀⴰⵎ ⴰⵎⵖⵔⵉⴱⵉ",
+            "reference": "درهم مغربي",
+            "predicted": "اديرهام امغريبي",
+            "category": "other (consonant or lexical difference)"
+          },
+          {
+            "tifinagh": "ⴰⵢⵜ ⵓⵔⵉⵔ",
+            "reference": "آيت أورير",
+            "predicted": "ايت اورير",
+            "category": "word-initial vowel spelling (ئ ؤ أ إ آ ا)"
+          },
+          {
+            "tifinagh": "ⵍⵃⵓⵙⵉⵎⴰ",
+            "reference": "الحسيمة",
+            "predicted": "لحوسيما",
+            "category": "other (consonant or lexical difference)"
+          }
+        ]
+      }
+    ],
+    "albane": [
+      {
+        "system": "baseline: naive Table I (1:1)",
+        "n": 3,
+        "exact": 0,
+        "exactRate": 0,
+        "altMatchRate": 0,
+        "skeletonRate": 0,
+        "cer": 0.5384615384615384,
+        "byTag": {
+          "schwa": {
+            "n": 1,
+            "exact": 0
+          },
+          "vowel i/u": {
+            "n": 2,
+            "exact": 0
+          },
+          "gemination": {
+            "n": 1,
+            "exact": 0
+          },
+          "initial vowel": {
+            "n": 1,
+            "exact": 0
+          },
+          "g": {
+            "n": 1,
+            "exact": 0
+          }
+        },
+        "errors": {
+          "vowel letters omitted or added (lexicalized spelling)": 1,
+          "other (consonant or lexical difference)": 2
+        },
+        "examples": [
+          {
+            "tifinagh": "ⴼⵉⵃⴻⵍ",
+            "reference": "فحل",
+            "predicted": "فيحل",
+            "category": "vowel letters omitted or added (lexicalized spelling)"
+          },
+          {
+            "tifinagh": "ⵝⴰⴱⴱⵓⵔⵝ",
+            "reference": "ثبورث",
+            "predicted": "ⵝاببورⵝ",
+            "category": "other (consonant or lexical difference)"
+          },
+          {
+            "tifinagh": "ⴰⵔⴳⴰⵣ",
+            "reference": "أرڨاز",
+            "predicted": "ارگاز",
+            "category": "other (consonant or lexical difference)"
+          }
+        ]
+      },
+      {
+        "system": "baseline: dictionary-style 1:1 map",
+        "n": 3,
+        "exact": 0,
+        "exactRate": 0,
+        "altMatchRate": 0,
+        "skeletonRate": 0,
+        "cer": 0.6153846153846154,
+        "byTag": {
+          "schwa": {
+            "n": 1,
+            "exact": 0
+          },
+          "vowel i/u": {
+            "n": 2,
+            "exact": 0
+          },
+          "gemination": {
+            "n": 1,
+            "exact": 0
+          },
+          "initial vowel": {
+            "n": 1,
+            "exact": 0
+          },
+          "g": {
+            "n": 1,
+            "exact": 0
+          }
+        },
+        "errors": {
+          "other (consonant or lexical difference)": 3
+        },
+        "examples": [
+          {
+            "tifinagh": "ⴼⵉⵃⴻⵍ",
+            "reference": "فحل",
+            "predicted": "فيحىل",
+            "category": "other (consonant or lexical difference)"
+          },
+          {
+            "tifinagh": "ⵝⴰⴱⴱⵓⵔⵝ",
+            "reference": "ثبورث",
+            "predicted": "ⵝاببورⵝ",
+            "category": "other (consonant or lexical difference)"
+          },
+          {
+            "tifinagh": "ⴰⵔⴳⴰⵣ",
+            "reference": "أرڨاز",
+            "predicted": "ارڭاز",
+            "category": "other (consonant or lexical difference)"
+          }
+        ]
+      },
+      {
+        "system": "ours: readable (default)",
+        "n": 3,
+        "exact": 0,
+        "exactRate": 0,
+        "altMatchRate": 0,
+        "skeletonRate": 0,
+        "cer": 0.38461538461538464,
+        "byTag": {
+          "schwa": {
+            "n": 1,
+            "exact": 0
+          },
+          "vowel i/u": {
+            "n": 2,
+            "exact": 0
+          },
+          "gemination": {
+            "n": 1,
+            "exact": 0
+          },
+          "initial vowel": {
+            "n": 1,
+            "exact": 0
+          },
+          "g": {
+            "n": 1,
+            "exact": 0
+          }
+        },
+        "errors": {
+          "vowel letters omitted or added (lexicalized spelling)": 2,
+          "other (consonant or lexical difference)": 1
+        },
+        "examples": [
+          {
+            "tifinagh": "ⴼⵉⵃⴻⵍ",
+            "reference": "فحل",
+            "predicted": "فيحل",
+            "category": "vowel letters omitted or added (lexicalized spelling)"
+          },
+          {
+            "tifinagh": "ⵝⴰⴱⴱⵓⵔⵝ",
+            "reference": "ثبورث",
+            "predicted": "ثابّورث",
+            "category": "vowel letters omitted or added (lexicalized spelling)"
+          },
+          {
+            "tifinagh": "ⴰⵔⴳⴰⵣ",
+            "reference": "أرڨاز",
+            "predicted": "ارڭاز",
+            "category": "other (consonant or lexical difference)"
+          }
+        ]
+      },
+      {
+        "system": "ours: ircam",
+        "n": 3,
+        "exact": 0,
+        "exactRate": 0,
+        "altMatchRate": 0,
+        "skeletonRate": 0,
+        "cer": 0.38461538461538464,
+        "byTag": {
+          "schwa": {
+            "n": 1,
+            "exact": 0
+          },
+          "vowel i/u": {
+            "n": 2,
+            "exact": 0
+          },
+          "gemination": {
+            "n": 1,
+            "exact": 0
+          },
+          "initial vowel": {
+            "n": 1,
+            "exact": 0
+          },
+          "g": {
+            "n": 1,
+            "exact": 0
+          }
+        },
+        "errors": {
+          "vowel letters omitted or added (lexicalized spelling)": 1,
+          "other (consonant or lexical difference)": 2
+        },
+        "examples": [
+          {
+            "tifinagh": "ⴼⵉⵃⴻⵍ",
+            "reference": "فحل",
+            "predicted": "فيحل",
+            "category": "vowel letters omitted or added (lexicalized spelling)"
+          },
+          {
+            "tifinagh": "ⵝⴰⴱⴱⵓⵔⵝ",
+            "reference": "ثبورث",
+            "predicted": "ثاببورث",
+            "category": "other (consonant or lexical difference)"
+          },
+          {
+            "tifinagh": "ⴰⵔⴳⴰⵣ",
+            "reference": "أرڨاز",
+            "predicted": "ارڭاز",
+            "category": "other (consonant or lexical difference)"
+          }
+        ]
+      },
+      {
+        "system": "ours: phonetic",
+        "n": 3,
+        "exact": 0,
+        "exactRate": 0,
+        "altMatchRate": 0,
+        "skeletonRate": 0,
+        "cer": 0.46153846153846156,
+        "byTag": {
+          "schwa": {
+            "n": 1,
+            "exact": 0
+          },
+          "vowel i/u": {
+            "n": 2,
+            "exact": 0
+          },
+          "gemination": {
+            "n": 1,
+            "exact": 0
+          },
+          "initial vowel": {
+            "n": 1,
+            "exact": 0
+          },
+          "g": {
+            "n": 1,
+            "exact": 0
+          }
+        },
+        "errors": {
+          "vowel letters omitted or added (lexicalized spelling)": 2,
+          "other (consonant or lexical difference)": 1
+        },
+        "examples": [
+          {
+            "tifinagh": "ⴼⵉⵃⴻⵍ",
+            "reference": "فحل",
+            "predicted": "فيحِل",
+            "category": "vowel letters omitted or added (lexicalized spelling)"
+          },
+          {
+            "tifinagh": "ⵝⴰⴱⴱⵓⵔⵝ",
+            "reference": "ثبورث",
+            "predicted": "ثابّورث",
+            "category": "vowel letters omitted or added (lexicalized spelling)"
+          },
+          {
+            "tifinagh": "ⴰⵔⴳⴰⵣ",
+            "reference": "أرڨاز",
+            "predicted": "ارڭاز",
+            "category": "other (consonant or lexical difference)"
+          }
+        ]
+      },
+      {
+        "system": "ablation: readable − positional rules",
+        "n": 3,
+        "exact": 0,
+        "exactRate": 0,
+        "altMatchRate": 0,
+        "skeletonRate": 0,
+        "cer": 0.38461538461538464,
+        "byTag": {
+          "schwa": {
+            "n": 1,
+            "exact": 0
+          },
+          "vowel i/u": {
+            "n": 2,
+            "exact": 0
+          },
+          "gemination": {
+            "n": 1,
+            "exact": 0
+          },
+          "initial vowel": {
+            "n": 1,
+            "exact": 0
+          },
+          "g": {
+            "n": 1,
+            "exact": 0
+          }
+        },
+        "errors": {
+          "vowel letters omitted or added (lexicalized spelling)": 2,
+          "other (consonant or lexical difference)": 1
+        },
+        "examples": [
+          {
+            "tifinagh": "ⴼⵉⵃⴻⵍ",
+            "reference": "فحل",
+            "predicted": "فيحل",
+            "category": "vowel letters omitted or added (lexicalized spelling)"
+          },
+          {
+            "tifinagh": "ⵝⴰⴱⴱⵓⵔⵝ",
+            "reference": "ثبورث",
+            "predicted": "ثابّورث",
+            "category": "vowel letters omitted or added (lexicalized spelling)"
+          },
+          {
+            "tifinagh": "ⴰⵔⴳⴰⵣ",
+            "reference": "أرڨاز",
+            "predicted": "ارڭاز",
+            "category": "other (consonant or lexical difference)"
+          }
+        ]
+      },
+      {
+        "system": "ablation: readable − gemination rule",
+        "n": 3,
+        "exact": 0,
+        "exactRate": 0,
+        "altMatchRate": 0,
+        "skeletonRate": 0,
+        "cer": 0.38461538461538464,
+        "byTag": {
+          "schwa": {
+            "n": 1,
+            "exact": 0
+          },
+          "vowel i/u": {
+            "n": 2,
+            "exact": 0
+          },
+          "gemination": {
+            "n": 1,
+            "exact": 0
+          },
+          "initial vowel": {
+            "n": 1,
+            "exact": 0
+          },
+          "g": {
+            "n": 1,
+            "exact": 0
+          }
+        },
+        "errors": {
+          "vowel letters omitted or added (lexicalized spelling)": 1,
+          "other (consonant or lexical difference)": 2
+        },
+        "examples": [
+          {
+            "tifinagh": "ⴼⵉⵃⴻⵍ",
+            "reference": "فحل",
+            "predicted": "فيحل",
+            "category": "vowel letters omitted or added (lexicalized spelling)"
+          },
+          {
+            "tifinagh": "ⵝⴰⴱⴱⵓⵔⵝ",
+            "reference": "ثبورث",
+            "predicted": "ثاببورث",
+            "category": "other (consonant or lexical difference)"
+          },
+          {
+            "tifinagh": "ⴰⵔⴳⴰⵣ",
+            "reference": "أرڨاز",
+            "predicted": "ارڭاز",
+            "category": "other (consonant or lexical difference)"
+          }
+        ]
+      },
+      {
+        "system": "ablation: readable − all context",
+        "n": 3,
+        "exact": 0,
+        "exactRate": 0,
+        "altMatchRate": 0,
+        "skeletonRate": 0,
+        "cer": 0.38461538461538464,
+        "byTag": {
+          "schwa": {
+            "n": 1,
+            "exact": 0
+          },
+          "vowel i/u": {
+            "n": 2,
+            "exact": 0
+          },
+          "gemination": {
+            "n": 1,
+            "exact": 0
+          },
+          "initial vowel": {
+            "n": 1,
+            "exact": 0
+          },
+          "g": {
+            "n": 1,
+            "exact": 0
+          }
+        },
+        "errors": {
+          "vowel letters omitted or added (lexicalized spelling)": 1,
+          "other (consonant or lexical difference)": 2
+        },
+        "examples": [
+          {
+            "tifinagh": "ⴼⵉⵃⴻⵍ",
+            "reference": "فحل",
+            "predicted": "فيحل",
+            "category": "vowel letters omitted or added (lexicalized spelling)"
+          },
+          {
+            "tifinagh": "ⵝⴰⴱⴱⵓⵔⵝ",
+            "reference": "ثبورث",
+            "predicted": "ثاببورث",
+            "category": "other (consonant or lexical difference)"
+          },
+          {
+            "tifinagh": "ⴰⵔⴳⴰⵣ",
+            "reference": "أرڨاز",
+            "predicted": "ارڭاز",
+            "category": "other (consonant or lexical difference)"
+          }
+        ]
+      }
+    ]
+  },
+  "coverage": {
+    "ircamUnits": 33,
+    "ircamUnitsMapped": 33,
+    "dglai": {
+      "words": 18846,
+      "tifinaghChars": 104100,
+      "unsupportedChars": 0,
+      "unsupportedRate": 0,
+      "wordsWithWarnings": 0,
+      "warningCodes": {},
+      "ms": 91.724247
+    }
+  },
+  "preservation": {
+    "cases": 2000,
+    "failures": 0
+  }
+}

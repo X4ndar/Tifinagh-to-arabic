@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tifinagh → Arabic</title>
+<style>
+  :root { --bg:#fafaf7; --fg:#1d1d1b; --muted:#666; --line:#d8d6cf; --accent:#0a6e5c; --warn:#9a5b00; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#161614; --fg:#ecebe6; --muted:#a3a29b; --line:#3a3933; --accent:#4fc2a6; --warn:#f0b35a; } }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg); font:16px/1.5 system-ui, sans-serif; }
+  main { max-width: 860px; margin: 0 auto; padding: 24px 16px 48px; }
+  h1 { font-size: 1.4rem; margin: 0 0 4px; }
+  p.lead { color: var(--muted); margin: 0 0 20px; }
+  label { font-weight: 600; display:block; margin: 16px 0 6px; }
+  textarea, .out { width:100%; min-height: 120px; padding: 12px; border:1px solid var(--line); border-radius:8px; background:transparent; color:var(--fg); font-size: 1.35rem; }
+  .out { direction: rtl; text-align: right; white-space: pre-wrap; font-family: "Noto Naskh Arabic", "Amiri", serif; }
+  textarea { font-family: "Noto Sans Tifinagh", "Ebrima", sans-serif; }
+  .row { display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
+  select, button { font: inherit; padding: 6px 12px; border-radius: 6px; border:1px solid var(--line); background: transparent; color: var(--fg); }
+  button.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .examples button { font-family: "Noto Sans Tifinagh", sans-serif; }
+  ul.warn { color: var(--warn); padding-left: 20px; font-size: .9rem; }
+  footer { color: var(--muted); font-size: .85rem; margin-top: 32px; }
+  #missing { display:none; border:1px solid var(--warn); color: var(--warn); padding: 12px; border-radius: 8px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Tifinagh → Arabic script</h1>
+  <p class="lead">Transliteration of Moroccan Amazigh (not translation). Runs entirely in your browser.</p>
+  <div id="missing">Library bundle not found. Run <code>npm install &amp;&amp; npm run build</code>, then open this file again.</div>
+
+  <label for="src">Tifinagh input</label>
+  <textarea id="src" lang="zgh" spellcheck="false">ⴰⵣⵓⵍ ⴼⵍⵍⴰⵡⵏ! ⵜⴰⵎⴰⵣⵉⵖⵜ ⵜⴰⵏⴰⵎⵓⵔⵜ</textarea>
+
+  <div class="row examples" aria-label="Examples">
+    <span>Examples:</span>
+    <button type="button">ⴰⵣⵓⵍ</button>
+    <button type="button">ⵜⴰⵎⴰⵣⵉⵖⵜ</button>
+    <button type="button">ⴰⵎⵖⴰⵔ</button>
+    <button type="button">ⵉⴼⴰⵙⵙⵏ</button>
+    <button type="button">ⵓⴽⵙⵓⵎ</button>
+    <button type="button">ⴰⴳⴳⵯⴰ</button>
+  </div>
+
+  <div class="row" style="margin-top:16px">
+    <label for="profile" style="margin:0">Profile</label>
+    <select id="profile">
+      <option value="readable" selected>readable (default)</option>
+      <option value="ircam">ircam (reference)</option>
+      <option value="phonetic">phonetic</option>
+    </select>
+    <button type="button" id="copy" class="primary">Copy output</button>
+  </div>
+
+  <label for="out">Arabic script output</label>
+  <div id="out" class="out" lang="zgh-Arab" dir="rtl" aria-live="polite"></div>
+  <ul id="warnings" class="warn"></ul>
+
+  <footer>Conventions follow the IRCAM correspondence tables; see the project README for profiles and limitations.</footer>
+</main>
+<script src="../dist/browser/amazigh-transliterate.min.js"></script>
+<script>
+  (function () {
+    var lib = window.AmazighTransliterate
+    var src = document.getElementById('src')
+    var out = document.getElementById('out')
+    var warn = document.getElementById('warnings')
+    var profile = document.getElementById('profile')
+    if (!lib) { document.getElementById('missing').style.display = 'block'; return }
+    function run() {
+      var r = lib.transliterate(src.value, { profile: profile.value })
+      out.textContent = r.output
+      warn.innerHTML = ''
+      r.warnings.filter(function (w) { return w.severity !== 'info' }).forEach(function (w) {
+        var li = document.createElement('li'); li.textContent = w.code + ': ' + w.message; warn.appendChild(li)
+      })
+    }
+    src.addEventListener('input', run)
+    profile.addEventListener('change', run)
+    document.querySelectorAll('.examples button').forEach(function (b) {
+      b.addEventListener('click', function () { src.value = b.textContent; run() })
+    })
+    document.getElementById('copy').addEventListener('click', function () {
+      if (navigator.clipboard) navigator.clipboard.writeText(out.textContent)
+    })
+    run()
+  })()
+</script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+# Notices and attributions
+
+## Code
+
+This project is a fork of **tifinagh-convert** by Hamza BOUQSSIM
+(<https://github.com/hamza-bouqssim/tifinagh-convert>, commit
+`1f0f31ad6910b47ce93c28c251f03956a2dd0579`, MIT License). The upstream
+files `src/converters/*`, `src/data/mapping.ts`, parts of `src/types/index.ts`,
+the `convert`/`detect`/`alphabet` API in `src/index.ts`, and
+`tests/upstream.test.ts` derive from it. The upstream license is reproduced
+verbatim in [`LICENSE.upstream`](LICENSE.upstream); the combined work is MIT
+([`LICENSE`](LICENSE)).
+
+## Linguistic sources (cited, not copied)
+
+- F. Ataa Allah, J. Frain, Y. Ait Ouguengay, *Amazigh Language Desktop
+  Converter*, IRCAM (SITACAM 2013) — Tables I and II. Character
+  correspondences (facts) were transcribed after visual verification; no text
+  or figures are reproduced.
+- S. Albane, H. Slimani, H. Kheddouci, *An approach for transliterating
+  Tifinagh Berber texts into Latin and Arabic alphabets*, Revue Iles d Imesli
+  17(1), 2025 — six correspondences for non-IRCAM letters and three short
+  worked examples quoted for comparison (`data/gold/albane2025-examples.json`).
+
+## Data shipped in this repository
+
+| File | Origin | License |
+|---|---|---|
+| `data/gold/wikidata-lexemes.json` | Wikidata lexemes L1215185, L309611, L675101 | CC0 |
+| `data/gold/wikidata-toponyms.json` | Wikidata item labels (zgh / ar / fr) | CC0 |
+| `data/gold/specification-examples.json` | three examples confirmed by the project specification | — (facts) |
+| `data/gold/albane2025-examples.json` | three examples quoted from Albane et al. (2025) | quotation for research |
+
+## Data deliberately NOT shipped
+
+- `mustapharajaa/tamazight-Transliterating-en-ar` — no license file
+  (all rights reserved by default); only its 1:1 character map is described
+  and re-implemented as a baseline (`benchmarks/baselines.mjs`).
+- `Tamazight-NLP/ircam-dglai` (Hugging Face) — CC-BY-NC-4.0, scraped from
+  IRCAM's DGLAI. Used locally for coverage statistics only
+  (`node benchmarks/evaluate.mjs --dglai <file>`); never bundled.

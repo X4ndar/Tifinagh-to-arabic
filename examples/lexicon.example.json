@@ -1,0 +1,12 @@
+{
+  "entries": [
+    {
+      "tifinagh": "ⴰⴳⴰⴷⵉⵔ",
+      "arabic": "أكادير",
+      "status": "provisional",
+      "source": "EXAMPLE ONLY — official Arabic spelling of the city name (Wikidata Q170357); replace with your own reviewed data",
+      "profiles": ["readable"],
+      "note": "Lexicalized official spelling; rule output is اڭادير"
+    }
+  ]
+}
