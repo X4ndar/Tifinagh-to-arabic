@@ -3,90 +3,489 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Tifinagh → Arabic</title>
+<title>Tamazight in Arabic letters</title>
+<meta name="description" content="Transliterate Moroccan Amazigh from Tifinagh into Arabic script, offline, and see how each letter was written.">
 <style>
-  :root { --bg:#fafaf7; --fg:#1d1d1b; --muted:#666; --line:#d8d6cf; --accent:#0a6e5c; --warn:#9a5b00; }
-  @media (prefers-color-scheme: dark) { :root { --bg:#161614; --fg:#ecebe6; --muted:#a3a29b; --line:#3a3933; --accent:#4fc2a6; --warn:#f0b35a; } }
+  /* Fonts are bundled (SIL Open Font License, see fonts/OFL-*.txt) so the page works offline. */
+  @font-face { font-family: "Noto Sans"; src: url(fonts/NotoSans-Variable-latin.woff2) format("woff2"); font-weight: 100 900; font-stretch: 62.5% 100%; font-display: swap; }
+  @font-face { font-family: "Noto Sans Tifinagh"; src: url(fonts/NotoSansTifinagh-400.woff2) format("woff2"); font-weight: 400; font-display: swap; }
+  @font-face { font-family: "Noto Naskh Arabic"; src: url(fonts/NotoNaskhArabic-400.woff2) format("woff2"); font-weight: 400; font-display: swap; }
+  @font-face { font-family: "Noto Naskh Arabic"; src: url(fonts/NotoNaskhArabic-700.woff2) format("woff2"); font-weight: 700; font-display: swap; }
+
+  :root {
+    --wool: #F3F4F8;      /* page: undyed wool washed in indigo */
+    --loom: #E7E9F2;      /* the working surface */
+    --ink: #1B1F3B;       /* text: indigo-black */
+    --indigo: #2B3A8C;    /* interactive, selected */
+    --saffron: #E0A21B;   /* the warp seam and the selected letter only */
+    --slate: #5A6078;     /* secondary text */
+    --line: #D5D8E3;
+    --on-indigo: #FFFFFF;
+    --warn: #8A4B00;
+    --latin: "Noto Sans", system-ui, sans-serif;
+    --tifinagh: "Noto Sans Tifinagh", "Ebrima", "Noto Sans", sans-serif;
+    --arabic: "Noto Naskh Arabic", "Amiri", "Geeza Pro", "Times New Roman", serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --wool: #12152B; --loom: #1A1E3A; --ink: #E9EAF2; --indigo: #9AA6F2; --saffron: #F0B940;
+      --slate: #A3A8C0; --line: #2E3358; --on-indigo: #12152B; --warn: #F0B940;
+    }
+  }
+  :root[data-theme="dark"] {
+    --wool: #12152B; --loom: #1A1E3A; --ink: #E9EAF2; --indigo: #9AA6F2; --saffron: #F0B940;
+    --slate: #A3A8C0; --line: #2E3358; --on-indigo: #12152B; --warn: #F0B940;
+  }
+
   * { box-sizing: border-box; }
-  body { margin:0; background:var(--bg); color:var(--fg); font:16px/1.5 system-ui, sans-serif; }
-  main { max-width: 860px; margin: 0 auto; padding: 24px 16px 48px; }
-  h1 { font-size: 1.4rem; margin: 0 0 4px; }
-  p.lead { color: var(--muted); margin: 0 0 20px; }
-  label { font-weight: 600; display:block; margin: 16px 0 6px; }
-  textarea, .out { width:100%; min-height: 120px; padding: 12px; border:1px solid var(--line); border-radius:8px; background:transparent; color:var(--fg); font-size: 1.35rem; }
-  .out { direction: rtl; text-align: right; white-space: pre-wrap; font-family: "Noto Naskh Arabic", "Amiri", serif; }
-  textarea { font-family: "Noto Sans Tifinagh", "Ebrima", sans-serif; }
-  .row { display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
-  select, button { font: inherit; padding: 6px 12px; border-radius: 6px; border:1px solid var(--line); background: transparent; color: var(--fg); }
-  button.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
-  .examples button { font-family: "Noto Sans Tifinagh", sans-serif; }
-  ul.warn { color: var(--warn); padding-left: 20px; font-size: .9rem; }
-  footer { color: var(--muted); font-size: .85rem; margin-top: 32px; }
-  #missing { display:none; border:1px solid var(--warn); color: var(--warn); padding: 12px; border-radius: 8px; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--wool); color: var(--ink); font: 400 1.0625rem/1.55 var(--latin); }
+  main { max-width: 68rem; margin: 0 auto; padding: 2.5rem 1rem 4rem; }
+  @media (min-width: 48rem) { main { padding: 3.5rem 2rem 5rem; } }
+
+  :focus-visible { outline: 2px solid var(--indigo); outline-offset: 3px; border-radius: 2px; }
+  button, input, textarea { font: inherit; color: inherit; }
+
+  /* ── Title ─────────────────────────────────────────────── */
+  .masthead { max-width: 44rem; }
+  h1 { margin: 0; font-size: clamp(2.125rem, 6vw, 3.5rem); line-height: 1.02; font-weight: 750; font-stretch: 70%; letter-spacing: -0.01em; }
+  .lede { margin: 0.75rem 0 0; color: var(--slate); max-width: 38rem; }
+
+  /* ── Controls ──────────────────────────────────────────── */
+  .controls { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 1rem 2rem; margin: 2rem 0 0.75rem; }
+  fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
+  legend { padding: 0; margin-bottom: 0.375rem; font-size: 0.875rem; color: var(--slate); }
+  .segmented { display: inline-flex; border: 1px solid var(--line); border-radius: 0.5rem; padding: 3px; background: var(--wool); }
+  .segmented label { position: relative; }
+  .segmented input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+  .segmented span { display: block; padding: 0.375rem 0.875rem; border-radius: 0.375rem; font-size: 0.9375rem; font-weight: 550; }
+  .segmented input:checked + span { background: var(--indigo); color: var(--on-indigo); }
+  .segmented input:focus-visible + span { outline: 2px solid var(--indigo); outline-offset: 2px; }
+  .profile-note { margin: 0.375rem 0 0; font-size: 0.875rem; color: var(--slate); max-width: 30rem; min-height: 1.4em; }
+
+  /* ── The loom: input and output facing each other ─────── */
+  .loom { display: grid; grid-template-columns: 1fr; background: var(--loom); border-radius: 0.75rem; overflow: hidden; }
+  @media (min-width: 48rem) { .loom { grid-template-columns: 1fr 3px 1fr; } }
+  .seam { background: var(--saffron); height: 3px; }
+  @media (min-width: 48rem) { .seam { height: auto; } }
+  .pane { padding: 1rem 1.25rem 1.25rem; min-width: 0; display: flex; flex-direction: column; }
+  .pane-label { font-size: 0.875rem; color: var(--slate); margin: 0 0 0.5rem; }
+  .pane-out .pane-label { text-align: right; }
+  textarea#src { width: 100%; min-height: 7rem; flex: 1; resize: vertical; border: 0; background: transparent; padding: 0;
+    font: 400 1.625rem/1.7 var(--tifinagh); color: var(--ink); }
+  textarea#src:focus-visible { outline: none; }
+  .pane-in:focus-within { box-shadow: inset 0 0 0 2px var(--indigo); }
+  #out { min-height: 6rem; flex: 1; font: 400 1.875rem/1.85 var(--arabic); white-space: pre-wrap; overflow-wrap: anywhere; text-align: right; }
+  #out mark { background: none; color: inherit; text-decoration: underline 3px var(--saffron); text-underline-offset: 0.35em; }
+  .pane-actions { display: flex; justify-content: flex-end; align-items: center; gap: 1rem; margin-top: 0.75rem; flex-wrap: wrap; }
+  .pane-out .pane-actions { justify-content: flex-end; }
+  .btn { border: 1px solid var(--line); background: var(--wool); border-radius: 0.5rem; padding: 0.4375rem 0.875rem; cursor: pointer; font-size: 0.9375rem; font-weight: 550; }
+  .btn:hover { border-color: var(--indigo); }
+  .btn-primary { background: var(--indigo); border-color: var(--indigo); color: var(--on-indigo); }
+  @media (min-width: 48rem) { textarea#src, #out { min-height: 11rem; } }
+  .ar-inline { font-family: var(--arabic); font-size: 1.15em; }
+
+  /* ── Tifinagh keyboard ─────────────────────────────────── */
+  details.keys { margin-top: 0.75rem; }
+  details.keys summary { cursor: pointer; font-size: 0.9375rem; font-weight: 550; color: var(--indigo); width: max-content; }
+  .keygrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(2.75rem, 1fr)); gap: 0.375rem; margin-top: 0.625rem; }
+  .keygrid button { border: 1px solid var(--line); background: var(--wool); border-radius: 0.375rem; height: 3rem; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.1; }
+  .keygrid button:hover { border-color: var(--indigo); }
+  .keygrid .t { font: 400 1.25rem var(--tifinagh); }
+  .keygrid .l { font-size: 0.6875rem; color: var(--slate); }
+  .keygrid .wide { grid-column: span 2; font-size: 0.875rem; }
+
+  /* ── Letter map: the memorable part ─────────────────────── */
+  .map { margin-top: 2.75rem; }
+  .map h2 { margin: 0; font-size: 1.25rem; font-weight: 650; line-height: 1.4; display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.25rem 0.5rem; }
+  .map h2 .w-t { font: 400 1.5rem var(--tifinagh); }
+  .map h2 .w-a { font: 700 1.625rem var(--arabic); }
+  .map .hint { color: var(--slate); margin: 0.375rem 0 0; font-size: 0.9375rem; }
+  .warp { display: flex; overflow-x: auto; margin-top: 1.25rem; padding-bottom: 0.25rem; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); scrollbar-width: thin; }
+  .thread { flex: 0 0 auto; min-width: 4.5rem; border: 0; border-right: 1px solid var(--line); background: transparent; padding: 0.875rem 0.75rem 0.75rem; cursor: pointer; display: grid; grid-template-rows: auto auto auto; justify-items: center; gap: 0.125rem; position: relative; }
+  .thread:first-child { border-left: 1px solid var(--line); }
+  .thread .t { font: 400 2rem/1.3 var(--tifinagh); }
+  .thread .l { font-size: 0.8125rem; color: var(--slate); }
+  .thread .a { font: 400 2.25rem/1.6 var(--arabic); min-height: 3.6rem; }
+  .thread .a.none { font: 400 0.8125rem/3.6rem var(--latin); color: var(--slate); }
+  .thread[aria-pressed="true"] { background: var(--loom); }
+  .thread[aria-pressed="true"]::before { content: ""; position: absolute; left: 0; right: 0; top: -1px; height: 4px; background: var(--saffron); }
+  .thread[aria-pressed="true"] .t, .thread[aria-pressed="true"] .a { color: var(--indigo); }
+  .explain { margin-top: 1.25rem; display: grid; gap: 1.5rem; }
+  @media (min-width: 48rem) { .explain { grid-template-columns: 1.2fr 1fr; gap: 3rem; } }
+  .explain h3 { margin: 0 0 0.5rem; font-size: 1rem; font-weight: 650; }
+  .explain ul { margin: 0; padding-left: 1.125rem; }
+  .explain li { margin: 0.25rem 0; max-width: 34rem; }
+  .explain .pair { font: 400 1.25rem var(--tifinagh); }
+  .explain .pair .ar { font: 400 1.5rem var(--arabic); }
+  .alts { list-style: none; padding: 0 !important; }
+  .alts li { display: flex; justify-content: space-between; gap: 1rem; border-bottom: 1px solid var(--line); padding: 0.375rem 0; margin: 0; }
+  .alts .ar { font: 400 1.375rem var(--arabic); }
+  .alts .why { color: var(--slate); font-size: 0.875rem; text-align: left; }
+
+  /* ── Warnings, examples, footer ─────────────────────────── */
+  .warnings { margin-top: 1rem; color: var(--warn); font-size: 0.9375rem; }
+  .warnings h2 { font-size: 1rem; margin: 0 0 0.25rem; }
+  .warnings ul { margin: 0; padding-left: 1.125rem; }
+  .examples { margin-top: 2.75rem; }
+  .examples h2 { font-size: 1.25rem; font-weight: 650; margin: 0 0 0.75rem; }
+  .examples ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .examples button { border: 1px solid var(--line); background: transparent; border-radius: 0.5rem; padding: 0.375rem 0.75rem 0.4375rem; cursor: pointer; text-align: left; }
+  .examples button:hover { border-color: var(--indigo); }
+  .examples .t { display: block; font: 400 1.25rem/1.4 var(--tifinagh); }
+  .examples .g { display: block; font-size: 0.8125rem; color: var(--slate); }
+  footer { margin-top: 3.5rem; color: var(--slate); font-size: 0.875rem; max-width: 40rem; }
+  footer a { color: var(--indigo); }
+  #missing { display: none; margin-top: 1.5rem; border-left: 3px solid var(--saffron); padding: 0.5rem 0 0.5rem 1rem; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  @media (prefers-reduced-motion: no-preference) { .btn, .thread { transition: background-color .15s, border-color .15s; } }
 </style>
 </head>
 <body>
 <main>
-  <h1>Tifinagh → Arabic script</h1>
-  <p class="lead">Transliteration of Moroccan Amazigh (not translation). Runs entirely in your browser.</p>
-  <div id="missing">Library bundle not found. Run <code>npm install &amp;&amp; npm run build</code>, then open this file again.</div>
+  <header class="masthead">
+    <h1>Tamazight in Arabic letters</h1>
+    <p class="lede">Type or paste Tifinagh. You get the same words written in Arabic script: this is transliteration, not translation. Everything runs in your browser.</p>
+  </header>
+  <p id="missing">This page needs the built library. Run <code>npm install</code> in the project folder, then open this file again.</p>
 
-  <label for="src">Tifinagh input</label>
-  <textarea id="src" lang="zgh" spellcheck="false">ⴰⵣⵓⵍ ⴼⵍⵍⴰⵡⵏ! ⵜⴰⵎⴰⵣⵉⵖⵜ ⵜⴰⵏⴰⵎⵓⵔⵜ</textarea>
-
-  <div class="row examples" aria-label="Examples">
-    <span>Examples:</span>
-    <button type="button">ⴰⵣⵓⵍ</button>
-    <button type="button">ⵜⴰⵎⴰⵣⵉⵖⵜ</button>
-    <button type="button">ⴰⵎⵖⴰⵔ</button>
-    <button type="button">ⵉⴼⴰⵙⵙⵏ</button>
-    <button type="button">ⵓⴽⵙⵓⵎ</button>
-    <button type="button">ⴰⴳⴳⵯⴰ</button>
+  <div class="controls">
+    <fieldset>
+      <legend>Spelling style</legend>
+      <div class="segmented" role="radiogroup">
+        <label><input type="radio" name="profile" value="readable" checked><span>Readable</span></label>
+        <label><input type="radio" name="profile" value="ircam"><span>IRCAM</span></label>
+        <label><input type="radio" name="profile" value="phonetic"><span>Phonetic</span></label>
+      </div>
+      <p class="profile-note" id="profile-note" aria-live="polite"></p>
+    </fieldset>
   </div>
 
-  <div class="row" style="margin-top:16px">
-    <label for="profile" style="margin:0">Profile</label>
-    <select id="profile">
-      <option value="readable" selected>readable (default)</option>
-      <option value="ircam">ircam (reference)</option>
-      <option value="phonetic">phonetic</option>
-    </select>
-    <button type="button" id="copy" class="primary">Copy output</button>
+  <section class="loom" aria-label="Converter">
+    <div class="pane pane-in">
+      <label class="pane-label" for="src">Tifinagh</label>
+      <textarea id="src" lang="zgh-Tfng" spellcheck="false" autocapitalize="off" autocomplete="off">ⴰⵣⵓⵍ ⴼⵍⵍⴰⵡⵏ! ⴰⵙⴳⴳⵯⴰⵙ ⴰⵎⴰⵢⵏⵓ ⵉⵖⵓⴷⴰⵏ.</textarea>
+      <div class="pane-actions">
+        <button type="button" class="btn" id="clear">Clear</button>
+      </div>
+      <details class="keys">
+        <summary>Tifinagh keyboard</summary>
+        <div class="keygrid" id="keygrid" aria-label="Insert a Tifinagh letter"></div>
+      </details>
+    </div>
+    <div class="seam" aria-hidden="true"></div>
+    <div class="pane pane-out">
+      <p class="pane-label" id="out-label">Arabic script</p>
+      <div id="out" lang="zgh-Arab" dir="rtl" aria-labelledby="out-label" aria-live="polite"></div>
+      <div class="pane-actions">
+        <button type="button" class="btn btn-primary" id="copy">Copy Arabic text</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="warnings" id="warnings" hidden>
+    <h2>Check these characters</h2>
+    <ul id="warning-list"></ul>
   </div>
 
-  <label for="out">Arabic script output</label>
-  <div id="out" class="out" lang="zgh-Arab" dir="rtl" aria-live="polite"></div>
-  <ul id="warnings" class="warn"></ul>
+  <section class="map" aria-labelledby="map-title">
+    <h2 id="map-title"></h2>
+    <p class="hint" id="map-hint"></p>
+    <div class="warp" id="warp" role="group" aria-label="Letters of the word"></div>
+    <div class="explain">
+      <div>
+        <h3 id="unit-title"></h3>
+        <ul id="unit-rules"></ul>
+      </div>
+      <div>
+        <h3>Other accepted spellings</h3>
+        <ul class="alts" id="alts"></ul>
+      </div>
+    </div>
+  </section>
 
-  <footer>Conventions follow the IRCAM correspondence tables; see the project README for profiles and limitations.</footer>
+  <section class="examples" aria-labelledby="ex-title">
+    <h2 id="ex-title">Try a word</h2>
+    <ul>
+      <li><button type="button" data-text="ⴰⵣⵓⵍ"><span class="t">ⴰⵣⵓⵍ</span><span class="g">azul, hello</span></button></li>
+      <li><button type="button" data-text="ⵜⴰⵎⴰⵣⵉⵖⵜ"><span class="t">ⵜⴰⵎⴰⵣⵉⵖⵜ</span><span class="g">tamaziɣt, the language</span></button></li>
+      <li><button type="button" data-text="ⵉⴼⴰⵙⵙⵏ"><span class="t">ⵉⴼⴰⵙⵙⵏ</span><span class="g">ifassn, hands</span></button></li>
+      <li><button type="button" data-text="ⵓⴽⵙⵓⵎ"><span class="t">ⵓⴽⵙⵓⵎ</span><span class="g">uksum, meat</span></button></li>
+      <li><button type="button" data-text="ⴰⵙⴳⴳⵯⴰⵙ"><span class="t">ⴰⵙⴳⴳⵯⴰⵙ</span><span class="g">asggʷas, year</span></button></li>
+      <li><button type="button" data-text="ⵜⴰⵎⴻⵣⴳⵉⴷⴰ"><span class="t">ⵜⴰⵎⴻⵣⴳⵉⴷⴰ</span><span class="g">tamezgida, mosque</span></button></li>
+    </ul>
+  </section>
+
+  <footer>
+    <p>Spellings follow the IRCAM correspondence tables, with the Tawalt dictionary's conventions in the Readable style. Arabic script cannot show every Amazigh sound; see the <a href="../README.md">README</a> and <a href="../docs/limitations.md">limitations</a>.</p>
+  </footer>
 </main>
+
 <script src="../dist/browser/amazigh-transliterate.min.js"></script>
 <script>
-  (function () {
-    var lib = window.AmazighTransliterate
-    var src = document.getElementById('src')
-    var out = document.getElementById('out')
-    var warn = document.getElementById('warnings')
-    var profile = document.getElementById('profile')
-    if (!lib) { document.getElementById('missing').style.display = 'block'; return }
-    function run() {
-      var r = lib.transliterate(src.value, { profile: profile.value })
-      out.textContent = r.output
-      warn.innerHTML = ''
-      r.warnings.filter(function (w) { return w.severity !== 'info' }).forEach(function (w) {
-        var li = document.createElement('li'); li.textContent = w.code + ': ' + w.message; warn.appendChild(li)
-      })
+(function () {
+  'use strict'
+  var lib = window.AmazighTransliterate
+  if (!lib) { document.getElementById('missing').style.display = 'block'; return }
+
+  var src = document.getElementById('src')
+  var out = document.getElementById('out')
+  var copyBtn = document.getElementById('copy')
+
+  var PROFILE_NOTES = {
+    readable: 'Everyday spelling, as in the Tawalt dictionary: أ ئ ؤ at the start of words, گ for ⴳ, shadda for doubled letters.',
+    ircam: 'Letter by letter, following IRCAM’s tables: doubled letters are written twice, and ⵡ ⵢ ⵕ keep a mark.',
+    phonetic: 'Shows as many sounds as Arabic script allows, including the neutral vowel ⴻ as a kasra.'
+  }
+
+  // Plain-language explanations of the engine's rules (ids from src/rules/rules.ts).
+  var EXPLAIN = {
+    'vowel.initial.hamza-all.a': 'ⴰ at the start of a word is written أ.',
+    'vowel.initial.hamza-all.i': 'ⵉ at the start of a word is written ئ, without an extra ي.',
+    'vowel.initial.hamza-all.u': 'ⵓ at the start of a word is written ؤ.',
+    'vowel.initial.hamza-seat.a': 'ⴰ at the start of a word is written with a plain ا.',
+    'vowel.initial.hamza-seat.i': 'ⵉ at the start of a word is written ئ, without an extra ي.',
+    'vowel.initial.hamza-seat.u': 'ⵓ at the start of a word is written ؤ.',
+    'semivowel.initial.plain-y': 'ⵢ at the start of a word needs no mark: it cannot be the vowel ⵉ there.',
+    'letter.base': 'Written with its usual Arabic letter.',
+    'schwa.letter': 'The neutral vowel ⴻ has no Arabic letter.',
+    'schwa.mark': 'The neutral vowel ⴻ is shown as a kasra on the letter before it.',
+    'schwa.between-identical': 'This ⴻ keeps two identical letters apart, so they are written twice and get no shadda.',
+    'gemination.shadda': 'A doubled consonant is written once, with a shadda (ّ).',
+    'gemination.double': 'A doubled consonant is written as two letters.',
+    'gemination.single': 'A doubled consonant is written once, without a mark.',
+    'labialization.damma': 'The rounding mark ⵯ becomes a damma (ُ).',
+    'base.g.gaf': 'ⴳ is written گ.',
+    'base.g.ng': 'ⴳ is written ڭ, as in IRCAM’s Table II.',
+    'base.r-emphatic.dot-below': 'ⵕ is written ڔ, so it stays distinct from ⵔ.',
+    'base.w.mark-arabic': 'The small mark (ٛ) shows that ⵡ is a consonant, not the vowel ⵓ.',
+    'base.y.mark-arabic': 'The small mark (ٛ) shows that ⵢ is a consonant, not the vowel ⵉ.',
+    'base.z-emphatic.jeh': 'ⵥ is written ژ, as in IRCAM’s Table I.',
+    'base.extended.albane2025': 'This letter is not part of Moroccan standard Tifinagh; it is written as in Algerian practice.',
+    'passthrough.unsupported': 'This character has no Arabic equivalent, so it is kept as it is.'
+  }
+
+  // Isolate each run of Arabic letters inside English text, so "أ ئ ؤ" keeps its order.
+  var ARABIC_RUN = /([\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF]+)/
+  function mixed(text) {
+    var frag = document.createDocumentFragment()
+    String(text).split(ARABIC_RUN).forEach(function (part, i) {
+      if (!part) return
+      if (i % 2) { var b = el('bdi', 'ar-inline', part); b.setAttribute('dir', 'rtl'); frag.appendChild(b) }
+      else frag.appendChild(document.createTextNode(part))
+    })
+    return frag
+  }
+  function setMixed(node, text) { node.textContent = ''; node.appendChild(mixed(text)) }
+
+  // Reader-facing names for the library's alternative-spelling variants.
+  var ALT_LABELS = {
+    'initial vowels all with hamza (أ / ئ / ؤ, Tawalt dictionary)': 'Hamza on every first vowel, as in Tawalt',
+    'initial vowels ا / ئ / ؤ (IRCAM Table II)': 'Plain ا for a first ⴰ, as in IRCAM’s tables',
+    'initial vowels with alef (اي / او / ا)': 'First vowel after an alef: اي او ا',
+    'initial vowels with hamza on alef (إي / أو / أ)': 'First vowel after أ or إ: إي أو أ',
+    'gemination as doubled letters': 'Doubled letter written twice',
+    'gemination not written': 'Doubled letter written once, no shadda',
+    'g as kaf (ك)': 'ⴳ written ك, as in official place names',
+    'g as gaf (گ, IRCAM Table I, Tawalt)': 'ⴳ written گ',
+    'g as ڭ (IRCAM Table II)': 'ⴳ written ڭ, as in IRCAM’s Table II',
+    'ẓ as zain (ز)': 'ⵥ written ز',
+    'ẓ as zah (ظ)': 'ⵥ written ظ',
+    'labialization not written': 'Rounding mark ⵯ left out',
+    'semivowels unmarked': 'No mark on ⵡ and ⵢ',
+    'ṛ as plain reh': 'ⵕ written ر',
+    'rule-based spelling (lexicon overridden)': 'Spelling from the rules'
+  }
+
+  // What each warning means for the reader, and what to check.
+  function warningText(w) {
+    var q = '‘' + w.source + '’'
+    switch (w.code) {
+      case 'ORPHAN_LABIALIZATION': return 'The rounding mark ⵯ must follow a consonant. It was left as it is.'
+      case 'UNSUPPORTED_TIFINAGH': return q + ' is not a Moroccan Tifinagh letter and has no Arabic equivalent. It was left as it is.'
+      case 'NONSTANDARD_LETTER': return q + ' is not part of Moroccan standard Tifinagh. It was written as in Algerian practice.'
+      case 'NONSTANDARD_LABIALIZATION': return q + ': in standard spelling only ⴳ and ⴽ take the rounding mark ⵯ. Check the word.'
+      case 'COMBINING_MARK_ON_TIFINAGH': return 'A mark on ' + q + ' has no Arabic equivalent. It was left as it is.'
+      case 'LONG_CONSONANT_RUN': return q + ' repeats a letter three or more times. Check the spelling.'
+      default: return w.message
     }
-    src.addEventListener('input', run)
-    profile.addEventListener('change', run)
-    document.querySelectorAll('.examples button').forEach(function (b) {
-      b.addEventListener('click', function () { src.value = b.textContent; run() })
+  }
+
+  function profile() { return document.querySelector('input[name="profile"]:checked').value }
+  function el(tag, cls, text) { var n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n }
+  var isTif = function (ch) { var c = ch.charCodeAt(0); return (c >= 0x2D30 && c <= 0x2D6F) || c === 0x2D7F }
+
+  // Word under the caret (or the first Tifinagh word in the text).
+  function activeWord(text, caret) {
+    var s = caret, e = caret
+    while (s > 0 && isTif(text[s - 1])) s--
+    while (e < text.length && isTif(text[e])) e++
+    if (e > s) return { start: s, end: e }
+    for (var i = 0; i < text.length; i++) {
+      if (isTif(text[i])) { var j = i; while (j < text.length && isTif(text[j])) j++; return { start: i, end: j } }
+    }
+    return null
+  }
+
+  var selected = 0
+  var lastWordStart = -1
+
+  function render() {
+    var text = src.value
+    var p = profile()
+    var big = text.length > 20000
+    var r = lib.transliterate(text, { profile: p, alternatives: !big })
+    var word = activeWord(text, src.selectionStart || 0)
+
+    // Output, with the active word underlined when the mapping is exact.
+    out.textContent = ''
+    var built = false
+    if (r.alternatives && word) {
+      var pieces = [], cursor = 0, hit = null
+      r.alternatives.forEach(function (w) {
+        pieces.push(document.createTextNode(text.slice(cursor, w.position)))
+        if (w.position === word.start) { hit = el('mark', null, w.output); pieces.push(hit) } else pieces.push(document.createTextNode(w.output))
+        cursor = w.position + w.source.length
+      })
+      pieces.push(document.createTextNode(text.slice(cursor)))
+      var joined = pieces.map(function (n) { return n.textContent }).join('')
+      if (joined === r.output) { pieces.forEach(function (n) { out.appendChild(n) }); built = true }
+    }
+    if (!built) out.textContent = r.output
+    if (!text) out.textContent = ''
+
+    setMixed(document.getElementById('profile-note'), PROFILE_NOTES[p])
+
+    // Warnings worth acting on (info-level notes are not shown here).
+    var ws = r.warnings.filter(function (w) { return w.severity !== 'info' })
+    var wl = document.getElementById('warning-list')
+    wl.textContent = ''
+    ws.slice(0, 8).forEach(function (w) { var li = el('li'); li.appendChild(mixed(warningText(w))); wl.appendChild(li) })
+    document.getElementById('warnings').hidden = ws.length === 0
+
+    renderMap(word ? text.slice(word.start, word.end) : '', p, word ? word.start : -1)
+  }
+
+  function renderMap(word, p, start) {
+    var title = document.getElementById('map-title')
+    var hint = document.getElementById('map-hint')
+    var warp = document.getElementById('warp')
+    var unitTitle = document.getElementById('unit-title')
+    var unitRules = document.getElementById('unit-rules')
+    var alts = document.getElementById('alts')
+    title.textContent = ''; warp.textContent = ''; unitRules.textContent = ''; alts.textContent = ''; unitTitle.textContent = ''
+    if (!word) {
+      title.textContent = 'Letter by letter'
+      hint.textContent = 'Type a Tifinagh word to see how each of its letters is written in Arabic script.'
+      return
+    }
+    if (start !== lastWordStart) { selected = 0; lastWordStart = start }
+    var r = lib.transliterate(word, { profile: p, trace: true, alternatives: true })
+    title.append('How ', el('span', 'w-t', word), ' became ', el('bdi', 'w-a', r.output))
+    title.querySelector('.w-a').setAttribute('dir', 'rtl')
+    hint.textContent = 'Each column is one Tifinagh letter and what it became. Select a column to see why. Move the cursor to another word to map it.'
+
+    var units = r.trace
+    if (selected >= units.length) selected = 0
+    units.forEach(function (u, i) {
+      var b = el('button', 'thread')
+      b.type = 'button'
+      b.setAttribute('aria-pressed', i === selected ? 'true' : 'false')
+      var latin = lib.convert(u.source, { from: 'tifinagh', to: 'latin' }).output
+      b.append(el('span', 't', u.source), el('span', 'l', latin))
+      var a = el('span', u.output ? 'a' : 'a none', u.output || 'not written')
+      if (u.output) { a.setAttribute('dir', 'rtl'); a.setAttribute('lang', 'zgh-Arab') }
+      b.appendChild(a)
+      b.setAttribute('aria-label', u.source + ' (' + latin + ') becomes ' + (u.output || 'nothing'))
+      b.addEventListener('click', function () { selected = i; renderMap(word, p, start) })
+      warp.appendChild(b)
     })
-    document.getElementById('copy').addEventListener('click', function () {
-      if (navigator.clipboard) navigator.clipboard.writeText(out.textContent)
+
+    var u = units[selected]
+    if (u) {
+      unitTitle.className = 'pair'
+      unitTitle.append(el('span', null, u.source + '  '), document.createTextNode('→ '))
+      var ar = el('bdi', 'ar', u.output || '–'); ar.setAttribute('dir', 'rtl'); unitTitle.appendChild(ar)
+      var seen = {}
+      var specific = u.rules.some(function (id) { return id.indexOf('base.') === 0 && EXPLAIN[id] })
+      var marked = u.rules.indexOf('schwa.mark') >= 0
+      u.rules.forEach(function (id) {
+        if (id === 'letter.base' && specific) return
+        if (id === 'schwa.letter' && marked) return
+        var text = EXPLAIN[id]
+        if (!text || seen[text]) return
+        seen[text] = true
+        var li = el('li'); li.appendChild(mixed(text)); unitRules.appendChild(li)
+      })
+      if (!unitRules.children.length) unitRules.appendChild(el('li', null, 'Written with its usual Arabic letter.'))
+    }
+
+    var list = (r.alternatives[0] && r.alternatives[0].alternatives) || []
+    if (!list.length) alts.appendChild(el('li', 'why', 'No other common spelling for this word.'))
+    list.slice(0, 6).forEach(function (a) {
+      var li = el('li')
+      var s = el('span', 'ar', a.output); s.setAttribute('dir', 'rtl'); s.setAttribute('lang', 'zgh-Arab')
+      var why = el('span', 'why'); why.appendChild(mixed(ALT_LABELS[a.label] || a.label))
+      li.append(why, s)
+      alts.appendChild(li)
     })
-    run()
-  })()
+  }
+
+  // Keyboard: the 31 IRCAM letters plus the labialization mark.
+  var grid = document.getElementById('keygrid')
+  lib.IRCAM_LETTERS.concat([{ char: 'ⵯ', latin: 'ʷ' }]).forEach(function (l) {
+    var b = el('button')
+    b.type = 'button'
+    b.append(el('span', 't', l.char), el('span', 'l', l.latin))
+    b.setAttribute('aria-label', 'Insert ' + l.char + ' (' + l.latin + ')')
+    b.addEventListener('click', function () { insert(l.char) })
+    grid.appendChild(b)
+  })
+  var space = el('button', 'wide', 'Space'); space.type = 'button'
+  space.addEventListener('click', function () { insert(' ') })
+  var back = el('button', 'wide', 'Delete'); back.type = 'button'
+  back.addEventListener('click', function () {
+    var s = src.selectionStart, e = src.selectionEnd
+    if (s === e && s > 0) s--
+    src.setRangeText('', s, e, 'end'); src.focus(); render()
+  })
+  grid.append(space, back)
+
+  function insert(ch) {
+    src.setRangeText(ch, src.selectionStart, src.selectionEnd, 'end')
+    src.focus()
+    render()
+  }
+
+  src.addEventListener('input', render)
+  ;['keyup', 'click', 'select'].forEach(function (ev) { src.addEventListener(ev, render) })
+  document.querySelectorAll('input[name="profile"]').forEach(function (r) { r.addEventListener('change', render) })
+  document.getElementById('clear').addEventListener('click', function () { src.value = ''; src.focus(); render() })
+  document.querySelectorAll('.examples button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      src.value = b.getAttribute('data-text')
+      src.setSelectionRange(0, 0)
+      render()
+      document.getElementById('map-title').scrollIntoView({ block: 'nearest', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' })
+    })
+  })
+
+  var copyTimer
+  copyBtn.addEventListener('click', function () {
+    var text = out.textContent
+    var done = function () { copyBtn.textContent = 'Copied'; clearTimeout(copyTimer); copyTimer = setTimeout(function () { copyBtn.textContent = 'Copy Arabic text' }, 1600) }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, function () { selectOut(); })
+    else selectOut()
+  })
+  function selectOut() {
+    var range = document.createRange(); range.selectNodeContents(out)
+    var sel = getSelection(); sel.removeAllRanges(); sel.addRange(range)
+    copyBtn.textContent = 'Text selected: press Ctrl+C'
+  }
+
+  src.setSelectionRange(src.value.indexOf('ⴰⵙⴳⴳⵯⴰⵙ') + 1, src.value.indexOf('ⴰⵙⴳⴳⵯⴰⵙ') + 1)
+  render()
+})()
 </script>
 </body>
 </html>

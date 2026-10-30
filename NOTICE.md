@@ -22,6 +22,13 @@ verbatim in [`LICENSE.upstream`](LICENSE.upstream); the combined work is MIT
   17(1), 2025 — six correspondences for non-IRCAM letters and three short
   worked examples quoted for comparison (`data/gold/albane2025-examples.json`).
 
+## Fonts shipped with the demo
+
+`demo/fonts/` contains Noto Sans (Latin, variable), Noto Sans Tifinagh and
+Noto Naskh Arabic as WOFF2 files from the Fontsource packages (5.3.0), by
+the Noto Project Authors, under the SIL Open Font License 1.1
+(`demo/fonts/OFL-*.txt`). They let the demo work offline.
+
 ## Data shipped in this repository
 
 | File | Origin | License |
