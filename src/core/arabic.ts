@@ -41,12 +41,14 @@ export interface ArabicResult {
  */
 export const ALTERNATIVE_VARIANTS: ReadonlyArray<{ label: string; options: Partial<ArabicOptions> }> = [
   { label: 'initial vowels all with hamza (أ / ئ / ؤ, Tawalt dictionary)', options: { initialVowels: 'hamza-all' } },
+  { label: 'initial vowels ا / ئ / ؤ (IRCAM Table II)', options: { initialVowels: 'hamza-seat' } },
   { label: 'initial vowels with alef (اي / او / ا)', options: { initialVowels: 'alef' } },
   { label: 'initial vowels with hamza on alef (إي / أو / أ)', options: { initialVowels: 'hamza-alef' } },
   { label: 'gemination as doubled letters', options: { gemination: 'double' } },
   { label: 'gemination not written', options: { gemination: 'single' } },
   { label: 'g as kaf (ك)', options: { g: 'kaf' } },
-  { label: 'g as gaf (گ, IRCAM Table I)', options: { g: 'gaf' } },
+  { label: 'g as gaf (گ, IRCAM Table I, Tawalt)', options: { g: 'gaf' } },
+  { label: 'g as ڭ (IRCAM Table II)', options: { g: 'ng' } },
   { label: 'ẓ as zain (ز)', options: { emphaticZ: 'zain' } },
   { label: 'ẓ as zah (ظ)', options: { emphaticZ: 'zah' } },
   { label: 'labialization not written', options: { labialization: 'omit' } },

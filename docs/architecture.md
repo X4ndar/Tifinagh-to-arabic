@@ -90,7 +90,7 @@ overridden per call (`arabic: { gemination: 'double' }`) or on the CLI
 
 | Option | Values (default in **readable**) |
 |---|---|
-| `g` | **`ng`** ڭ · `gaf` گ · `kaf` ك · `qaf3` ڨ |
+| `g` | `ng` ڭ (ircam, phonetic) · **`gaf`** گ · `kaf` ك · `qaf3` ڨ |
 | `k` | **`kaf`** ك · `keheh` ک |
 | `emphaticR` | **`plain`** ر · `dot-below` ڔ · `ircam-literal` ر+U+05B6 |
 | `emphaticZ` | **`jeh`** ژ · `zah` ظ · `zain` ز |
@@ -99,7 +99,7 @@ overridden per call (`arabic: { gemination: 'double' }`) or on the CLI
 | `labialization` | **`damma`** · `ircam-table1` (‘) · `omit` |
 | `gemination` | **`shadda`** · `double` · `single` |
 | `schwa` | **`omit`** · `kasra` · `fatha` |
-| `initialVowels` | **`hamza-seat`** ا ئ ؤ · `hamza-all` أ ئ ؤ · `alef` ا اي او · `hamza-alef` أ إي أو |
+| `initialVowels` | `hamza-seat` ا ئ ؤ (ircam, phonetic) · **`hamza-all`** أ ئ ؤ · `alef` ا اي او · `hamza-alef` أ إي أو |
 | `hiatus` | **`plain`** · `hamza-seat` |
 | `h` | **`heh`** ه · `heh-doachashmee` ھ |
 | `punctuation` | **`preserve`** · `arabic` |
@@ -173,3 +173,7 @@ always holds (property-tested).
 * `ConvertOptions`/`ConvertResult`/`ConversionWarning` gain optional fields
   only.
 * Package renamed `amazigh-transliterate` (fork); version 0.2.0.
+* Within this version, `readable` changed its defaults to the Tawalt
+  dictionary's conventions (`initialVowels: 'hamza-all'`, `g: 'gaf'`):
+  ⴰⵣⵓⵍ → أزول (was ازول), ⴳ → گ (was ڭ). Pass
+  `{ initialVowels: 'hamza-seat', g: 'ng' }` for the previous output.

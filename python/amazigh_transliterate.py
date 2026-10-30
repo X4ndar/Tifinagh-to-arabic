@@ -7,11 +7,11 @@ Usage
 -----
     from amazigh_transliterate import Transliterator, to_arabic
 
-    to_arabic("ⴰⵣⵓⵍ")                       # 'ازول'  (one-shot, spawns a process)
+    to_arabic("ⴰⵣⵓⵍ")                       # 'أزول'  (one-shot, spawns a process)
 
     with Transliterator(profile="readable") as tr:   # persistent process, fast for batches
         tr.convert("ⵜⴰⵎⴰⵣⵉⵖⵜ")              # 'تامازيغت'
-        tr.convert_many(["ⴰⵎⵖⴰⵔ", "ⵉⴼⴰⵙⵙⵏ"])  # ['امغار', 'ئفاسّن']
+        tr.convert_many(["ⴰⵎⵖⴰⵔ", "ⵉⴼⴰⵙⵙⵏ"])  # ['أمغار', 'ئفاسّن']
         tr.convert_detailed("ⵯ")             # {'output': 'ⵯ', 'warnings': [...]}
 
 The CLI is located via, in order: the `cli` argument, the AMAZIGH_TRANSLITERATE_CLI

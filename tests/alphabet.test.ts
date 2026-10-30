@@ -103,12 +103,12 @@ describe('labialization (U+2D6F)', () => {
   test('ⴳⵯ and ⴽⵯ are single units (longest match)', () => {
     const r = transliterate('ⴰⴳⵯⵎⵎⴰⵔ', { trace: true })
     expect(r.trace!.map((t) => t.source)).toEqual(['ⴰ', 'ⴳⵯ', 'ⵎⵎ', 'ⴰ', 'ⵔ'])
-    expect(r.output).toBe('اڭُمّار')
-    expect(toArabic('ⴰⴽⵯⴰⵎ')).toBe('اكُام')
+    expect(r.output).toBe('أگُمّار')
+    expect(toArabic('ⴰⴽⵯⴰⵎ')).toBe('أكُام')
   })
 
   test('the Table I quote-mark style is available and documented', () => {
-    expect(toArabic('ⴰⴳⵯⴰ', { arabic: { labialization: 'ircam-table1', g: 'gaf' } })).toBe('اگ' + AR.LEFT_SINGLE_QUOTE + 'ا')
+    expect(toArabic('ⴰⴳⵯⴰ', { arabic: { labialization: 'ircam-table1', g: 'gaf' } })).toBe('أگ' + AR.LEFT_SINGLE_QUOTE + 'ا')
   })
 
   test('labialization on other consonants is converted but flagged', () => {
@@ -119,9 +119,9 @@ describe('labialization (U+2D6F)', () => {
 
   test.each([
     ['word-initial', 'ⵯⴰⵏ', 'ⵯان'],
-    ['after a vowel', 'ⴰⵯⵏ', 'اⵯن'],
+    ['after a vowel', 'ⴰⵯⵏ', 'أⵯن'],
     ['after schwa', 'ⴷⴻⵯ', 'دⵯ'],
-    ['doubled mark', 'ⴳⵯⵯ', 'ڭُⵯ'],
+    ['doubled mark', 'ⴳⵯⵯ', 'گُⵯ'],
     ['alone', 'ⵯ', 'ⵯ'],
   ])('invalid placement (%s) keeps the mark and warns', (_label, input, expected) => {
     const r = transliterate(input)
@@ -131,7 +131,7 @@ describe('labialization (U+2D6F)', () => {
 
   test('U+02B7 (ʷ) after a Tifinagh consonant is normalized to ⵯ', () => {
     const r = transliterate('ⴰⴳʷⴰ')
-    expect(r.output).toBe('اڭُا')
+    expect(r.output).toBe('أگُا')
     expect(r.warnings.map((w) => w.code)).toEqual(['MODIFIER_NORMALIZED'])
   })
 })
@@ -149,14 +149,14 @@ describe('non-IRCAM Tifinagh', () => {
       const ch = String.fromCodePoint(cp)
       if (known.has(ch)) continue
       const r = transliterate('ⴰ' + ch)
-      expect(r.output).toBe('ا' + ch)
+      expect(r.output).toBe('أ' + ch)
       expect(r.warnings.map((w) => w.code)).toEqual(['UNSUPPORTED_TIFINAGH'])
     }
   })
 
   test('U+2D70 separator mark is punctuation and is preserved', () => {
     const r = transliterate('ⴰⵣⵓⵍ⵰')
-    expect(r.output).toBe('ازول⵰')
+    expect(r.output).toBe('أزول⵰')
     expect(r.warnings).toHaveLength(0)
   })
 })

@@ -116,21 +116,26 @@ const V = AR.INVERTED_SMALL_V_ABOVE
  */
 export const CORRESPONDENCES: readonly Correspondence[] = [
   row('ⴰ', 'a', AR.ALEF, [AR.ALEF, AR.ALEF, AR.ALEF], {
-    alternatives: [{ arabic: AR.ALEF_HAMZA_ABOVE, label: 'word-initial hamza (أ), Arabic-orthography convention', sources: ['ALBANE-2025'] }],
+    sources: ['IRCAM-T1', 'TAWALT'],
+    alternatives: [
+      { arabic: AR.ALEF_HAMZA_ABOVE, label: 'word-initial أ (Tawalt; readable default)', sources: ['TAWALT', 'ALBANE-2025'] },
+      { arabic: AR.ALEF, label: 'word-initial bare ا (ircam/phonetic; specification examples, Wikidata)', sources: ['IRCAM-T1', 'WIKIDATA-SHI'] },
+    ],
   }),
   row('ⴱ', 'b', AR.BEH, [AR.BEH, AR.BEH, AR.BEH]),
-  row('ⴳ', 'g', AR.GAF, [AR.NG, AR.NG, AR.NG], {
+  row('ⴳ', 'g', AR.GAF, [AR.NG, AR.GAF, AR.NG], {
     ircamTable1TextLayer: null,
     ircamTable2: { arabic: AR.NG, context: 'everywhere' },
-    sources: ['IRCAM-T1', 'IRCAM-T2'],
+    sources: ['IRCAM-T1', 'IRCAM-T2', 'TAWALT'],
     alternatives: [
-      { arabic: AR.GAF, label: 'gaf گ (IRCAM Table I)', sources: ['IRCAM-T1'] },
+      { arabic: AR.GAF, label: 'gaf گ (IRCAM Table I; Tawalt; readable default)', sources: ['IRCAM-T1', 'TAWALT'] },
+      { arabic: AR.NG, label: 'ڭ (IRCAM Table II; ircam/phonetic default)', sources: ['IRCAM-T2'] },
       { arabic: AR.KAF, label: 'kaf ك (official Arabic toponyms, e.g. أكادير)', sources: ['PROJECT'] },
       { arabic: AR.QAF_THREE_DOTS, label: 'ڨ (Algerian convention)', sources: ['ALBANE-2025'] },
     ],
-    notes: 'Table II replaces Table I gaf by ڭ "to help the reader to correctly pronounce" ⴳ.',
+    notes: 'Table II replaces Table I gaf by ڭ "to help the reader to correctly pronounce" ⴳ; Tawalt keeps گ (99 % of 4,172 occurrences), which readable follows.',
   }),
-  row('ⴳⵯ', 'gʷ', AR.GAF + AR.LEFT_SINGLE_QUOTE, [AR.NG + AR.DAMMA, AR.NG + AR.DAMMA, AR.NG + AR.DAMMA], {
+  row('ⴳⵯ', 'gʷ', AR.GAF + AR.LEFT_SINGLE_QUOTE, [AR.NG + AR.DAMMA, AR.GAF + AR.DAMMA, AR.NG + AR.DAMMA], {
     ircamTable1TextLayer: AR.LEFT_SINGLE_QUOTE,
     ircamTable2: { arabic: AR.NG + AR.DAMMA, context: 'everywhere' },
     sources: ['IRCAM-T1', 'IRCAM-T2'],

@@ -1,7 +1,7 @@
 {
   "description": "Illustrative Tifinagh → Arabic-script examples confirmed by the project specification (also listed in the README of mustapharajaa/tamazight-Transliterating-en-ar).",
   "sourceType": "maintainer-confirmed examples (not independently published)",
-  "profile": "readable",
+  "profile": "readable with initialVowels=hamza-seat (bare ا word-initially; the readable default writes أ)",
   "entries": [
     { "tifinagh": "ⴰⵣⵓⵍ", "arabic": "ازول", "latin": "azul", "gloss": "hello (greeting)" },
     { "tifinagh": "ⵜⴰⵎⴰⵣⵉⵖⵜ", "arabic": "تامازيغت", "latin": "tamaziɣt", "gloss": "the Amazigh language" },

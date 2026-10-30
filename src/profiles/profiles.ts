@@ -58,19 +58,19 @@ export const IRCAM_PROFILE: ProfileDefinition = {
 }
 
 /**
- * `readable` — default. Natural Arabic-script spelling of Moroccan Amazigh:
- * IRCAM letters, Table II initial vowels, shadda for gemination, no extra
- * marks on ⵡ ⵢ ⵕ. Matches every independently sourced Moroccan example
- * available (see docs/evaluation.md).
+ * `readable` — default. Natural Arabic-script spelling of Moroccan Amazigh as
+ * written in the Tawalt dictionary (the largest independent reference):
+ * أ ئ ؤ word-initially, گ for ⴳ, shadda for gemination, no extra marks on
+ * ⵡ ⵢ ⵕ. See docs/evaluation.md.
  */
 export const READABLE_PROFILE: ProfileDefinition = {
   id: 'readable',
   title: 'Readable (default)',
   description:
-    'IRCAM letters with Table II conventions; shadda for gemination; no diacritics on semivowels or ṛ; schwa not written.',
+    'Tawalt dictionary conventions on IRCAM letters: أ ئ ؤ word-initially, گ for ⴳ, shadda for gemination; no diacritics on semivowels or ṛ; schwa not written.',
   options: {
     ...COMMON,
-    g: 'ng',
+    g: 'gaf',
     emphaticR: 'plain',
     emphaticZ: 'jeh',
     semivowelMark: 'none',
@@ -78,15 +78,19 @@ export const READABLE_PROFILE: ProfileDefinition = {
     labialization: 'damma',
     gemination: 'shadda',
     schwa: 'omit',
-    initialVowels: 'hamza-seat',
+    initialVowels: 'hamza-all',
   },
   rationale: {
+    g: { sources: ['TAWALT', 'IRCAM-T1'], note: 'Tawalt writes گ for ⴳ in 99 % of words (also IRCAM Table I); Table II’s ڭ remains in ircam/phonetic.' },
     gemination: {
-      sources: ['WIKIDATA-SHI', 'IRCAM-RULES', 'ALBANE-2025'],
+      sources: ['WIKIDATA-SHI', 'IRCAM-RULES', 'ALBANE-2025', 'TAWALT'],
       note: 'ⵉⴼⴰⵙⵙⵏ → ئفاسّن (Wikidata); IRCAM treats shadda as the Arabic-script mark of gemination; Albane R2.',
     },
     semivowelMark: { sources: ['WIKIDATA-SHI'], note: 'ⴱⵔⴰⵢⵔ → براير: semivowels written plainly.' },
-    initialVowels: { sources: ['IRCAM-T2', 'WIKIDATA-SHI'], note: 'ⵓⴽⵙⵓⵎ → ؤكسوم; ⵉⴼⴰⵙⵙⵏ → ئفاسّن.' },
+    initialVowels: {
+      sources: ['TAWALT', 'IRCAM-T2'],
+      note: 'Tawalt: initial ⴰ → أ (10,558 vs 12 ا), ⵉ → ئ, ⵓ → ؤ. ئ / ؤ match Table II and Wikidata; bare ا (ازول, افوس) remains in ircam/phonetic.',
+    },
     emphaticR: { sources: ['ALBANE-2025', 'PROJECT'], note: 'Plain ر keeps text free of rare letters; ṛ distinction is lost (documented).' },
   },
 }

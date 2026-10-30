@@ -45,7 +45,7 @@ Inside a word, tokenization is longest-match:
 |---|---|---|---|---|
 | ⴰ a | ا | ا | ا | documented T1 |
 | ⴱ b | ب | ب | ب | documented T1 |
-| ⴳ g | ڭ | ڭ | ڭ | documented T2 (T1: گ) |
+| ⴳ g | گ | ڭ | ڭ | readable: T1 + Tawalt (99 %); ircam/phonetic: T2 |
 | ⴷ d | د | د | د | documented T1 |
 | ⴹ ḍ | ض | ض | ض | documented T1 |
 | ⴻ e | — | — | kasra on previous consonant | T1 cell empty; kasra heuristic |
@@ -74,7 +74,7 @@ Inside a word, tokenization is longest-match:
 | ⵢ y | ي | يٛ | يٛ | idem |
 | ⵣ z | ز | ز | ز | documented T1 |
 | ⵥ ẓ | ژ | ژ | ژ | documented T1 |
-| ⴳⵯ gʷ | ڭُ | ڭُ | ڭُ | documented T2 |
+| ⴳⵯ gʷ | گُ | ڭُ | ڭُ | documented T2 (damma); letter as for ⴳ |
 | ⴽⵯ kʷ | كُ | كُ | كُ | documented T2 |
 
 Non-IRCAM letters (always with `NONSTANDARD_LETTER`): ⴲ ب, ⴵ ج, ⴸ ذ, ⵒ پ,
@@ -87,19 +87,24 @@ Rules are matched in priority order; for each (letter, previous letter class,
 options) exactly one rule of the highest matching priority applies — a test
 enumerates all combinations to guarantee this.
 
-| Rule id | Context | Output | Status | Source | Example (readable) |
+| Rule id | Context | Output | Status | Source | Example |
 |---|---|---|---|---|---|
-| `vowel.initial.hamza-seat.i` | ⵉ at word start | ئ (no extra ي) | documented | T2, Wikidata | ⵉⴼⴰⵙⵙⵏ → ئفاسّن |
-| `vowel.initial.hamza-seat.u` | ⵓ at word start | ؤ | documented | T2, Wikidata | ⵓⴽⵙⵓⵎ → ؤكسوم |
-| `vowel.initial.hamza-seat.a` | ⴰ at word start | ا (no hamza) | documented | T1, Wikidata, spec | ⴰⵣⵓⵍ → ازول |
+| `vowel.initial.hamza-all.*` | word start, **readable default** (`initialVowels: hamza-all`) | أ / ئ / ؤ | documented | Tawalt (أ 10,558 vs ا 12); ئ ؤ also T2 | ⴰⵣⵓⵍ → أزول, ⵉⴼⴰⵙⵙⵏ → ئفاسّن |
+| `vowel.initial.hamza-seat.i` | ⵉ at word start (ircam, phonetic) | ئ (no extra ي) | documented | T2, Wikidata | ⵉⴼⴰⵙⵙⵏ → ئفاسّن |
+| `vowel.initial.hamza-seat.u` | ⵓ at word start (ircam, phonetic) | ؤ | documented | T2, Wikidata | ⵓⴽⵙⵓⵎ → ؤكسوم |
+| `vowel.initial.hamza-seat.a` | ⴰ at word start (ircam, phonetic) | ا (no hamza) | documented | T1, Wikidata, spec | ircam: ⴰⵣⵓⵍ → ازول |
 | `vowel.initial.alef.*` | option `initialVowels: alef` | اي / او / ا | heuristic | — | ⵉⵎⵉ → ايمي |
-| `vowel.initial.hamza-all.*` | option `initialVowels: hamza-all` | أ / ئ / ؤ | documented | Tawalt | ⴰⵙⴰⴳⴳⴰⵍ → أساڭّال |
 | `vowel.initial.hamza-alef.*` | option `initialVowels: hamza-alef` | إي / أو / أ | documented | Albane 2025 | ⵉⵎⵉ → إيمي |
 | (default) vowel after a vowel | ⵉ/ⵓ right after a vowel | plain ي / و (`letter.base`), `VOWEL_HIATUS` info | documented | Tawalt (87/87) | ⵉⵓⵙⵔ → ئوسر |
 | `vowel.hiatus.hamza-seat.i/u` | option `hiatus: hamza-seat` | ئ / ؤ | heuristic | T2 logic; not attested | ⵜⴰⵉⵔⵉ → تائري |
 | `semivowel.initial.plain-y` | ⵢ at word start, `plainInitialY` | ي (no mark) | documented | T2 | ircam: ⵢⴰⵏ → يان |
 | `letter.base` | anything else | §2 | documented | T1/T2 | ⵜⴰⵎⴰⵣⵉⵖⵜ → تامازيغت |
-| `schwa.letter` | ⴻ | nothing | documented | T1 | ⵜⴰⵎⴻⵣⴳⵉⴷⴰ → تامزڭيدا |
+| `schwa.letter` | ⴻ | nothing | documented | T1 | ⵜⴰⵎⴻⵣⴳⵉⴷⴰ → تامزگيدا |
+
+**Initial ⴰ: أ or ا.** `readable` writes أ, as the Tawalt dictionary does in
+10,558 of 10,570 words. The specification examples (ازول, امغار) and the
+Wikidata lexeme افوس use bare ا, which `ircam`, `phonetic` and
+`initialVowels: 'hamza-seat'` produce. Both are attested; neither is wrong.
 
 Word-initial ⵉ → ئ follows the hamza-seat logic of the Chafik-inspired
 Table II: the seat (ا / ي / و) shows the quality of the initial vowel, so
@@ -132,7 +137,7 @@ that the two consonants are *not* a geminate. Table I gives it no Arabic
 letter. Consequences:
 
 * readable / ircam: the schwa is not written. Because gemination is decided on
-  Tifinagh units *before* the schwa is dropped, ⴰⵣⴻⵣ → ازز while ⴰⵣⵣ → ازّ:
+  Tifinagh units *before* the schwa is dropped, ⴰⵣⴻⵣ → أزز while ⴰⵣⵣ → أزّ:
   the contrast survives through the shadda.
 * phonetic: kasra on the preceding consonant (ازِز). Kasra is chosen as the
   closest short-vowel sign; fatha is available (`schwa: 'fatha'`). This is a
@@ -172,4 +177,3 @@ pronunciation.
 | Arabic article detection (ⵍ… → ال…) | would change the Amazigh word |
 | ⵥ → ظ by default | not documented by IRCAM; offered as an alternative |
 | hamza seats in hiatus (ئ / ؤ) by default | refuted by Tawalt (0 of 87 words); kept as option |
-| أ for initial ⴰ in `readable` | contradicts the specification examples (ازول, امغار) and Wikidata (افوس); kept as option `hamza-all` |

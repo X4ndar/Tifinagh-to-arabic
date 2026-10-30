@@ -71,12 +71,14 @@ describe('rule metadata', () => {
 
 describe('word-initial vowels', () => {
   test.each([
-    ['hamza-seat', 'ⴰⵔⴳⴰⵣ', 'ارڭاز'],
+    ['hamza-seat', 'ⴰⵔⴳⴰⵣ', 'ارگاز'],
     ['hamza-seat', 'ⵉⵎⵉ', 'ئمي'],
     ['hamza-seat', 'ⵓⵙⵎⵎⴰⵏ', 'ؤسمّان'],
     ['alef', 'ⵉⵎⵉ', 'ايمي'],
     ['alef', 'ⵓⵙⵎⵎⴰⵏ', 'اوسمّان'],
-    ['hamza-alef', 'ⴰⵔⴳⴰⵣ', 'أرڭاز'],
+    ['hamza-alef', 'ⴰⵔⴳⴰⵣ', 'أرگاز'],
+    ['hamza-all', 'ⴰⵔⴳⴰⵣ', 'أرگاز'],
+    ['hamza-all', 'ⵉⵎⵉ', 'ئمي'],
     ['hamza-alef', 'ⵉⵎⵉ', 'إيمي'],
     ['hamza-alef', 'ⵓⵙⵎⵎⴰⵏ', 'أوسمّان'],
   ] as const)('initialVowels=%s: %s → %s', (style, input, expected) => {
@@ -86,7 +88,7 @@ describe('word-initial vowels', () => {
   test('medial and final vowels use plain letters', () => {
     expect(toArabic('ⵜⵉⴼⵉⵏⴰⵖ')).toBe('تيفيناغ')
     expect(toArabic('ⵜⴰⵎⵓⵔⵜ')).toBe('تامورت')
-    expect(toArabic('ⴰⵎⴰⵏ')).toBe('امان')
+    expect(toArabic('ⴰⵎⴰⵏ')).toBe('أمان')
     expect(toArabic('ⵉⵍⵍⵉ')).toBe('ئلّي')
   })
 
@@ -123,9 +125,9 @@ describe('initialVowels=hamza-all (Tawalt convention)', () => {
 
 describe('gemination', () => {
   test.each([
-    ['shadda', 'ⴰⴽⴽⴰ', 'اكّا'],
-    ['double', 'ⴰⴽⴽⴰ', 'اككا'],
-    ['single', 'ⴰⴽⴽⴰ', 'اكا'],
+    ['shadda', 'ⴰⴽⴽⴰ', 'أكّا'],
+    ['double', 'ⴰⴽⴽⴰ', 'أككا'],
+    ['single', 'ⴰⴽⴽⴰ', 'أكا'],
   ] as const)('gemination=%s', (style, input, expected) => {
     expect(toArabic(input, { arabic: { gemination: style } })).toBe(expected)
   })
@@ -137,7 +139,7 @@ describe('gemination', () => {
 
   test('labialized geminate ⴳⴳⵯ is one unit; marks in canonical order (damma before shadda)', () => {
     const out = toArabic('ⴰⴳⴳⵯⴰ')
-    expect(out).toBe('ا' + AR.NG + AR.DAMMA + AR.SHADDA + 'ا')
+    expect(out).toBe('أ' + AR.GAF + AR.DAMMA + AR.SHADDA + 'ا')
     expect(out.normalize('NFC')).toBe(out)
     expect(toArabic('ⴰⴳⴳⵯⴰ', { profile: 'ircam' })).toBe('ا' + AR.NG + AR.NG + AR.DAMMA + 'ا')
   })
@@ -150,7 +152,7 @@ describe('gemination', () => {
 
   test('three identical consonants: plain letter + geminate, and flagged', () => {
     const r = transliterate('ⴰⵎⵎⵎⴰ')
-    expect(r.output).toBe('اممّا')
+    expect(r.output).toBe('أممّا')
     expect(r.warnings.map((w) => w.code)).toEqual(['LONG_CONSONANT_RUN'])
     expect(r.warnings[0].source).toBe('ⵎⵎⵎ')
   })
@@ -163,9 +165,9 @@ describe('gemination', () => {
 describe('schwa', () => {
   test('omitted in ircam/readable, kasra in phonetic, fatha on request', () => {
     expect(toArabic('ⵜⴰⵎⴻⵣⴳⵉⴷⴰ', { profile: 'ircam' })).toBe('تامزڭيدا')
-    expect(toArabic('ⵜⴰⵎⴻⵣⴳⵉⴷⴰ', { profile: 'readable' })).toBe('تامزڭيدا')
+    expect(toArabic('ⵜⴰⵎⴻⵣⴳⵉⴷⴰ', { profile: 'readable' })).toBe('تامزگيدا')
     expect(toArabic('ⵜⴰⵎⴻⵣⴳⵉⴷⴰ', { profile: 'phonetic' })).toBe('تامِزڭيدا')
-    expect(toArabic('ⵜⴰⵎⴻⵣⴳⵉⴷⴰ', { arabic: { schwa: 'fatha' } })).toBe('تامَزڭيدا')
+    expect(toArabic('ⵜⴰⵎⴻⵣⴳⵉⴷⴰ', { arabic: { schwa: 'fatha' } })).toBe('تامَزگيدا')
   })
 
   test('schwa between identical consonants blocks gemination (IRCAM spelling CeC)', () => {
@@ -197,15 +199,15 @@ describe('emphatics and option letters', () => {
   })
 
   test('options', () => {
-    expect(toArabic('ⴰⴳ', { arabic: { g: 'gaf' } })).toBe('اگ')
-    expect(toArabic('ⴰⴳ', { arabic: { g: 'kaf' } })).toBe('اك')
-    expect(toArabic('ⴰⴳ', { arabic: { g: 'qaf3' } })).toBe('اڨ')
-    expect(toArabic('ⴰⴽ', { arabic: { k: 'keheh' } })).toBe('اک')
-    expect(toArabic('ⴰⵀ', { arabic: { h: 'heh-doachashmee' } })).toBe('اھ')
-    expect(toArabic('ⴰⵥ', { arabic: { emphaticZ: 'zah' } })).toBe('اظ')
-    expect(toArabic('ⴰⵥ', { arabic: { emphaticZ: 'zain' } })).toBe('از')
-    expect(toArabic('ⴰⵕ', { arabic: { emphaticR: 'ircam-literal' } })).toBe('ار' + AR.HEBREW_SEGOL)
-    expect(toArabic('ⴰⵡ', { arabic: { semivowelMark: 'ircam-literal' } })).toBe('او' + AR.LATIN_COMBINING_CIRCUMFLEX)
+    expect(toArabic('ⴰⴳ', { arabic: { g: 'gaf' } })).toBe('أگ')
+    expect(toArabic('ⴰⴳ', { arabic: { g: 'kaf' } })).toBe('أك')
+    expect(toArabic('ⴰⴳ', { arabic: { g: 'qaf3' } })).toBe('أڨ')
+    expect(toArabic('ⴰⴽ', { arabic: { k: 'keheh' } })).toBe('أک')
+    expect(toArabic('ⴰⵀ', { arabic: { h: 'heh-doachashmee' } })).toBe('أھ')
+    expect(toArabic('ⴰⵥ', { arabic: { emphaticZ: 'zah' } })).toBe('أظ')
+    expect(toArabic('ⴰⵥ', { arabic: { emphaticZ: 'zain' } })).toBe('أز')
+    expect(toArabic('ⴰⵕ', { arabic: { emphaticR: 'ircam-literal' } })).toBe('أر' + AR.HEBREW_SEGOL)
+    expect(toArabic('ⴰⵡ', { arabic: { semivowelMark: 'ircam-literal' } })).toBe('أو' + AR.LATIN_COMBINING_CIRCUMFLEX)
   })
 
   test('invalid option values are rejected with a clear message', () => {
@@ -234,7 +236,7 @@ describe('trace and alternatives', () => {
   test('trace lists the rules applied per unit', () => {
     const r = transliterate('ⵉⴼⴰⵙⵙⵏ', { trace: true })
     expect(r.trace!.map((t) => [t.source, t.output, t.rules[0]])).toEqual([
-      ['ⵉ', 'ئ', 'vowel.initial.hamza-seat.i'],
+      ['ⵉ', 'ئ', 'vowel.initial.hamza-all.i'],
       ['ⴼ', 'ف', 'letter.base'],
       ['ⴰ', 'ا', 'letter.base'],
       ['ⵙⵙ', 'سّ', 'letter.base'],
@@ -246,10 +248,10 @@ describe('trace and alternatives', () => {
   test('alternatives contain documented variants and never the main output', () => {
     const r = transliterate('ⵉⴳⵔ ⵓⵍ', { alternatives: true })
     const first = r.alternatives![0]
-    expect(first.output).toBe('ئڭر')
+    expect(first.output).toBe('ئگر')
     const outs = first.alternatives.map((a) => a.output)
-    expect(outs).toEqual(expect.arrayContaining(['ايڭر', 'إيڭر', 'ئكر', 'ئگر']))
-    expect(outs).not.toContain('ئڭر')
+    expect(outs).toEqual(expect.arrayContaining(['ايگر', 'إيگر', 'ئكر', 'ئڭر']))
+    expect(outs).not.toContain('ئگر')
     expect(new Set(outs).size).toBe(outs.length)
   })
 })

@@ -5,11 +5,11 @@ plus the Tifinagh ↔ Latin conversion of the upstream
 [`tifinagh-convert`](https://github.com/hamza-bouqssim/tifinagh-convert).
 
 ```
-ⵜⴰⵎⴰⵣⵉⵖⵜ  →  تامازيغت        ⵉⴼⴰⵙⵙⵏ  →  ئفاسّن        ⴰⴳⴳⵯⴰ  →  اڭُّا
+ⵜⴰⵎⴰⵣⵉⵖⵜ  →  تامازيغت        ⵉⴼⴰⵙⵙⵏ  →  ئفاسّن        ⴰⴳⴳⵯⴰ  →  أگُّا
 ```
 
 > **Transliteration, not translation.** The output is the *same Amazigh
-> words* written in Arabic letters. ⴰⵎⵖⴰⵔ becomes امغار (*amɣar*), not the
+> words* written in Arabic letters. ⴰⵎⵖⴰⵔ becomes أمغار (*amɣar*), not the
 > Arabic word for "chief".
 
 * Rule-based, deterministic, offline, zero runtime dependencies, TypeScript.
@@ -48,7 +48,7 @@ Requires Node.js ≥ 18.
 git clone https://github.com/x4ndar/tifinagh-to-arabic.git
 cd tifinagh-to-arabic
 npm install        # also builds dist/ (prepare script)
-npm test           # 290 tests
+npm test           # 298 tests
 ```
 
 Or as a dependency straight from GitHub: `npm install github:x4ndar/tifinagh-to-arabic`.
@@ -58,18 +58,18 @@ Or as a dependency straight from GitHub: `npm install github:x4ndar/tifinagh-to-
 ```ts
 import { toArabic, convert, transliterate, createConverter } from 'amazigh-transliterate'
 
-toArabic('ⴰⵣⵓⵍ')                                   // 'ازول'
+toArabic('ⴰⵣⵓⵍ')                                   // 'أزول'
 
 convert('ⵜⴰⵎⴰⵣⵉⵖⵜ', { from: 'tifinagh', to: 'arabic', profile: 'readable' }).output
 // 'تامازيغت'
 
-toArabic('ⴰⵣⵓⵍ, bonjour! 2026 ⵜⴰⵎⴰⵣⵉⵖⵜ')            // 'ازول, bonjour! 2026 تامازيغت'
+toArabic('ⴰⵣⵓⵍ, bonjour! 2026 ⵜⴰⵎⴰⵣⵉⵖⵜ')            // 'أزول, bonjour! 2026 تامازيغت'
 
 const r = transliterate('ⵉⴳⵔ ⵯ', { alternatives: true, trace: true })
-r.output                     // 'ئڭر ⵯ'
+r.output                     // 'ئگر ⵯ'
 r.warnings[0].code           // 'ORPHAN_LABIALIZATION' (the stray ⵯ is kept, not dropped)
 r.alternatives[0].alternatives.map(a => a.output)
-// ['ايڭر', 'إيڭر', 'ئكر', 'ئگر']
+// ['ايگر', 'إيگر', 'ئكر', 'ئڭر']
 r.trace[0]                   // { source: 'ⵉ', output: 'ئ', rules: ['vowel.initial.hamza-seat.i'], position: 0 }
 
 // one option on top of a profile
@@ -110,10 +110,10 @@ process, so results are identical. Copy or import
 ```python
 from amazigh_transliterate import Transliterator, to_arabic
 
-to_arabic("ⴰⵣⵓⵍ")                                  # 'ازول'
+to_arabic("ⴰⵣⵓⵍ")                                  # 'أزول'
 
 with Transliterator(profile="readable") as tr:     # one Node process, fast for ASR/OCR batches
-    tr.convert_many(["ⵜⴰⵎⴰⵣⵉⵖⵜ", "ⴰⵎⵖⴰⵔ"])         # ['تامازيغت', 'امغار']
+    tr.convert_many(["ⵜⴰⵎⴰⵣⵉⵖⵜ", "ⴰⵎⵖⴰⵔ"])         # ['تامازيغت', 'أمغار']
     tr.convert_detailed("ⵯ")["warnings"][0]["code"] # 'ORPHAN_LABIALIZATION'
 ```
 
@@ -125,37 +125,37 @@ streams through the CLI. Example: [examples/python_batch.py](examples/python_bat
 
 | | `readable` (default) | `ircam` | `phonetic` |
 |---|---|---|---|
-| purpose | natural Arabic-script spelling | letter-by-letter IRCAM reference | keep as many contrasts as possible |
-| ⴳ / ⴳⵯ ⴽⵯ | ڭ / ڭُ كُ | ڭ / ڭُ كُ | ڭ / ڭُ كُ |
-| initial ⴰ ⵉ ⵓ | ا ئ ؤ | ا ئ ؤ | ا ئ ؤ |
+| purpose | natural Arabic-script spelling (Tawalt dictionary conventions) | letter-by-letter IRCAM reference | keep as many contrasts as possible |
+| ⴳ / ⴳⵯ ⴽⵯ | گ / گُ كُ | ڭ / ڭُ كُ | ڭ / ڭُ كُ |
+| initial ⴰ ⵉ ⵓ | أ ئ ؤ | ا ئ ؤ | ا ئ ؤ |
 | gemination | shadda ّ | doubled letters | shadda ّ |
 | ⵡ ⵢ | و ي | وٛ يٛ (initial ⵢ: ي) | وٛ يٛ |
 | ⵕ | ر | ڔ | ڔ |
 | ⵥ | ژ | ژ | ژ |
 | schwa ⴻ | not written | not written | kasra |
 | ⵉⴼⴰⵙⵙⵏ | ئفاسّن | ئفاسسن | ئفاسّن |
-| ⴰⵡⴰⵍ | اوال | اوٛال | اوٛال |
-| ⵜⴰⵎⴻⵣⴳⵉⴷⴰ | تامزڭيدا | تامزڭيدا | تامِزڭيدا |
+| ⴰⵡⴰⵍ | أوال | اوٛال | اوٛال |
+| ⵜⴰⵎⴻⵣⴳⵉⴷⴰ | تامزگيدا | تامزڭيدا | تامِزڭيدا |
 
 Every choice can be overridden individually (see
-[docs/architecture.md](docs/architecture.md#profiles-and-options)). For the
-spelling used by the Tawalt dictionary (أ ئ ؤ word-initially, گ for ⴳ), use
-`{ arabic: { initialVowels: 'hamza-all', g: 'gaf' } }` or
-`--option initialVowels=hamza-all --option g=gaf`.
+[docs/architecture.md](docs/architecture.md#profiles-and-options)). For IRCAM
+Table II spelling in `readable` (bare ا word-initially, ڭ for ⴳ — e.g. ازول,
+امغار), use `{ arabic: { initialVowels: 'hamza-seat', g: 'ng' } }` or
+`--option initialVowels=hamza-seat --option g=ng`.
 
 ## Examples
 
 | Tifinagh | Latin | readable | Notes |
 |---|---|---|---|
-| ⴰⵣⵓⵍ | azul | ازول | |
+| ⴰⵣⵓⵍ | azul | أزول | initial ⴰ → أ (ازول with IRCAM Table II options) |
 | ⵜⴰⵎⴰⵣⵉⵖⵜ | tamaziɣt | تامازيغت | final ⵜ is ت, never ة |
-| ⴰⵎⵖⴰⵔ | amɣar | امغار | |
+| ⴰⵎⵖⴰⵔ | amɣar | أمغار | |
 | ⵉⴼⴰⵙⵙⵏ | ifassn | ئفاسّن | initial ⵉ → ئ; geminate → shadda |
 | ⵓⴽⵙⵓⵎ | uksum | ؤكسوم | initial ⵓ → ؤ |
 | ⴱⵔⴰⵢⵔ | brayr | براير | semivowel unmarked |
-| ⴰⴳⴳⵯⴰ | aggʷa | اڭُّا | labialized geminate: damma + shadda |
+| ⴰⴳⴳⵯⴰ | aggʷa | أگُّا | ⴳ → گ; labialized geminate: damma + shadda |
 | ⴰⵣⴻⵣ / ⴰⵣⵣ | azez / azz | ازز / ازّ | schwa not written, but it blocks the shadda |
-| `ⴰⵣⵓⵍ https://ⵜⴰⵎⴰ.ma` | | `ازول https://ⵜⴰⵎⴰ.ma` | URL untouched |
+| `ⴰⵣⵓⵍ https://ⵜⴰⵎⴰ.ma` | | `أزول https://ⵜⴰⵎⴰ.ma` | URL untouched |
 
 A small offline demo page: `npm run build`, then open
 [`demo/index.html`](demo/index.html) in a browser.
@@ -165,15 +165,17 @@ A small offline demo page: `npm run build`, then open
 Full report: [docs/evaluation.md](docs/evaluation.md). In short:
 
 * **Tawalt dictionary (27,921 independent Arabic-script Amazigh words; used
-  locally, not shipped):** with Tawalt's two spelling preferences (أ, گ) the
-  engine matches **88.2 % exactly and 99.6 % ignoring short-vowel signs**;
-  the gap is Tawalt's irregular sukun/damma. The default `readable` gets
-  46.4 % exact (83.2 % counting its listed alternatives); the naive 1:1
-  baselines get 13.8–15.1 %. Removing the context rules drops accuracy to
-  baseline level.
-* **Specification + Wikidata examples (n = 7):** `readable` 7/7.
-* **Official Arabic toponyms (n = 192, different convention):** 20.3 % exact,
-  33.9 % with alternatives (baselines 17.7–20.3 %); differences are
+  locally, not shipped):** `readable` matches **88.2 % exactly and 99.6 %
+  ignoring short-vowel signs**; the gap is Tawalt's irregular sukun/damma.
+  The naive 1:1 baselines get 13.8–15.1 %; removing the context rules drops
+  `readable` to 17.5 %. Caveat: `readable` adopted Tawalt's أ and گ after
+  measuring on it, so this is not a blind test for those two choices (with
+  IRCAM Table II's ا and ڭ instead: 46.4 %).
+* **Specification + Wikidata examples (n = 7):** these use bare ا (ازول, افوس),
+  so `readable` matches 4/7 exactly and 7/7 with its listed alternatives; with
+  `initialVowels: 'hamza-seat'` it matches 7/7.
+* **Official Arabic toponyms (n = 192, different convention):** 26.0 % exact,
+  40.1 % with alternatives (baselines 17.7–20.3 %); differences are
   lexicalized Arabic spellings (أكادير, وجدة, الحسيمة), analysed per cause.
 * **Coverage:** 33/33 IRCAM units mapped and tested in every profile; 0
   unsupported characters on IRCAM's 18,846-word lexicon; 3 (input typos) in

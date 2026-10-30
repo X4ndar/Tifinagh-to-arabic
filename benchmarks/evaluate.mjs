@@ -67,7 +67,7 @@ const SYSTEMS = {
   'ablation: readable − gemination rule': conv('readable', { gemination: 'double' }),
   'ablation: readable − all context': conv('readable', { initialVowels: 'alef', hiatus: 'plain', gemination: 'double' }),
   'variant: readable + hiatus=hamza-seat (earlier default)': conv('readable', { hiatus: 'hamza-seat' }),
-  'ours: readable + Tawalt conventions (initialVowels=hamza-all, g=gaf)': conv('readable', { initialVowels: 'hamza-all', g: 'gaf' }),
+  'variant: readable with IRCAM Table II initial vowels and ڭ (earlier default)': conv('readable', { initialVowels: 'hamza-seat', g: 'ng' }),
 }
 
 // ── Metrics ────────────────────────────────────────────────────────────────

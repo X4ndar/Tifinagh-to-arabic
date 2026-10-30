@@ -62,7 +62,7 @@ export const LETTER_RULES: readonly Rule[] = [
     sources: ['IRCAM-T2', 'WIKIDATA-SHI'],
     status: 'documented',
     examples: [
-      { profile: 'readable', input: 'ⵉⴼⴰⵙⵙⵏ', output: 'ئفاسّن' },
+      { profile: 'phonetic', input: 'ⵉⴼⴰⵙⵙⵏ', output: 'ئفاسّن' },
       { profile: 'ircam', input: 'ⵉⵎⵉ', output: 'ئمي' },
     ],
   },
@@ -74,7 +74,7 @@ export const LETTER_RULES: readonly Rule[] = [
     action: { type: 'emit', text: AR.WAW_HAMZA },
     sources: ['IRCAM-T2', 'WIKIDATA-SHI'],
     status: 'documented',
-    examples: [{ profile: 'readable', input: 'ⵓⴽⵙⵓⵎ', output: 'ؤكسوم' }],
+    examples: [{ profile: 'ircam', input: 'ⵓⴽⵙⵓⵎ', output: 'ؤكسوم' }],
   },
   {
     id: 'vowel.initial.hamza-seat.a',
@@ -85,8 +85,8 @@ export const LETTER_RULES: readonly Rule[] = [
     sources: ['IRCAM-T1', 'WIKIDATA-SHI'],
     status: 'documented',
     examples: [
-      { profile: 'readable', input: 'ⴰⵣⵓⵍ', output: 'ازول' },
-      { profile: 'readable', input: 'ⴰⴼⵓⵙ', output: 'افوس' },
+      { profile: 'ircam', input: 'ⴰⵣⵓⵍ', output: 'ازول' },
+      { profile: 'ircam', input: 'ⴰⴼⵓⵙ', output: 'افوس' },
     ],
   },
   {
@@ -97,7 +97,10 @@ export const LETTER_RULES: readonly Rule[] = [
     action: { type: 'emit', text: AR.ALEF_HAMZA_ABOVE },
     sources: ['TAWALT'],
     status: 'documented',
-    examples: [],
+    examples: [
+      { profile: 'readable', input: 'ⴰⵣⵓⵍ', output: 'أزول' },
+      { profile: 'readable', input: 'ⴰⵎⵖⴰⵔ', output: 'أمغار' },
+    ],
   },
   {
     id: 'vowel.initial.hamza-all.i',
@@ -107,7 +110,7 @@ export const LETTER_RULES: readonly Rule[] = [
     action: { type: 'emit', text: AR.YEH_HAMZA },
     sources: ['TAWALT', 'IRCAM-T2'],
     status: 'documented',
-    examples: [],
+    examples: [{ profile: 'readable', input: 'ⵉⴼⴰⵙⵙⵏ', output: 'ئفاسّن' }],
   },
   {
     id: 'vowel.initial.hamza-all.u',
@@ -117,7 +120,7 @@ export const LETTER_RULES: readonly Rule[] = [
     action: { type: 'emit', text: AR.WAW_HAMZA },
     sources: ['TAWALT', 'IRCAM-T2'],
     status: 'documented',
-    examples: [],
+    examples: [{ profile: 'readable', input: 'ⵓⴽⵙⵓⵎ', output: 'ؤكسوم' }],
   },
   {
     id: 'vowel.initial.alef.i',
@@ -225,7 +228,7 @@ export const LETTER_RULES: readonly Rule[] = [
     status: 'documented',
     examples: [
       { profile: 'readable', input: 'ⵜⴰⵎⴰⵣⵉⵖⵜ', output: 'تامازيغت' },
-      { profile: 'readable', input: 'ⴰⵎⵖⴰⵔ', output: 'امغار' },
+      { profile: 'ircam', input: 'ⴰⵎⵖⴰⵔ', output: 'امغار' },
       { profile: 'readable', input: 'ⴱⵔⴰⵢⵔ', output: 'براير' },
       { profile: 'readable', input: 'ⵉⵓⵙⵔ', output: 'ئوسر' },
     ],
@@ -239,7 +242,8 @@ export const LETTER_RULES: readonly Rule[] = [
     sources: ['IRCAM-T1'],
     status: 'documented',
     examples: [
-      { profile: 'readable', input: 'ⵜⴰⵎⴻⵣⴳⵉⴷⴰ', output: 'تامزڭيدا' },
+      { profile: 'readable', input: 'ⵜⴰⵎⴻⵣⴳⵉⴷⴰ', output: 'تامزگيدا' },
+      { profile: 'ircam', input: 'ⵜⴰⵎⴻⵣⴳⵉⴷⴰ', output: 'تامزڭيدا' },
       { profile: 'phonetic', input: 'ⵜⴰⵎⴻⵣⴳⵉⴷⴰ', output: 'تامِزڭيدا' },
     ],
   },
@@ -262,7 +266,7 @@ export const MODIFIER_RULES: readonly ModifierRule[] = [
     status: 'documented',
     examples: [
       { profile: 'readable', input: 'ⵉⴼⴰⵙⵙⵏ', output: 'ئفاسّن' },
-      { profile: 'readable', input: 'ⴰⴳⴳⵯⴰ', output: 'اڭُّا' },
+      { profile: 'readable', input: 'ⴰⴳⴳⵯⴰ', output: 'أگُّا' },
       { profile: 'readable', input: 'ⵜⴰⵖⵓⵢⵢⵢⵜ', output: 'تاغوييّت' },
     ],
   },
@@ -286,7 +290,7 @@ export const MODIFIER_RULES: readonly ModifierRule[] = [
     sources: ['IRCAM-T2'],
     status: 'documented',
     examples: [
-      { profile: 'readable', input: 'ⴰⴽⵯⵉ', output: 'اكُي' },
+      { profile: 'readable', input: 'ⴰⴽⵯⵉ', output: 'أكُي' },
       { profile: 'ircam', input: 'ⴰⴳⴳⵯⴰ', output: 'اڭڭُا' },
     ],
   },
@@ -302,7 +306,7 @@ export const MODIFIER_RULES: readonly ModifierRule[] = [
     description: 'Labialization not written (lossy).',
     sources: ['PROJECT'],
     status: 'heuristic',
-    examples: [{ profile: 'readable', input: 'ⴰⴽⵯⵉ', output: 'اكي', options: { labialization: 'omit' } }],
+    examples: [{ profile: 'readable', input: 'ⴰⴽⵯⵉ', output: 'أكي', options: { labialization: 'omit' } }],
   },
   {
     id: 'schwa.mark',
@@ -317,8 +321,8 @@ export const MODIFIER_RULES: readonly ModifierRule[] = [
     sources: ['IRCAM-INVENTORY', 'TAWALT'],
     status: 'documented',
     examples: [
-      { profile: 'readable', input: 'ⴰⵣⴻⵣ', output: 'ازز' },
-      { profile: 'readable', input: 'ⴰⵣⵣ', output: 'ازّ' },
+      { profile: 'readable', input: 'ⴰⵣⴻⵣ', output: 'أزز' },
+      { profile: 'readable', input: 'ⴰⵣⵣ', output: 'أزّ' },
       { profile: 'readable', input: 'ⵢⵓⵏⴻⵏ', output: 'يونن' },
     ],
   },

@@ -185,16 +185,15 @@ Issues found (left as-is unless noted, to preserve upstream behaviour):
 | Topic | Decision | Basis |
 |---|---|---|
 | Algorithm | direct Tifinagh → Arabic, units → rules → render; not via Latin | spec; IRCAM Table I is Tifinagh–Arabic |
-| ⴳ | ڭ (all profiles); options گ ك ڨ | Table II |
+| ⴳ | گ in readable (Tawalt, Table I); ڭ in ircam/phonetic (Table II); options ك ڨ | Table I/II; Tawalt |
 | ⴽ | ك U+0643 | Table II (ⴽⵯ → كُ); keheh shape in Table I is a font glyph |
 | ⵀ | ه U+0647 | visible glyph; U+06BE text-layer value as option |
 | ⵥ | ژ | Table I |
 | ⵕ | ر (readable); ڔ U+0694 (ircam, phonetic) | Table I mark has no Arabic code point; IRCAM rule 1 |
 | ⵡ ⵢ | plain و ي (readable); + U+065B (ircam, phonetic) | Wikidata (براير); Table I "^" mark |
 | labialization | damma | Table II |
-| initial vowels | ا / ئ / ؤ; options أ ئ ؤ (Tawalt), اي او, إي أو أ | Table II; Wikidata; spec examples (ازول) |
+| initial vowels | readable أ / ئ / ؤ (Tawalt); ircam/phonetic ا / ئ / ؤ (Table II, spec examples, Wikidata); options اي او, إي أو أ | Tawalt; Table II |
 | vowel after vowel | plain و / ي (changed from ئ / ؤ after the Tawalt check) | Tawalt: 87/87 hiatus words |
-| ⴳ in `readable` | ڭ kept (Tawalt uses گ in 99 %) | Table II is explicit; گ is an option |
 | gemination | shadda (readable, phonetic); doubled letters (ircam) | Wikidata, IRCAM rule 4, Albane R2; Table I per-letter |
 | schwa | omitted (ircam, readable); kasra (phonetic, heuristic) | Table I empty cell |
 | final ⵜ | always ت (never ة) | Table I |
@@ -238,10 +237,11 @@ script* next to Tifinagh (a transliteration), or only an Arabic
 * What this confirmed independently: Table II initial ئ / ؤ, shadda,
   ژ, the schwa-between-identical rule. What it changed: the hiatus default
   (ئ / ؤ → plain letters) and runs of three identical consonants (now a plain
-  letter + shadda letter, as Tawalt writes them). What it differs on:
-  initial أ (the project specification's ازول / امغار use bare ا) and گ
-  (IRCAM Table II prefers ڭ) — both available as options
-  (`initialVowels: 'hamza-all'`, `g: 'gaf'`).
+  letter + shadda letter, as Tawalt writes them). Two conventions differed
+  from IRCAM Table II: initial أ (the project specification's ازول / امغار use
+  bare ا) and گ (Table II prefers ڭ). At the maintainer's request `readable`
+  now follows Tawalt on both; `ircam` and `phonetic` keep Table II, and
+  `initialVowels: 'hamza-seat'`, `g: 'ng'` restore it in `readable`.
 
 ### TAWNZA as a robustness corpus
 

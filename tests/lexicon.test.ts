@@ -4,21 +4,21 @@ const verified = { tifinagh: 'ⴰⴳⴰⴷⵉⵔ', arabic: 'أكادير', statu
 
 describe('lexicon', () => {
   test('is optional and empty by default: rules apply', () => {
-    expect(toArabic('ⴰⴳⴰⴷⵉⵔ')).toBe('اڭادير')
+    expect(toArabic('ⴰⴳⴰⴷⵉⵔ')).toBe('أگادير')
   })
 
   test('verified entries override rule output, with a diagnostic and the rule output as alternative', () => {
     const lexicon = new Lexicon([verified])
     const r = transliterate('ⴰⴳⴰⴷⵉⵔ ⴰⵣⵓⵍ', { lexicon, alternatives: true, trace: true })
-    expect(r.output).toBe('أكادير ازول')
+    expect(r.output).toBe('أكادير أزول')
     expect(r.warnings.map((w) => w.code)).toEqual(['LEXICON_OVERRIDE'])
-    expect(r.alternatives![0].alternatives[0]).toEqual({ output: 'اڭادير', label: 'rule-based spelling (lexicon overridden)' })
+    expect(r.alternatives![0].alternatives[0]).toEqual({ output: 'أگادير', label: 'rule-based spelling (lexicon overridden)' })
     expect(r.trace![0].rules).toEqual(['lexicon.override'])
   })
 
   test('provisional entries never override unless explicitly allowed', () => {
     const e = { ...verified, status: 'provisional' as const }
-    expect(toArabic('ⴰⴳⴰⴷⵉⵔ', { lexicon: new Lexicon([e]) })).toBe('اڭادير')
+    expect(toArabic('ⴰⴳⴰⴷⵉⵔ', { lexicon: new Lexicon([e]) })).toBe('أگادير')
     expect(toArabic('ⴰⴳⴰⴷⵉⵔ', { lexicon: new Lexicon([e], { allowProvisional: true }) })).toBe('أكادير')
   })
 
@@ -32,7 +32,7 @@ describe('lexicon', () => {
     const lex = new Lexicon([verified, { ...verified, arabic: 'اڭادير', source: 'other' }])
     expect(lex.conflicts()).toHaveLength(3) // one per profile
     const r = transliterate('ⴰⴳⴰⴷⵉⵔ', { lexicon: lex })
-    expect(r.output).toBe('اڭادير')
+    expect(r.output).toBe('أگادير')
     expect(r.warnings.map((w) => w.code)).toEqual(['LEXICON_CONFLICT'])
   })
 

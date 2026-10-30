@@ -7,6 +7,8 @@ Read this before relying on the output.
 1. **Reference data is limited and convention-dependent.** The largest
    independent reference (Tawalt dictionary, 27,921 words) cannot be shipped
    (no license) and follows its own editorial choices (أ, گ, irregular sukun).
+   `readable` adopted its أ and گ after measuring on it, so its Tawalt score
+   is not a blind test for those two choices.
    There is still no published, licensed, reviewed Moroccan gold standard;
    running text (sentences, inflected forms in context) is not covered by any
    reference set (see [evaluation.md](evaluation.md)).

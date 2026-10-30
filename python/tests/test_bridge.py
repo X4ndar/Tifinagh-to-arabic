@@ -9,12 +9,12 @@ from amazigh_transliterate import Transliterator, TransliterationError, to_arabi
 
 class BridgeTest(unittest.TestCase):
     def test_one_shot(self):
-        self.assertEqual(to_arabic("ⴰⵣⵓⵍ"), "ازول")
+        self.assertEqual(to_arabic("ⴰⵣⵓⵍ"), "أزول")
 
     def test_persistent_batch(self):
         with Transliterator() as tr:
-            self.assertEqual(tr.convert_many(["ⵜⴰⵎⴰⵣⵉⵖⵜ", "ⴰⵎⵖⴰⵔ", "ⵉⴼⴰⵙⵙⵏ"]), ["تامازيغت", "امغار", "ئفاسّن"])
-            self.assertEqual(tr.convert("line1\nⴰⵣⵓⵍ"), "line1\nازول")
+            self.assertEqual(tr.convert_many(["ⵜⴰⵎⴰⵣⵉⵖⵜ", "ⴰⵎⵖⴰⵔ", "ⵉⴼⴰⵙⵙⵏ"]), ["تامازيغت", "أمغار", "ئفاسّن"])
+            self.assertEqual(tr.convert("line1\nⴰⵣⵓⵍ"), "line1\nأزول")
 
     def test_profile_and_options(self):
         with Transliterator(profile="ircam", options={"gemination": "shadda"}) as tr:

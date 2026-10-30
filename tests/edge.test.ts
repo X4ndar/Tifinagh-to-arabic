@@ -44,7 +44,7 @@ describe('edge cases', () => {
   test('non-BMP characters and lone surrogates are preserved, never split', () => {
     const s = '𝕋 ⴰⵣⵓⵍ 🧪\uD800 ⴰ\uDC00'
     const out = toArabic(s)
-    expect(out).toBe('𝕋 ازول 🧪\uD800 ا\uDC00')
+    expect(out).toBe('𝕋 أزول 🧪\uD800 أ\uDC00')
     expect(toArabic('ⴰⵣⵓⵍ 🇲🇦')).not.toMatch(LONE_SURROGATE_RE)
   })
 
@@ -59,22 +59,22 @@ describe('edge cases', () => {
     const nfd = nfc.normalize('NFD')
     expect(toArabic(nfd).normalize('NFC')).toBe(toArabic(nfc).normalize('NFC'))
     // non-Tifinagh text is not normalized behind the user's back
-    expect(toArabic(nfd)).toBe(nfd.replace('ⴰⵣⵓⵍ', 'ازول'))
+    expect(toArabic(nfd)).toBe(nfd.replace('ⴰⵣⵓⵍ', 'أزول'))
   })
 
   test('BOM at the start of a file is preserved', () => {
-    expect(toArabic('\uFEFFⴰⵣⵓⵍ')).toBe('\uFEFFازول')
+    expect(toArabic('\uFEFFⴰⵣⵓⵍ')).toBe('\uFEFFأزول')
   })
 
   test('paragraph of real text', () => {
     const para = 'ⴰⵙⴳⴳⵯⴰⵙ ⴰⵎⴰⵢⵏⵓ ⵉⵖⵓⴷⴰⵏ! ⵜⴰⵎⴰⵣⵉⵖⵜ ⵜⵓⵜⵍⴰⵢⵜ ⵜⴰⵏⴰⵎⵓⵔⵜ.'
-    expect(toArabic(para)).toBe('اسڭُّاس اماينو ئغودان! تامازيغت توتلايت تانامورت.')
+    expect(toArabic(para)).toBe('أسگُّاس أماينو ئغودان! تامازيغت توتلايت تانامورت.')
   })
 })
 
 describe('strict mode', () => {
   test('clean input passes', () => {
-    expect(transliterate('ⴰⵣⵓⵍ ⴰⴳⴳⵯⴰ', { strict: true }).output).toBe('ازول اڭُّا')
+    expect(transliterate('ⴰⵣⵓⵍ ⴰⴳⴳⵯⴰ', { strict: true }).output).toBe('أزول أگُّا')
   })
 
   test.each([
@@ -109,7 +109,7 @@ describe('streaming API', () => {
     const b = c.convertChunk('ⴰⵣⵓⵍ', state, 4)
     const d = c.convertChunk('```', state, 9)
     const e = c.convertChunk('ⴰⵣⵓⵍ ⵯ', state, 13)
-    expect([a.output, b.output, d.output, e.output]).toEqual(['```', 'ⴰⵣⵓⵍ', '```', 'ازول ⵯ'])
+    expect([a.output, b.output, d.output, e.output]).toEqual(['```', 'ⴰⵣⵓⵍ', '```', 'أزول ⵯ'])
     expect(e.warnings[0].position).toBe(13 + 5)
   })
 })

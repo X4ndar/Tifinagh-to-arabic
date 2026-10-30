@@ -101,7 +101,7 @@ writeFileSync(
       license: 'CC0-1.0 (Wikidata)',
       retrieved: now,
       sourceType: 'community lexicographic data (independent of this project)',
-      profile: 'arabic-script Tachelhit (compared against `readable`)',
+      profile: 'arabic-script Tachelhit (compared against `readable` with initialVowels=hamza-seat)',
       entries: lex,
     },
     null,
