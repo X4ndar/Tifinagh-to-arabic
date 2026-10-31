@@ -15,7 +15,8 @@ const assert = require('assert/strict')
 const { chromium } = require('playwright')
 const lib = require('../dist/index.js')
 
-const PAGE = 'file://' + path.resolve(__dirname, '../demo/index.html')
+// DEMO_URL tests a running server (e.g. the Docker image) instead of the local file.
+const PAGE = process.env.DEMO_URL || 'file://' + path.resolve(__dirname, '../demo/index.html')
 const AXE = require.resolve('axe-core/axe.min.js')
 let failures = 0
 const results = []

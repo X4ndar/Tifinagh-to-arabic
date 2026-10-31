@@ -1,0 +1,7 @@
+# For running on a plain Docker host or your own machine (not needed on Coolify):
+#   docker compose -f docker-compose.yml -f docker-compose.local.yml up --build
+# then open http://localhost:3000
+services:
+  app:
+    ports:
+      - "3000:3000"

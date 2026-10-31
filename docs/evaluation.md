@@ -145,7 +145,7 @@ inconsistent Wikidata labels (ⵜⵉⵎⵓⵎⵉⵍⵜ vs تيموليلت).
 | IRCAM DGLAI lexicon (local, 18,846 words, 104,100 Tifinagh chars) | 0 unsupported characters, 0 words with warnings |
 | TAWNZA subtitles (local, CC-BY-4.0; 897,778 words, 3.5 M Tifinagh chars) | 3 unsupported code points (input typos), 75 diagnostics in total, 2.1 s |
 | Input preservation (2,000 synthetic mixed-script documents) | 0 failures |
-| Unit / integration tests | 358 passing in 12 files (CI: Node 18, 20, 22); 98.2 % line, 91.5 % branch coverage |
+| Unit / integration tests | 388 passing in 13 files (CI: Node 18, 20, 22); 98.2 % line, 91.5 % branch coverage |
 | Property tests (9 invariants) | 400 cases each on every CI run, 20,000 in the `thorough` CI job |
 | Round trip (`ircam`, schwa-free words) | an independent decoder recovers the exact Tifinagh; 50,000 random multi-word cases |
 | Metamorphic relations (9) | idempotence, letter counts, streaming = whole text, CLI = library, alternatives = their options, profile = its options, context independence, cache consistency |

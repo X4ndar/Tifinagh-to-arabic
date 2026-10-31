@@ -4,7 +4,7 @@ import sys
 import unittest
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
-from amazigh_transliterate import Transliterator, TransliterationError, to_arabic  # noqa: E402
+from amazigh_transliterate import HttpTransliterator, Transliterator, TransliterationError, to_arabic  # noqa: E402
 
 
 class BridgeTest(unittest.TestCase):
@@ -27,6 +27,45 @@ class BridgeTest(unittest.TestCase):
         with Transliterator(strict=True) as tr:
             with self.assertRaises(TransliterationError):
                 tr.convert("ⵯ")
+
+
+class HttpClientTest(unittest.TestCase):
+    """Starts the real server (dist/server/bin.js) on a free port."""
+
+    @classmethod
+    def setUpClass(cls):
+        import socket
+        import subprocess
+        import time
+        import urllib.request
+
+        root = os.path.join(os.path.dirname(__file__), "..", "..")
+        with socket.socket() as s:
+            s.bind(("127.0.0.1", 0))
+            cls.port = s.getsockname()[1]
+        env = dict(os.environ, PORT=str(cls.port), HOST="127.0.0.1", LOG_REQUESTS="false")
+        cls.proc = subprocess.Popen(["node", os.path.join(root, "dist", "server", "bin.js")], env=env)
+        for _ in range(50):
+            try:
+                urllib.request.urlopen(f"http://127.0.0.1:{cls.port}/healthz", timeout=1)
+                break
+            except Exception:
+                time.sleep(0.1)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.proc.terminate()
+        cls.proc.wait(timeout=10)
+
+    def test_http_client(self):
+        tr = HttpTransliterator(f"http://127.0.0.1:{self.port}")
+        self.assertEqual(tr.convert("ⴰⵣⵓⵍ"), "أزول")
+        self.assertEqual(tr.convert_many(["ⵜⴰⵎⴰⵣⵉⵖⵜ", "ⴰⵎⵖⴰⵔ"] * 3, batch_size=2), ["تامازيغت", "أمغار"] * 3)
+        self.assertEqual(HttpTransliterator(f"http://127.0.0.1:{self.port}", profile="ircam").convert("ⵉⴼⴰⵙⵙⵏ"), "ئفاسسن")
+
+    def test_http_errors(self):
+        with self.assertRaises(TransliterationError):
+            HttpTransliterator(f"http://127.0.0.1:{self.port}", profile="nope").convert("ⴰ")
 
 
 if __name__ == "__main__":

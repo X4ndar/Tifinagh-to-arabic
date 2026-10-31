@@ -13,7 +13,8 @@
     "./package.json": "./package.json"
   },
   "bin": {
-    "amazigh-transliterate": "dist/cli/bin.js"
+    "amazigh-transliterate": "dist/cli/bin.js",
+    "amazigh-transliterate-server": "dist/server/bin.js"
   },
   "files": [
     "dist",
@@ -42,7 +43,8 @@
     "prepare": "npm run build",
     "test:heavy": "FC_RUNS=20000 jest tests/property.test.ts tests/metamorphic.test.ts tests/roundtrip.test.ts",
     "test:e2e": "node tests-e2e/demo.e2e.cjs",
-    "test:pack": "bash scripts/smoke-pack.sh"
+    "test:pack": "bash scripts/smoke-pack.sh",
+    "start": "node dist/server/bin.js"
   },
   "keywords": [
     "tifinagh",

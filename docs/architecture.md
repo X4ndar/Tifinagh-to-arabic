@@ -45,6 +45,7 @@ copied verbatim, so the converter is safe on arbitrary text.
 | `src/diagnostics/diagnostics.ts` | warning codes, severities, `TransliterationError` |
 | `src/core/arabic.ts` | `ArabicConverter` (precompiled options, streaming `convertChunk`) |
 | `src/cli/` | command-line interface |
+| `src/server/` | dependency-free HTTP server: web page + JSON API, used by the Docker image ([deploy.md](deploy.md)) |
 | `src/converters/`, `src/data/mapping.ts` | upstream Latin ↔ Tifinagh code (unchanged logic) |
 | `python/amazigh_transliterate.py` | Python bridge over the CLI (`--jsonl`) |
 

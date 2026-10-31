@@ -1,4 +1,6 @@
-// Make the CLI executable after `tsc` (shebang is preserved by TypeScript).
+// Make the command-line entry points executable after `tsc` (TypeScript keeps the shebang).
 import { chmodSync, existsSync } from 'node:fs'
-const bin = new URL('../dist/cli/bin.js', import.meta.url)
-if (existsSync(bin)) chmodSync(bin, 0o755)
+for (const rel of ['../dist/cli/bin.js', '../dist/server/bin.js']) {
+  const file = new URL(rel, import.meta.url)
+  if (existsSync(file)) chmodSync(file, 0o755)
+}

@@ -64,3 +64,32 @@ jobs:
       - name: Demo end-to-end and accessibility (axe-core)
         run: npm run test:e2e
 
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compose file is valid
+        run: docker compose -f docker-compose.yml -f docker-compose.local.yml config --quiet
+      - name: Build and start the image exactly as Coolify would (plus a local port)
+        run: docker compose -f docker-compose.yml -f docker-compose.local.yml up -d --build
+      - name: Wait until healthy
+        run: |
+          for i in $(seq 1 30); do
+            s=$(docker inspect --format '{{.State.Health.Status}}' "$(docker compose ps -q app)")
+            [ "$s" = healthy ] && exit 0
+            sleep 2
+          done
+          docker compose logs app; exit 1
+      - name: Check the page and the API
+        run: |
+          set -e
+          curl -fsS localhost:3000/healthz
+          curl -fsS localhost:3000/ | grep -q 'Tamazight in Arabic letters'
+          out=$(curl -fsS -X POST localhost:3000/api/transliterate -H 'Content-Type: application/json' -d '{"text":"ⵜⴰⵎⴰⵣⵉⵖⵜ"}')
+          echo "$out" | grep -q '"output":"تامازيغت"'
+          test "$(docker exec "$(docker compose ps -q app)" id -un)" = node
+      - name: Stops cleanly on SIGTERM
+        run: |
+          docker compose stop
+          test "$(docker inspect --format '{{.State.ExitCode}}' "$(docker compose ps -aq app)")" = 0
+

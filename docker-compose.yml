@@ -1,0 +1,50 @@
+# Docker Compose for Coolify (Docker Compose build pack) or any Docker host.
+#
+# Coolify: SERVICE_URL_APP_3000 asks Coolify to generate a URL for the `app`
+# service and route it to container port 3000. Every ${VAR:-default} below
+# appears as an editable variable in Coolify's Environment Variables tab.
+# No `ports:` on purpose: Coolify's proxy reaches the container directly.
+# For a plain Docker host, see docker-compose.local.yml.
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NODE_IMAGE: ${NODE_IMAGE:-node:22-alpine}
+    image: amazigh-transliterate:latest
+    restart: unless-stopped
+    expose:
+      - "3000"
+    environment:
+      - SERVICE_URL_APP_3000
+      - PORT=3000
+      - DEFAULT_PROFILE=${DEFAULT_PROFILE:-readable}
+      - CORS_ORIGIN=${CORS_ORIGIN:-*}
+      - RATE_LIMIT_PER_MINUTE=${RATE_LIMIT_PER_MINUTE:-120}
+      - MAX_BODY_BYTES=${MAX_BODY_BYTES:-1048576}
+      - MAX_TEXT_CHARS=${MAX_TEXT_CHARS:-200000}
+      - MAX_BATCH_ITEMS=${MAX_BATCH_ITEMS:-1000}
+      - TRUST_PROXY=${TRUST_PROXY:-true}
+      - UI_ENABLED=${UI_ENABLED:-true}
+      - LOG_REQUESTS=${LOG_REQUESTS:-true}
+      - LEXICON_PATH=${LEXICON_PATH:-}
+      - LEXICON_ALLOW_PROVISIONAL=${LEXICON_ALLOW_PROVISIONAL:-false}
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/healthz').then(r=>process.exit(r.ok?0:1),()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    # Hardening: the app writes nothing to disk and needs no privileges.
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    deploy:
+      resources:
+        limits:
+          memory: 512M

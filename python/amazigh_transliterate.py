@@ -29,7 +29,7 @@ import subprocess
 import threading
 from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence
 
-__all__ = ["Transliterator", "TransliterationError", "to_arabic", "find_cli"]
+__all__ = ["Transliterator", "TransliterationError", "to_arabic", "find_cli", "HttpTransliterator"]
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
 
@@ -186,6 +186,55 @@ def convert_file(src: str, dst: str, profile: str = "readable", extra_args: Sequ
     res = subprocess.run(cmd, capture_output=True, encoding="utf-8", check=False)
     if res.returncode != 0:
         raise TransliterationError(res.stderr.strip())
+
+
+class HttpTransliterator:
+    """Client for a self-hosted server (see docs/deploy.md). Standard library only.
+
+        tr = HttpTransliterator("https://amazigh.example.com")
+        tr.convert("ⴰⵣⵓⵍ")                    # 'أزول'
+        tr.convert_many(["ⴰⵎⵖⴰⵔ", "ⵉⴼⴰⵙⵙⵏ"])   # one request for the whole batch
+    """
+
+    def __init__(self, base_url: str, profile: str = "readable", options: Optional[Mapping[str, Any]] = None, *, timeout: float = 30.0) -> None:
+        self.url = base_url.rstrip("/") + "/api/transliterate"
+        self.profile = profile
+        self.options = dict(options or {})
+        self.timeout = timeout
+
+    def _post(self, payload: Dict[str, Any]) -> Dict[str, Any]:
+        import urllib.error
+        import urllib.request
+
+        payload = {"profile": self.profile, **({"options": self.options} if self.options else {}), **payload}
+        req = urllib.request.Request(
+            self.url,
+            data=json.dumps(payload, ensure_ascii=False).encode("utf-8"),
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+        try:
+            with urllib.request.urlopen(req, timeout=self.timeout) as res:
+                return json.loads(res.read().decode("utf-8"))
+        except urllib.error.HTTPError as e:
+            detail = json.loads(e.read().decode("utf-8") or "{}")
+            raise TransliterationError(f"HTTP {e.code}: {detail.get('error', e.reason)}", detail.get("warnings")) from None
+
+    def convert_detailed(self, text: str) -> Dict[str, Any]:
+        return self._post({"text": text})
+
+    def convert(self, text: str) -> str:
+        return self.convert_detailed(text)["output"]
+
+    def convert_many(self, texts: Sequence[str], batch_size: int = 500) -> List[str]:
+        out: List[str] = []
+        for i in range(0, len(texts), batch_size):
+            res = self._post({"texts": list(texts[i : i + batch_size])})
+            for r in res["results"]:
+                if "error" in r:
+                    raise TransliterationError(r["error"], r.get("warnings"))
+                out.append(r["output"])
+        return out
 
 
 if __name__ == "__main__":  # pragma: no cover

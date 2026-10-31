@@ -1,0 +1,15 @@
+# Only what the image needs is copied explicitly; keep the build context small.
+node_modules
+dist
+coverage
+.git
+.github
+benchmarks
+data
+tests
+tests-e2e
+python
+examples
+demo/screenshots
+scratch
+*.log

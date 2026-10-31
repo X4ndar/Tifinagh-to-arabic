@@ -48,7 +48,7 @@ Requires Node.js ≥ 18.
 git clone https://github.com/x4ndar/tifinagh-to-arabic.git
 cd tifinagh-to-arabic
 npm install        # also builds dist/ (prepare script)
-npm test           # 358 tests
+npm test           # 388 tests
 npm run test:heavy # randomized tests at 20,000 cases each
 npm run test:e2e   # demo page in a real browser + accessibility scan (needs Playwright)
 npm run test:pack  # installs the packed tarball and uses it like a consumer
@@ -123,6 +123,20 @@ with Transliterator(profile="readable") as tr:     # one Node process, fast for 
 The CLI is found via `AMAZIGH_TRANSLITERATE_CLI`, `node_modules/.bin`, the
 repository's `dist/cli/bin.js`, or `PATH`. For files, `convert_file(src, dst)`
 streams through the CLI. Example: [examples/python_batch.py](examples/python_batch.py).
+
+## Self-hosting (Coolify, Docker)
+
+The repository includes a small web server (the converter page and a JSON
+API), a `Dockerfile` and a `docker-compose.yml` ready for Coolify:
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.local.yml up -d --build   # http://localhost:3000
+curl -s localhost:3000/api/transliterate -H 'Content-Type: application/json' -d '{"text":"ⴰⵣⵓⵍ"}'
+```
+
+On Coolify: new resource from this repository, build pack *Docker Compose*,
+deploy. Step-by-step instructions, settings and the API reference:
+[docs/deploy.md](docs/deploy.md).
 
 ## Profiles
 
