@@ -143,10 +143,15 @@ inconsistent Wikidata labels (ⵜⵉⵎⵓⵎⵉⵍⵜ vs تيموليلت).
 |---|---|
 | IRCAM units with an explicit, tested mapping | 33 / 33 (31 letters + ⴳⵯ ⴽⵯ), in all 3 profiles |
 | IRCAM DGLAI lexicon (local, 18,846 words, 104,100 Tifinagh chars) | 0 unsupported characters, 0 words with warnings |
-| TAWNZA subtitles (local, CC-BY-4.0; 897,778 words, 3.5 M Tifinagh chars) | 3 unsupported code points (input typos), 76 diagnostics in total, 2.1 s |
+| TAWNZA subtitles (local, CC-BY-4.0; 897,778 words, 3.5 M Tifinagh chars) | 3 unsupported code points (input typos), 75 diagnostics in total, 2.1 s |
 | Input preservation (2,000 synthetic mixed-script documents) | 0 failures |
-| Property tests (9 invariants) | pass at 400 runs each in CI; also run once at 20,000 runs |
-| Unit / integration tests | 298 passing (CI: Node 18, 20, 22) |
+| Unit / integration tests | 352 passing in 12 files (CI: Node 18, 20, 22); 98.2 % line, 91.5 % branch coverage |
+| Property tests (9 invariants) | 400 cases each on every CI run, 20,000 in the `thorough` CI job |
+| Round trip (`ircam`, schwa-free words) | an independent decoder recovers the exact Tifinagh; 50,000 random multi-word cases |
+| Metamorphic relations (9) | idempotence, letter counts, streaming = whole text, CLI = library, alternatives = their options, profile = its options, context independence, cache consistency |
+| Demo page in Chromium | 19 checks: conversion, letter map, profile switch, keyboard, copy, warnings, offline fonts, no sideways scroll at 320–768 px, reduced motion, axe-core WCAG 2.1 AA with 0 violations (light and dark) |
+| Installed package | packed tarball installed in an empty project: CommonJS, ES module, CLI, TypeScript types and Python bridge |
+| TAWNZA through CLI, library and Python | identical output for 131,624 lines; every diagnostic points at its source text |
 | Throughput, library, `readable`, 20 MiB synthetic text | 7.1 MiB/s, ≈ 333,000 words/s (`ircam` 7.2, `phonetic` 5.4 MiB/s) |
 | Latency, single word | p50 1.6 µs, p99 6.9 µs |
 | CLI streaming, same 20 MiB file | 3.2 MiB/s (incl. process start) |

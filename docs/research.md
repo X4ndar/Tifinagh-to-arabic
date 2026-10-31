@@ -246,7 +246,7 @@ script* next to Tifinagh (a transliteration), or only an Arabic
 ### TAWNZA as a robustness corpus
 
 897,778 Tifinagh words (3.5 M Tifinagh characters) converted in 2.1 s with
-76 diagnostics, all genuine input anomalies: 54 vowel–vowel sequences (mostly
+75 diagnostics, all genuine input anomalies: 54 vowel–vowel sequences (mostly
 loanwords such as ⵜⵉⵓⵔⵓⴱⵉⵢⵉⵏ), 17 triple consonants (typos such as ⴰⴳⴳⴳⵯⵏ),
 2 × U+2D36 ⴶ (Tuareg/Kabyle letter, probably a typo), 1 Arabic shadda typed
 inside a Tifinagh word and the ⵯ it orphaned. Only those 3 code points remain

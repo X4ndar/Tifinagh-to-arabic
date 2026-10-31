@@ -199,11 +199,38 @@ function parseArgs(argv: string[]): CliArgs {
   return a
 }
 
+/** Output streams whose reader has gone away (e.g. `amazigh-transliterate big.txt | head`). */
+const closedStreams = new WeakSet<NodeJS.WritableStream>()
+const isPipeClosed = (e: unknown): boolean => {
+  const code = (e as { code?: string } | null)?.code
+  return code === 'EPIPE' || code === 'ERR_STREAM_DESTROYED' || code === 'ERR_STREAM_WRITE_AFTER_END'
+}
+
+/** Stop quietly, like other command-line tools, when the reader of a stream goes away. */
+function watchPipe(stream: NodeJS.WritableStream): void {
+  stream.on('error', (e: unknown) => {
+    if (isPipeClosed(e)) closedStreams.add(stream)
+  })
+}
+
 function write(stream: NodeJS.WritableStream, s: string): Promise<void> {
   return new Promise((resolve, reject) => {
-    const ok = stream.write(s, (err) => (err ? reject(err) : undefined))
+    if (closedStreams.has(stream) || (stream as { destroyed?: boolean }).destroyed) {
+      closedStreams.add(stream)
+      return resolve()
+    }
+    const ok = stream.write(s, (err) => {
+      if (!err) return
+      if (isPipeClosed(err)) {
+        closedStreams.add(stream)
+        resolve()
+      } else reject(err)
+    })
     if (ok) resolve()
-    else stream.once('drain', () => resolve())
+    else {
+      stream.once('drain', () => resolve())
+      stream.once('close', () => resolve())
+    }
   })
 }
 
@@ -241,8 +268,8 @@ function openInputs(a: CliArgs, io: CliIO): NodeJS.ReadableStream[] {
   return a.inputs.map((f) => {
     if (f === '-') return io.stdin
     try {
-      const st = fs.statSync(f)
-      if (!st.isFile()) throw new Error('not a regular file')
+      // regular files, but also pipes and devices (`<(cmd)`, /dev/stdin); only directories are refused
+      if (fs.statSync(f).isDirectory()) throw new Error('it is a directory')
     } catch (e) {
       throw Object.assign(new Error(`Cannot read input file '${f}': ${(e as Error).message}`), { io: true })
     }
@@ -261,6 +288,8 @@ function versionString(): string {
 
 /** Run the CLI. Returns the exit code (never calls process.exit). */
 export async function main(argv: string[], io: CliIO): Promise<number> {
+  watchPipe(io.stdout)
+  watchPipe(io.stderr)
   let a: CliArgs
   try {
     a = parseArgs(argv)
@@ -287,9 +316,9 @@ export async function main(argv: string[], io: CliIO): Promise<number> {
       const st = fs.statSync(a.lexicon)
       if (st.size > 64 * 1024 * 1024) throw new Error('lexicon file larger than 64 MiB')
       lexicon = Lexicon.fromJSON(fs.readFileSync(a.lexicon, 'utf8'), { allowProvisional: a.allowProvisional })
-      const conflicts = lexicon.conflicts()
-      if (conflicts.length > 0) {
-        await write(io.stderr, `warning: lexicon has ${conflicts.length} conflicting entr${conflicts.length === 1 ? 'y' : 'ies'}; conflicting words keep rule output\n`)
+      const words = new Set(lexicon.conflicts().map((c) => c.tifinagh)).size
+      if (words > 0) {
+        await write(io.stderr, `warning: lexicon has conflicting spellings for ${words} word${words === 1 ? '' : 's'}; those words keep the rule output\n`)
       }
     } catch (e) {
       await write(io.stderr, `error: cannot load lexicon '${a.lexicon}': ${(e as Error).message}\n`)
@@ -367,6 +396,7 @@ export async function main(argv: string[], io: CliIO): Promise<number> {
       let strictFailed = false
       for (const s of inputs) {
         for await (const { line } of lines(s, a.maxBytes)) {
+          if (closedStreams.has(out)) return strictFailed ? EXIT.STRICT : EXIT.OK
           n++
           const raw = line.endsWith('\r') ? line.slice(0, -1) : line
           if (raw.trim() === '') continue
@@ -401,6 +431,7 @@ export async function main(argv: string[], io: CliIO): Promise<number> {
     let pending = ''
     for (const s of inputs) {
       for await (const { line, eol } of lines(s, a.maxBytes)) {
+        if (closedStreams.has(out)) return EXIT.OK // nobody is reading any more
         const r = convertPlain(line, state, offset)
         pending += r.output + eol
         // batch writes (64 KiB) — order with stderr diagnostics is kept by flushing first

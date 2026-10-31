@@ -47,8 +47,13 @@ describe('rule metadata', () => {
     for (const initialVowels of ['hamza-seat', 'alef', 'hamza-alef'] as const)
       for (const hiatus of ['hamza-seat', 'plain'] as const)
         for (const plainInitialY of [true, false]) combos.push({ initialVowels, hiatus, plainInitialY })
-    for (const l of IRCAM_LETTERS) {
-      const unit = tokenizeWord(l.char, 0).units[0]
+    const units = IRCAM_LETTERS.flatMap((l) => {
+      const single = tokenizeWord(l.char, 0).units[0]
+      // vowels never geminate; consonants and semivowels can
+      return l.cls === 'consonant' || l.cls === 'semivowel' ? [single, tokenizeWord(l.char + l.char, 0).units[0]] : [single]
+    })
+    for (const unit of units) {
+      const l = unit.letter!
       for (const prev of prevs) {
         for (const c of combos) {
           const o = resolveOptions('readable', c)
@@ -59,6 +64,7 @@ describe('rule metadata', () => {
             if (w.letters && !w.letters.includes(l.char)) return false
             if (w.classes && !w.classes.includes(l.cls)) return false
             if (w.prev && !w.prev.includes(prev)) return false
+            if (w.single !== undefined && w.single !== (unit.length === 1)) return false
             if (w.options) for (const k of Object.keys(w.options) as (keyof ArabicOptions)[]) if (w.options[k] !== o[k]) return false
             return true
           })

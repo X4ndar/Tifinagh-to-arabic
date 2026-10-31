@@ -11,12 +11,15 @@ export type PrevContext = LetterClass | 'boundary' | 'other'
  *  - letters:  Tifinagh base letters the rule applies to
  *  - classes:  letter classes the rule applies to
  *  - prev:     class of the previous *letter* in the word ('boundary' = word start)
+ *  - single:   whether the unit is a single letter (false = geminate)
  *  - options:  profile option values required
  */
 export interface Condition {
   letters?: readonly string[]
   classes?: readonly LetterClass[]
   prev?: readonly PrevContext[]
+  /** true: the unit is a single letter; false: a geminate (two or more). */
+  single?: boolean
   options?: Partial<ArabicOptions>
 }
 
@@ -209,13 +212,18 @@ export const LETTER_RULES: readonly Rule[] = [
   // ── Semivowels ─────────────────────────────────────────────────────────────
   {
     id: 'semivowel.initial.plain-y',
-    description: 'Word-initial ⵢ is written plain ي even when semivowels are otherwise marked (initial ي cannot be the vowel, which is ئ).',
+    description:
+      'Word-initial single ⵢ is written plain ي even when semivowels are otherwise marked (initial ي cannot be the vowel, which is ئ). ' +
+      'A geminate ⵢⵢ keeps the mark, so that under gemination=double ⵢⵢ (يٛيٛ) stays distinct from ⵢⵉ (يي).',
     priority: 80,
-    when: { letters: [Y], prev: ['boundary'], options: { plainInitialY: true } },
+    when: { letters: [Y], prev: ['boundary'], single: true, options: { plainInitialY: true } },
     action: { type: 'emit', text: AR.YEH },
     sources: ['IRCAM-T2'],
     status: 'documented',
-    examples: [{ profile: 'ircam', input: 'ⵢⴰⵏ', output: 'يان' }],
+    examples: [
+      { profile: 'ircam', input: 'ⵢⴰⵏ', output: 'يان' },
+      { profile: 'ircam', input: 'ⵢⵢⴰ', output: 'يٛيٛا' },
+    ],
   },
   // ── Defaults ───────────────────────────────────────────────────────────────
   {

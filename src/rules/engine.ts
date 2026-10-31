@@ -1,5 +1,4 @@
 import { AR, baseArabic } from '../alphabet/arabic'
-import { LABIALIZATION_MARK } from '../alphabet/inventory'
 import { diag } from '../diagnostics/diagnostics'
 import { canonicalMarkOrder } from '../normalization/normalize'
 import type { Unit } from '../tokenization/units'
@@ -41,6 +40,7 @@ function matches(cond: Condition, unit: Unit, prev: PrevContext, o: ArabicOption
   if (cond.letters && !cond.letters.includes(unit.letter!.char)) return false
   if (cond.classes && !cond.classes.includes(unit.cls!)) return false
   if (cond.prev && !cond.prev.includes(prev)) return false
+  if (cond.single !== undefined && cond.single !== (unit.length === 1)) return false
   if (cond.options) {
     for (const k of Object.keys(cond.options) as (keyof ArabicOptions)[]) {
       if (cond.options[k] !== o[k]) return false
@@ -56,7 +56,7 @@ export function selectRule(unit: Unit, prev: PrevContext, o: ArabicOptions): Rul
 }
 
 /**
- * Rule selection depends only on (letter, previous context, options), and the
+ * Rule selection depends only on (letter, previous context, single vs geminate, options), and the
  * base letter only on (letter, options), so both are memoized per options
  * object. Results are identical to calling `selectRule` / `baseArabic`.
  */
@@ -78,10 +78,11 @@ function selectRuleMemo(m: Memo, unit: Unit, prev: PrevContext, o: ArabicOptions
   const ch = unit.letter!.char
   let row = m.rules.get(ch)
   if (!row) {
-    row = new Array(6)
+    row = new Array(12)
     m.rules.set(ch, row)
   }
-  const i = PREV_INDEX[prev]
+  // rule conditions depend on the previous context and on single vs geminate
+  const i = PREV_INDEX[prev] * 2 + (unit.length > 1 ? 1 : 0)
   let r = row[i]
   if (r === undefined) {
     r = selectRule(unit, prev, o) ?? null
@@ -245,7 +246,3 @@ export function convertUnits(units: Unit[], o: ArabicOptions, wantTrace = true):
   return { output, warnings, trace }
 }
 
-/** True if the text still contains a raw labialization mark (only from orphans). */
-export function hasRawLabialization(s: string): boolean {
-  return s.includes(LABIALIZATION_MARK)
-}

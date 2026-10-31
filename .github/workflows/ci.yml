@@ -31,6 +31,8 @@ jobs:
           test "$out" = "تامازيغت"
           printf 'ⴰⵣⵓⵍ\n\nⴰⵎⵖⴰⵔ' | node dist/cli/bin.js > out.txt
           printf 'أزول\n\nأمغار' | cmp - out.txt
+      - name: Packed tarball works when installed (CJS, ESM, CLI, types, Python)
+        run: bash scripts/smoke-pack.sh
       - name: Package exports
         run: |
           node -e "const m=require('./dist/index.js'); if (m.toArabic('ⴰⵣⵓⵍ')!=='أزول') process.exit(1)"
@@ -43,3 +45,22 @@ jobs:
         run: python -m unittest discover -s python/tests -v
       - name: Evaluation (shipped datasets)
         run: node benchmarks/evaluate.mjs
+
+  thorough:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Property, metamorphic and round-trip tests at 20,000 cases each
+        run: npm run test:heavy
+      - name: Install Playwright and Chromium (not a library dependency)
+        run: |
+          npm install --no-save playwright@1.49.1
+          npx playwright install --with-deps chromium
+      - name: Demo end-to-end and accessibility (axe-core)
+        run: npm run test:e2e
+
