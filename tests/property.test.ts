@@ -13,7 +13,10 @@ const ircamUnit = fc.oneof(
   fc.constantFrom(...IRCAM_LETTERS.map((l) => l.char)),
   fc.constantFrom('ⴳⵯ', 'ⴽⵯ'),
 )
-const ircamWord = fc.array(ircamUnit, { minLength: 1, maxLength: 12 }).map((a) => a.join(''))
+const ircamWord = fc
+  .array(ircamUnit, { minLength: 1, maxLength: 12 })
+  .map((a) => a.join(''))
+  .filter((w) => /[^ⴻ]/.test(w)) // a word of only ⴻ is kept unchanged (EMPTY_WORD), tested separately
 
 /** Any sequence of Tifinagh-block code points plus some marks — malformed input welcome. */
 const tifinaghNoise = fc

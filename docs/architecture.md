@@ -136,6 +136,7 @@ Optional and empty by default. JSON format (array or `{ "entries": [...] }`):
 | `COMBINING_MARK_ON_TIFINAGH` | warning | combining mark on a letter (kept) |
 | `LONG_CONSONANT_RUN` | warning | ≥ 3 identical consonants |
 | `LEXICON_CONFLICT` | warning | conflicting lexicon spellings |
+| `EMPTY_WORD` | warning | a word with nothing written in Arabic (only ⴻ or formatting) — kept unchanged |
 | `FORMAT_CHAR_REMOVED` | info | ZWJ/bidi mark/etc. removed inside a word |
 | `MODIFIER_NORMALIZED` | info | ʷ read as ⵯ |
 | `VOWEL_HIATUS` | info | vowel after vowel (spelled with plain letters by default) |

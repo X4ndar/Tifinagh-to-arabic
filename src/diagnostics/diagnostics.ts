@@ -12,6 +12,7 @@ export const SEVERITY: Readonly<Record<WarningCode, Severity>> = {
   COMBINING_MARK_ON_TIFINAGH: 'warning',
   LONG_CONSONANT_RUN: 'warning',
   LEXICON_CONFLICT: 'warning',
+  EMPTY_WORD: 'warning',
   FORMAT_CHAR_REMOVED: 'info',
   MODIFIER_NORMALIZED: 'info',
   SCHWA_OMITTED: 'info',

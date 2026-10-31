@@ -48,7 +48,7 @@ Requires Node.js ≥ 18.
 git clone https://github.com/x4ndar/tifinagh-to-arabic.git
 cd tifinagh-to-arabic
 npm install        # also builds dist/ (prepare script)
-npm test           # 352 tests
+npm test           # 358 tests
 npm run test:heavy # randomized tests at 20,000 cases each
 npm run test:e2e   # demo page in a real browser + accessibility scan (needs Playwright)
 npm run test:pack  # installs the packed tarball and uses it like a consumer

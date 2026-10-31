@@ -92,6 +92,11 @@ describe('every correspondence, every profile (word-medial context)', () => {
     for (const profile of PROFILE_IDS) {
       for (const l of IRCAM_LETTERS) {
         const out = toArabic(l.char, { profile })
+        if (l.cls === 'schwa' && profile !== 'phonetic') {
+          // nothing would be written: the word is kept (EMPTY_WORD) rather than vanishing
+          expect(out).toBe(l.char)
+          continue
+        }
         expect(out).not.toMatch(TIFINAGH_RE)
         expect(out).toMatch(ARABIC_RE)
       }

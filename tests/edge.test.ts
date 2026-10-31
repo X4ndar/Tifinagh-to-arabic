@@ -113,3 +113,25 @@ describe('streaming API', () => {
     expect(e.warnings[0].position).toBe(13 + 5)
   })
 })
+
+describe('words with nothing to write in Arabic', () => {
+  test.each([['ⴻ'], ['ⴻⴻ'], ['\u2D7F'], ['ⴻ\u200Dⴻ']])('%j is kept unchanged with EMPTY_WORD instead of vanishing', (w) => {
+    for (const profile of ['ircam', 'readable'] as const) {
+      const r = transliterate(`a ${w} b`, { profile })
+      expect(r.output).toBe(`a ${w} b`)
+      expect(r.warnings.some((x) => x.code === 'EMPTY_WORD' && x.source === w)).toBe(true)
+    }
+  })
+
+  test('phonetic writes the schwa, so such a word is not empty there', () => {
+    expect(toArabic('ⴻ', { profile: 'phonetic' })).toBe('اِ')
+  })
+
+  test('regression: removing a schwa-only word must not merge Markdown backticks (found by fast-check)', () => {
+    const s = '»``ⴻ`ⴰⵣⵓⵍ`'
+    const once = toArabic(s, { profile: 'ircam' })
+    expect(once).toBe(s)
+    expect(toArabic(once, { profile: 'ircam' })).toBe(once)
+  })
+})
+

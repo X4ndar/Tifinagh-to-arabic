@@ -108,6 +108,20 @@ export class ArabicConverter {
       const ruled = convertUnits(tok.units, o, trace !== undefined)
       warnings.push(...ruled.warnings)
       let wordOut = ruled.output
+      if (wordOut === '') {
+        // A "word" made only of unwritten characters (the neutral vowel ⴻ, a joiner)
+        // would vanish and could merge the text around it; keep it and say so.
+        wordOut = seg.text
+        warnings.push(
+          diag(
+            'EMPTY_WORD',
+            `'${seg.text}' has no letter that is written in Arabic script (only the neutral vowel ⴻ or formatting); it was kept unchanged.`,
+            start,
+            seg.text,
+          ),
+        )
+      }
+      const ruleOutput = wordOut // rule-based spelling, before any lexicon override
 
       const lex = this.config.lexicon
       if (lex) {
@@ -126,17 +140,17 @@ export class ArabicConverter {
           )
         }
       }
-      if (trace && !(lex && wordOut !== ruled.output)) trace.push(...ruled.trace)
+      if (trace && !(lex && wordOut !== ruleOutput)) trace.push(...ruled.trace)
 
       if (alternatives) {
         const seen = new Set<string>([wordOut])
         const alts: Array<{ output: string; label: string }> = []
-        if (wordOut !== ruled.output) {
-          seen.add(ruled.output)
-          alts.push({ output: ruled.output, label: 'rule-based spelling (lexicon overridden)' })
+        if (wordOut !== ruleOutput) {
+          seen.add(ruleOutput)
+          alts.push({ output: ruleOutput, label: 'rule-based spelling (lexicon overridden)' })
         }
         for (const v of this.variantOptions) {
-          const alt = convertUnits(tok.units, v.options, false).output
+          const alt = convertUnits(tok.units, v.options, false).output || seg.text // same rule as EMPTY_WORD
           if (!seen.has(alt)) {
             seen.add(alt)
             alts.push({ output: alt, label: v.label })

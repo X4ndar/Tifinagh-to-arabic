@@ -26,6 +26,8 @@ const unit = fc.oneof(
   { weight: 1, arbitrary: fc.constantFrom('ⴳⵯ', 'ⴽⵯ') },
 )
 const word = fc.array(unit, { minLength: 1, maxLength: 10 }).map((a) => a.join(''))
+/** Words with at least one letter that is written in Arabic (not only ⴻ). */
+const writtenWord = word.filter((w) => /[^ⴻ]/.test(w))
 const profileArb = fc.constantFrom<ProfileId>(...PROFILE_IDS)
 
 /** Realistic messy text: Tifinagh words mixed with punctuation, other scripts, URLs, code and line breaks. */
@@ -53,7 +55,7 @@ describe('metamorphic relations', () => {
 
   test('ircam: one Arabic letter per non-schwa Tifinagh letter, exactly', () => {
     fc.assert(
-      fc.property(word, (w) => {
+      fc.property(writtenWord, (w) => {
         const out = toArabic(w, { profile: 'ircam' })
         const expected = [...w].filter((c) => c !== 'ⴻ' && c !== 'ⵯ').length
         return [...lettersOnly(out)].length === expected && !TIFINAGH_RE.test(out)

@@ -21,6 +21,7 @@ export type WarningCode =
   | 'LONG_CONSONANT_RUN'
   | 'LEXICON_OVERRIDE'
   | 'LEXICON_CONFLICT'
+  | 'EMPTY_WORD'
 
 export type Severity = 'info' | 'warning' | 'error'
 

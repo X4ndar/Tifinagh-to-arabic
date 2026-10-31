@@ -307,6 +307,7 @@
       case 'NONSTANDARD_LABIALIZATION': return q + ': in standard spelling only ⴳ and ⴽ take the rounding mark ⵯ. Check the word.'
       case 'COMBINING_MARK_ON_TIFINAGH': return 'A mark on ' + q + ' has no Arabic equivalent. It was left as it is.'
       case 'LONG_CONSONANT_RUN': return q + ' repeats a letter three or more times. Check the spelling.'
+      case 'EMPTY_WORD': return q + ' has no letter that is written in Arabic script, so it was left as it is.'
       default: return w.message
     }
   }
