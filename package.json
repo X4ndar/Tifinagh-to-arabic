@@ -41,7 +41,7 @@
     "gold:build": "node benchmarks/scripts/build-gold.mjs",
     "prepublishOnly": "npm run build && npm test",
     "prepare": "npm run build",
-    "test:heavy": "FC_RUNS=20000 jest tests/property.test.ts tests/metamorphic.test.ts tests/roundtrip.test.ts",
+    "test:heavy": "node scripts/test-heavy.mjs",
     "test:e2e": "node tests-e2e/demo.e2e.cjs",
     "test:pack": "bash scripts/smoke-pack.sh",
     "start": "node dist/server/bin.js"
