@@ -41,3 +41,24 @@ export function dictionaryStyle(text) {
   for (const ch of text) out += DICT_MAP.has(ch) ? DICT_MAP.get(ch) : ch
   return out
 }
+
+/**
+ * Naive Arabic → Tifinagh baseline: one Arabic letter → one Tifinagh letter,
+ * ي always ⵉ, و always ⵓ, ر always ⵔ, shadda doubles, other marks dropped.
+ * Independent of the engine's reverse rules.
+ */
+const REV = {
+  'ا': 'ⴰ', 'أ': 'ⴰ', 'إ': 'ⵉ', 'آ': 'ⴰ', 'ى': 'ⴰ', 'ئ': 'ⵉ', 'ؤ': 'ⵓ', 'ي': 'ⵉ', 'و': 'ⵓ', 'ب': 'ⴱ', 'ت': 'ⵜ', 'ج': 'ⵊ',
+  'ح': 'ⵃ', 'خ': 'ⵅ', 'د': 'ⴷ', 'ر': 'ⵔ', 'ڔ': 'ⵕ', 'ز': 'ⵣ', 'ژ': 'ⵥ', 'ظ': 'ⵥ', 'س': 'ⵙ', 'ش': 'ⵛ', 'ص': 'ⵚ', 'ض': 'ⴹ',
+  'ط': 'ⵟ', 'ع': 'ⵄ', 'غ': 'ⵖ', 'ف': 'ⴼ', 'ق': 'ⵇ', 'ك': 'ⴽ', 'ک': 'ⴽ', 'گ': 'ⴳ', 'ڭ': 'ⴳ', 'ل': 'ⵍ', 'م': 'ⵎ', 'ن': 'ⵏ',
+  'ه': 'ⵀ',
+}
+export function naiveReverse(text) {
+  let out = ''
+  for (const ch of text.normalize('NFC')) {
+    if (ch === '\u0651') out += out.slice(-1)
+    else if (/[\u064B-\u065F\u0670]/.test(ch)) continue
+    else out += REV[ch] ?? ch
+  }
+  return out
+}

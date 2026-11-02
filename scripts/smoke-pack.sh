@@ -18,30 +18,36 @@ eq(m.toArabic('ⵜⴰⵎⴰⵣⵉⵖⵜ'), 'تامازيغت')
 eq(m.convert('ⴰⵎⵖⴰⵔ', { from: 'tifinagh', to: 'arabic' }).output, 'أمغار')
 eq(m.convert('ⵜⴰⵎⵓⵔⵜ', { to: 'latin' }).output, 'tamurt')
 eq(require('amazigh-transliterate/package.json').name, 'amazigh-transliterate')
+eq(m.fromArabic('تامازيغت'), 'ⵜⴰⵎⴰⵣⵉⵖⵜ')
+eq(m.convert('أمغار', { from: 'arabic', to: 'latin' }).output, 'amɣar')
 console.log('cjs ok')"
 
 # ES module
 node --input-type=module -e "
 import m from 'amazigh-transliterate'
-import { toArabic } from 'amazigh-transliterate'
+import { toArabic, fromArabic } from 'amazigh-transliterate'
 if (m.toArabic('ⴰⵣⵓⵍ') !== 'أزول' || toArabic('ⴰⵣⵓⵍ', { profile: 'ircam' }) !== 'ازول') process.exit(1)
+if (fromArabic('أزول') !== 'ⴰⵣⵓⵍ') process.exit(1)
 console.log('esm ok')"
 
 # CLI from node_modules/.bin
 test "$(npx --no-install amazigh-transliterate --text 'ⵉⴼⴰⵙⵙⵏ')" = "ئفاسّن"
 printf 'ⴰⵣⵓⵍ\n\nⵓⴽⵙⵓⵎ' | npx --no-install amazigh-transliterate > out.txt
 printf 'أزول\n\nؤكسوم' | cmp - out.txt
+test "$(npx --no-install amazigh-transliterate --from arabic --text 'ئفاسّن')" = "ⵉⴼⴰⵙⵙⵏ"
 echo "cli ok"
 
 # TypeScript declarations
 cat > check.ts <<'TS'
-import { createConverter, transliterate, type ArabicOptions, type ConvertResult, type ProfileId } from 'amazigh-transliterate'
+import { arabicToTifinagh, createConverter, transliterate, type ArabicOptions, type ConvertResult, type ProfileId, type ReverseOptions } from 'amazigh-transliterate'
+const ro: Partial<ReverseOptions> = { semivowels: 'marked', doubledLetters: 'geminate' }
+const rr: string = arabicToTifinagh('أزول', { profile: 'ircam', options: ro, trace: true }).output
 const p: ProfileId = 'phonetic'
 const o: Partial<ArabicOptions> = { gemination: 'double', initialVowels: 'hamza-seat' }
 const r = transliterate('ⴰⵣⵓⵍ', { profile: p, arabic: o, alternatives: true })
 const first: string | undefined = r.alternatives?.[0]?.alternatives[0]?.output
 const c: ConvertResult | undefined = undefined
-console.log(createConverter().convert('ⴰ').output, first, c)
+console.log(createConverter().convert('ⴰ').output, first, c, rr)
 TS
 "$ROOT/node_modules/.bin/tsc" --noEmit --strict --module commonjs --target es2019 --esModuleInterop --skipLibCheck false --types node --typeRoots "$ROOT/node_modules/@types" check.ts
 echo "types ok"
@@ -49,9 +55,10 @@ echo "types ok"
 # Python bridge against the installed CLI
 AMAZIGH_TRANSLITERATE_CLI="$WORK/node_modules/.bin/amazigh-transliterate" python3 -c "
 import sys; sys.path.insert(0, '$WORK/node_modules/amazigh-transliterate/python')
-from amazigh_transliterate import Transliterator
+from amazigh_transliterate import Transliterator, from_arabic
 with Transliterator() as tr:
     assert tr.convert('ⵜⴰⵎⴰⵣⵉⵖⵜ') == 'تامازيغت'
+assert from_arabic('أمغار') == 'ⴰⵎⵖⴰⵔ'
 print('python ok')"
 
 # contents: no tests, no unlicensed data

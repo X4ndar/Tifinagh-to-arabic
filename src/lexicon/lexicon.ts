@@ -1,5 +1,16 @@
 import { LABIALIZATION_MARK, LETTER_BY_CHAR } from '../alphabet/inventory'
-import type { LexiconLike, LexiconLookup, LexiconStatus, ProfileId } from '../types/index'
+import type { LexiconLike, LexiconLookup, LexiconStatus, ProfileId, ReverseLexiconLookup } from '../types/index'
+
+const MARK_RE = /[\p{Mn}\p{Me}\p{Cf}\u0640]/gu
+
+/**
+ * Key used for reverse (Arabic → Tifinagh) lookups: NFKC (folds presentation
+ * forms), then vowel signs, shadda, tatweel and formatting removed. Entries
+ * therefore match whether or not the text is vowelled.
+ */
+export function arabicLexiconKey(arabic: string): string {
+  return arabic.normalize('NFKC').replace(MARK_RE, '')
+}
 
 /**
  * One lexical override. Entries are word-level and exact-match on the
@@ -90,6 +101,7 @@ export function validateEntry(e: unknown, index = 0): LexiconEntry {
  */
 export class Lexicon implements LexiconLike {
   private readonly map = new Map<string, LexiconEntry[]>()
+  private readonly reverse = new Map<string, LexiconEntry[]>()
   private count = 0
   private readonly allowProvisional: boolean
   private readonly maxEntries: number
@@ -119,6 +131,11 @@ export class Lexicon implements LexiconLike {
     if (list) {
       if (!list.some((x) => x.arabic === e.arabic && sameProfiles(x, e) && x.status === e.status)) list.push(e)
     } else this.map.set(e.tifinagh, [e])
+    const key = arabicLexiconKey(e.arabic)
+    const rlist = this.reverse.get(key)
+    if (rlist) {
+      if (!rlist.includes(e) && !rlist.some((x) => x.tifinagh === e.tifinagh && sameProfiles(x, e) && x.status === e.status)) rlist.push(e)
+    } else this.reverse.set(key, [e])
     this.count++
   }
 
@@ -143,6 +160,23 @@ export class Lexicon implements LexiconLike {
     if (spellings.length > 1) return { kind: 'conflict', candidates: spellings }
     const e = pool[0]
     return { kind: 'hit', arabic: e.arabic, source: e.source, status: e.status }
+  }
+
+  /**
+   * Reverse lookup for Arabic → Tifinagh: `arabic` is compared after
+   * {@link arabicLexiconKey}, so vowel signs and shadda do not matter.
+   */
+  lookupArabic(arabic: string, profile: ProfileId): ReverseLexiconLookup {
+    const list = (this.reverse.get(arabicLexiconKey(arabic)) ?? []).filter(
+      (e) => (!e.profiles || e.profiles.includes(profile)) && (e.status === 'verified' || this.allowProvisional),
+    )
+    if (list.length === 0) return { kind: 'none' }
+    const verified = list.filter((e) => e.status === 'verified')
+    const pool = verified.length > 0 ? verified : list
+    const spellings = [...new Set(pool.map((e) => e.tifinagh))]
+    if (spellings.length > 1) return { kind: 'conflict', candidates: spellings }
+    const e = pool[0]
+    return { kind: 'hit', tifinagh: e.tifinagh, source: e.source, status: e.status }
   }
 
   /** All (word, profile) pairs with more than one competing spelling. */

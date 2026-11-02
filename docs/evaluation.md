@@ -11,7 +11,7 @@ node benchmarks/evaluate.mjs \
 node benchmarks/performance.mjs --mb 20
 ```
 
-Raw outputs: `benchmarks/results/evaluation.md`, `evaluation.json`,
+Raw outputs (both directions): `benchmarks/results/evaluation.md`, `evaluation.json`,
 `performance.json` (generated with both local datasets present).
 
 ## 1. Reference data
@@ -136,6 +136,49 @@ inconsistent Wikidata labels (ⵜⵉⵎⵓⵎⵉⵍⵜ vs تيموليلت).
 
 0/3 for every system, as expected (ⴳ → ڨ, full vowels dropped by rule R1,
 ⵝ → ث). `readable` has the lowest CER (0.308).
+
+## 4b. Arabic script → Tifinagh
+
+The same reference pairs, read the other way (`from: 'arabic'`). Only pairs
+whose Arabic spelling has one Tifinagh reading in the dataset are used.
+Because Tawalt's Tifinagh never writes ⵕ or ⵯ (0 of 27,921 words), the fair
+comparison on Tawalt is the column that ignores them; the strict column is
+reported anyway.
+
+### `tawalt` (n = 27,921)
+
+| system | exact | ignoring ⴻ | ignoring ⴻ and ⵔ/ⵕ | also ignoring ⵯ | CER |
+|---|---:|---:|---:|---:|---:|
+| baseline: letter by letter (ي = ⵉ, و = ⵓ, ر = ⵔ) | 76.3 % | 78.4 % | 78.4 % | 78.4 % | 0.044 |
+| **ours: readable (default)** | 93.0 % | 93.1 % | 98.2 % | **99.4 %** | 0.012 |
+| ours: ircam | 84.3 % | 86.7 % | 86.7 % | 87.8 % | 0.028 |
+| ours: phonetic | 84.3 % | 86.7 % | 86.7 % | 87.8 % | 0.028 |
+| ablation: readable − ي/و context rules | 81.8 % | 81.8 % | 86.7 % | 87.8 % | 0.033 |
+| ablation: readable − emphatic-word rule for ر | 98.1 % | 98.2 % | 98.2 % | 99.4 % | 0.003 |
+| ablation: readable − doubled letters = CⴻC | 90.6 % | 93.1 % | 98.2 % | 99.4 % | 0.017 |
+| variant: readable, damma not read as ⵯ | 94.2 % | 94.2 % | 99.4 % | 99.4 % | 0.010 |
+
+* The ي/و context rules are worth 11.6 points (87.8 % → 99.4 % on the fair
+  column) and the CⴻC reading of doubled letters 2.4 points of exact match.
+* Removing IRCAM's ر rule *raises* the strict score to 98.1 %, only because
+  Tawalt never writes ⵕ; the rule is kept because it is IRCAM's documented
+  rule and helps on the toponyms (71 vs 70 exact).
+* **Not a blind test:** the ي/و readings, the sukun rule and the CⴻC rule
+  were chosen by measuring on Tawalt (counts in
+  [linguistic-rules.md §9](linguistic-rules.md#9-arabic-script--tifinagh)).
+* `ircam` and `phonetic` read unmarked ي/و as vowels by design; they are for
+  text written with IRCAM's marks, which Tawalt is not.
+
+### Other datasets
+
+| dataset | baseline | readable | ircam / phonetic |
+|---|---:|---:|---:|
+| `moroccan` (n = 7) | 6/7 | **7/7** | 6/7 |
+| `toponyms` (n = 190, official spellings) | 22.6 % | **37.4 %** | 25.8 % |
+| `albane` (n = 3, Kabyle) | 0/3 | 1/3 | 1/3 |
+
+Toponyms are lexicalized Arabic spellings (أكادير, الحسيمة), so most
+differences are lexical; a lexicon handles them (`lexicon.lookupArabic`).
 
 ## 5. Coverage, robustness, speed
 

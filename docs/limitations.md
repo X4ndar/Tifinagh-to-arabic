@@ -41,8 +41,16 @@ Read this before relying on the output.
    It does not check that the input is real Amazigh.
 11. **Latin → Arabic** goes through upstream's Latin → Tifinagh converter,
     which guesses digraphs (`gh`, `ch`, `kh`); prefer Tifinagh input.
-12. **Arabic → Tifinagh** is not implemented: Arabic script does not encode
-    vowels/schwa/emphasis reliably.
+12. **Arabic → Tifinagh reads, it cannot know.** In everyday spelling ر is
+    read as ⵕ only in words with ض ص ط ظ ژ (IRCAM's rule), so ⵕ elsewhere
+    (أرومي ← ⴰⵕⵓⵎⵉ) comes back as ⵔ; the unwritten ⴻ is restored only
+    between two identical letters (أمودد → ⴰⵎⵓⴷⴻⴷ); ي / و are read from the
+    letters around them, which is right for about 98 % of Tawalt words. Known
+    ambiguities: word-initial ئي / ؤو are read as one vowel (ⵉ, ⵓ — Tawalt
+    practice, 17 vs 13 cases), so a real ⵉⵢ… / ⵓⵡ… comes back without its
+    semivowel; ⵔⵕ written رر reads as a geminate; final ه is read as ⵀ although
+    some writers use it for -a. Text written by this library's `ircam` or
+    `phonetic` profile reads back exactly. Use a lexicon for words that matter.
 
 ## Technical
 

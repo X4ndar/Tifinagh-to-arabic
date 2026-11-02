@@ -30,7 +30,12 @@ type Range = [number, number]
  * Split `text` into segments. Linear in the input length: no backtracking
  * regular expressions are used on unbounded input.
  */
-export function segment(text: string, opts: SegmentOptions, state: SegmentState = { fence: null }): Segment[] {
+export function segment(
+  text: string,
+  opts: SegmentOptions,
+  state: SegmentState = { fence: null },
+  isWordChar: (cp: number) => boolean = isTifinaghWordChar,
+): Segment[] {
   const protectedRanges: Range[] = []
   if (opts.protectCode) findCodeRanges(text, state, protectedRanges)
   if (opts.protectUrls) findUrlRanges(text, protectedRanges)
@@ -39,11 +44,11 @@ export function segment(text: string, opts: SegmentOptions, state: SegmentState 
   const out: Segment[] = []
   let cursor = 0
   for (const [s, e] of ranges) {
-    if (s > cursor) splitTifinagh(text, cursor, s, out)
+    if (s > cursor) splitWords(text, cursor, s, out, isWordChar)
     out.push({ kind: 'protected', text: text.slice(s, e), start: s })
     cursor = e
   }
-  if (cursor < text.length) splitTifinagh(text, cursor, text.length, out)
+  if (cursor < text.length) splitWords(text, cursor, text.length, out, isWordChar)
   return out
 }
 
@@ -54,13 +59,17 @@ function pushText(out: Segment[], text: string, start: number): void {
   else out.push({ kind: 'text', text, start })
 }
 
-/** Split an unprotected stretch into Tifinagh words and other text. */
-function splitTifinagh(text: string, from: number, to: number, out: Segment[]): void {
+/**
+ * Split an unprotected stretch into words (Tifinagh by default, or the script
+ * `isWordChar` describes) and other text. Segments of words keep kind 'tifinagh'
+ * for compatibility; for Arabic input they hold Arabic-script words.
+ */
+function splitWords(text: string, from: number, to: number, out: Segment[], isWordChar: (cp: number) => boolean): void {
   let i = from
   let textStart = from
   while (i < to) {
     const cp = text.codePointAt(i)!
-    if (!isTifinaghWordChar(cp)) {
+    if (!isWordChar(cp)) {
       i += cp > 0xffff ? 2 : 1
       continue
     }
@@ -73,7 +82,7 @@ function splitTifinagh(text: string, from: number, to: number, out: Segment[]): 
       const c = text.codePointAt(j)!
       const ch = String.fromCodePoint(c)
       const w = ch.length
-      if (isTifinaghWordChar(c)) {
+      if (isWordChar(c)) {
         j += w
         end = j
       } else if (isCombiningMark(ch) || ch === LATIN_SMALL_W) {
@@ -84,7 +93,7 @@ function splitTifinagh(text: string, from: number, to: number, out: Segment[]): 
         // formatting chars belong to the word only when *internal*
         let k = j + w
         while (k < to && isFormatChar(String.fromCodePoint(text.codePointAt(k)!))) k += text.codePointAt(k)! > 0xffff ? 2 : 1
-        if (k < to && isTifinaghWordChar(text.codePointAt(k)!)) {
+        if (k < to && isWordChar(text.codePointAt(k)!)) {
           j = k
         } else break
       } else break

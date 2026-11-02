@@ -14,6 +14,10 @@ Usage
         tr.convert_many(["ⴰⵎⵖⴰⵔ", "ⵉⴼⴰⵙⵙⵏ"])  # ['أمغار', 'ئفاسّن']
         tr.convert_detailed("ⵯ")             # {'output': 'ⵯ', 'warnings': [...]}
 
+    from_arabic("أزول")                      # 'ⴰⵣⵓⵍ'  (Arabic script → Tifinagh)
+    with Transliterator(source="arabic") as tr:      # target defaults to "tifinagh"
+        tr.convert("تامازيغت")               # 'ⵜⴰⵎⴰⵣⵉⵖⵜ'
+
 The CLI is located via, in order: the `cli` argument, the AMAZIGH_TRANSLITERATE_CLI
 environment variable, `node_modules/.bin/amazigh-transliterate`, the repository's
 `dist/cli/bin.js`, and finally `amazigh-transliterate` on PATH.
@@ -29,7 +33,19 @@ import subprocess
 import threading
 from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence
 
-__all__ = ["Transliterator", "TransliterationError", "to_arabic", "find_cli", "HttpTransliterator"]
+__all__ = ["Transliterator", "TransliterationError", "to_arabic", "from_arabic", "find_cli", "HttpTransliterator"]
+
+_SCRIPTS = ("tifinagh", "latin", "arabic")
+
+
+def _direction(source: str, target: Optional[str]) -> List[str]:
+    if source not in _SCRIPTS:
+        raise ValueError(f"source must be one of {', '.join(_SCRIPTS)}")
+    if target is None:
+        target = "tifinagh" if source == "arabic" else "arabic"
+    if target not in _SCRIPTS or target == source:
+        raise ValueError(f"target must be one of {', '.join(_SCRIPTS)} and differ from source")
+    return ["--from", source, "--to", target]
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
 
@@ -102,8 +118,13 @@ class Transliterator:
         trace: bool = False,
         lexicon: Optional[str] = None,
         cli: Optional[str] = None,
+        source: str = "tifinagh",
+        target: Optional[str] = None,
     ) -> None:
-        cmd = find_cli(cli) + ["--jsonl"] + _options_args(profile, options, strict, alternatives, trace, lexicon)
+        """`source`/`target`: scripts ('tifinagh', 'latin', 'arabic'). Default Tifinagh → Arabic;
+        with source='arabic' the target defaults to 'tifinagh' and `options` are the Arabic → Tifinagh
+        options (e.g. {"semivowels": "marked"})."""
+        cmd = find_cli(cli) + ["--jsonl"] + _direction(source, target) + _options_args(profile, options, strict, alternatives, trace, lexicon)
         self._proc = subprocess.Popen(
             cmd,
             stdin=subprocess.PIPE,
@@ -180,6 +201,15 @@ def to_arabic(text: str, profile: str = "readable", options: Optional[Mapping[st
     return json.loads(res.stdout)["output"]
 
 
+def from_arabic(text: str, profile: str = "readable", options: Optional[Mapping[str, Any]] = None, *, target: str = "tifinagh", cli: Optional[str] = None) -> str:
+    """One-shot Arabic-script → Tifinagh (or `target='latin'`). Prefer Transliterator(source='arabic') for batches."""
+    cmd = find_cli(cli) + ["--json"] + _direction("arabic", target) + _options_args(profile, options, False, False, False, None)
+    res = subprocess.run(cmd, input=text, capture_output=True, encoding="utf-8", check=False)
+    if res.returncode != 0:
+        raise TransliterationError(res.stderr.strip())
+    return json.loads(res.stdout)["output"]
+
+
 def convert_file(src: str, dst: str, profile: str = "readable", extra_args: Sequence[str] = (), *, cli: Optional[str] = None) -> None:
     """Stream a UTF-8 text file through the CLI (line breaks preserved)."""
     cmd = find_cli(cli) + ["--profile", profile, *extra_args, "-o", dst, src]
@@ -194,19 +224,31 @@ class HttpTransliterator:
         tr = HttpTransliterator("https://amazigh.example.com")
         tr.convert("ⴰⵣⵓⵍ")                    # 'أزول'
         tr.convert_many(["ⴰⵎⵖⴰⵔ", "ⵉⴼⴰⵙⵙⵏ"])   # one request for the whole batch
+        HttpTransliterator(url, source="arabic").convert("أزول")   # 'ⴰⵣⵓⵍ'
     """
 
-    def __init__(self, base_url: str, profile: str = "readable", options: Optional[Mapping[str, Any]] = None, *, timeout: float = 30.0) -> None:
+    def __init__(
+        self,
+        base_url: str,
+        profile: str = "readable",
+        options: Optional[Mapping[str, Any]] = None,
+        *,
+        timeout: float = 30.0,
+        source: str = "tifinagh",
+        target: Optional[str] = None,
+    ) -> None:
         self.url = base_url.rstrip("/") + "/api/transliterate"
         self.profile = profile
         self.options = dict(options or {})
         self.timeout = timeout
+        _, self.source, _, self.target = _direction(source, target)
 
     def _post(self, payload: Dict[str, Any]) -> Dict[str, Any]:
         import urllib.error
         import urllib.request
 
-        payload = {"profile": self.profile, **({"options": self.options} if self.options else {}), **payload}
+        direction = {"from": self.source, "to": self.target} if self.source == "arabic" else ({"from": self.source} if self.source != "tifinagh" else {})
+        payload = {"profile": self.profile, **direction, **({"options": self.options} if self.options else {}), **payload}
         req = urllib.request.Request(
             self.url,
             data=json.dumps(payload, ensure_ascii=False).encode("utf-8"),

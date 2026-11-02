@@ -31,12 +31,15 @@ jobs:
           test "$out" = "تامازيغت"
           printf 'ⴰⵣⵓⵍ\n\nⴰⵎⵖⴰⵔ' | node dist/cli/bin.js > out.txt
           printf 'أزول\n\nأمغار' | cmp - out.txt
+          out=$(node dist/cli/bin.js --from arabic --text "تامازيغت")
+          test "$out" = "ⵜⴰⵎⴰⵣⵉⵖⵜ"
       - name: Packed tarball works when installed (CJS, ESM, CLI, types, Python)
         run: bash scripts/smoke-pack.sh
       - name: Package exports
         run: |
           node -e "const m=require('./dist/index.js'); if (m.toArabic('ⴰⵣⵓⵍ')!=='أزول') process.exit(1)"
           node --input-type=module -e "import m from './dist/index.js'; if (m.convert('ⴰⵎⵖⴰⵔ',{to:'arabic'}).output!=='أمغار') process.exit(1)"
+          node --input-type=module -e "import { fromArabic } from './dist/index.js'; if (fromArabic('أمغار')!=='ⴰⵎⵖⴰⵔ') process.exit(1)"
           npm pack --dry-run
       - uses: actions/setup-python@v5
         with:

@@ -22,6 +22,8 @@ export type WarningCode =
   | 'LEXICON_OVERRIDE'
   | 'LEXICON_CONFLICT'
   | 'EMPTY_WORD'
+  // Arabic → Tifinagh diagnostics
+  | 'VOWEL_SIGN_IGNORED'
 
 export type Severity = 'info' | 'warning' | 'error'
 
@@ -55,8 +57,27 @@ export interface ConvertOptions {
   alternatives?: boolean
   /** Arabic output only: include a rule-by-rule trace. */
   trace?: boolean
-  /** Arabic output only: optional lexicon of validated overrides. */
+  /** Optional lexicon of validated overrides (both directions). */
   lexicon?: LexiconLike | null
+  /**
+   * Arabic input only: per-option overrides of the Arabic → Tifinagh reading
+   * (`semivowels`, `emphaticR`, `schwa`, `labialization`, `punctuation`, `digits`, …).
+   * `profile`, `strict`, `trace` and `lexicon` also apply to Arabic input.
+   */
+  reverse?: Partial<ReverseOptionsShape>
+}
+
+/** Shape of the Arabic → Tifinagh options (see `ReverseOptions`). */
+export interface ReverseOptionsShape {
+  semivowels: 'context' | 'marked'
+  emphaticR: 'word-rule' | 'as-written'
+  schwa: 'vowel-sign' | 'ignore'
+  doubledLetters: 'schwa' | 'geminate'
+  labialization: 'damma' | 'ignore'
+  punctuation: 'latin' | 'preserve'
+  digits: 'western' | 'preserve'
+  protectUrls: boolean
+  protectCode: boolean
 }
 
 export interface ConvertResult {
@@ -158,11 +179,18 @@ export interface WordAlternatives {
 
 export interface LexiconLike {
   lookup(tifinagh: string, profile: ProfileId): LexiconLookup
+  /** Reverse lookup (Arabic-script word → Tifinagh), used by Arabic → Tifinagh. Optional. */
+  lookupArabic?(arabic: string, profile: ProfileId): ReverseLexiconLookup
 }
 
 export type LexiconLookup =
   | { kind: 'none' }
   | { kind: 'hit'; arabic: string; source: string; status: LexiconStatus }
+  | { kind: 'conflict'; candidates: string[] }
+
+export type ReverseLexiconLookup =
+  | { kind: 'none' }
+  | { kind: 'hit'; tifinagh: string; source: string; status: LexiconStatus }
   | { kind: 'conflict'; candidates: string[] }
 
 export type LexiconStatus = 'verified' | 'provisional'

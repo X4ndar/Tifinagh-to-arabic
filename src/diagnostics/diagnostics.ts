@@ -19,6 +19,7 @@ export const SEVERITY: Readonly<Record<WarningCode, Severity>> = {
   SCHWA_BETWEEN_IDENTICAL: 'info',
   VOWEL_HIATUS: 'info',
   LEXICON_OVERRIDE: 'info',
+  VOWEL_SIGN_IGNORED: 'info',
 }
 
 export function hex(ch: string): string {

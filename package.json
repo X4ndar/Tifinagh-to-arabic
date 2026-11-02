@@ -1,7 +1,7 @@
 {
   "name": "amazigh-transliterate",
   "version": "0.2.0",
-  "description": "Rule-based, linguistically documented Tifinagh → Arabic-script transliteration for Moroccan Amazigh (Tamazight), plus Tifinagh ↔ Latin conversion. Fork of tifinagh-convert.",
+  "description": "Rule-based, linguistically documented Tifinagh ↔ Arabic-script transliteration for Moroccan Amazigh (Tamazight), plus Tifinagh ↔ Latin conversion. Fork of tifinagh-convert.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {

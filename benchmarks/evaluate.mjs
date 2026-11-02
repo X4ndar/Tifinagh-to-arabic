@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-// Quality evaluation against independently sourced references.
+// Quality evaluation against independently sourced references, in both directions
+// (Tifinagh → Arabic script, and Arabic script → Tifinagh on the same pairs).
 //
 //   npm run build && node benchmarks/evaluate.mjs [--tawalt tawalt_ar.json] [--dglai dglai.json] [--json out.json]
 //
@@ -14,9 +15,9 @@
 //   dglai    IRCAM DGLAI scrape (CC-BY-NC) — coverage statistics only.
 import { readFileSync, writeFileSync } from 'node:fs'
 import lib from '../dist/index.js'
-import { dictionaryStyle, naiveTable1 } from './baselines.mjs'
+import { dictionaryStyle, naiveReverse, naiveTable1 } from './baselines.mjs'
 
-const { createConverter, IRCAM_LETTERS, CORRESPONDENCES } = lib
+const { createConverter, IRCAM_LETTERS, CORRESPONDENCES, ArabicToTifinaghConverter } = lib
 const args = process.argv.slice(2)
 const argVal = (k) => (args.includes(k) ? args[args.indexOf(k) + 1] : undefined)
 
@@ -245,5 +246,58 @@ console.log(readableTopo.errors)
 console.log('\nreadable vs official toponyms — by phenomenon (exact):')
 console.log(Object.fromEntries(Object.entries(readableTopo.byTag).map(([k, v]) => [k, `${v.exact}/${v.n}`])))
 
+// ── Arabic script → Tifinagh ───────────────────────────────────────────────
+// Same reference pairs, read the other way. Only pairs whose Arabic spelling
+// has a single Tifinagh reading in the dataset are used.
+const revConv = (profile, options = {}) => {
+  const c = new ArabicToTifinaghConverter({ profile, options })
+  return { run: (a) => c.convert(a).output }
+}
+const REV_SYSTEMS = {
+  'baseline: letter by letter (ي = ⵉ, و = ⵓ, ر = ⵔ)': { run: naiveReverse },
+  'ours: readable (default)': revConv('readable'),
+  'ours: ircam': revConv('ircam'),
+  'ours: phonetic': revConv('phonetic'),
+  'ablation: readable − ي/و context rules': revConv('readable', { semivowels: 'marked' }),
+  'ablation: readable − emphatic-word rule for ر': revConv('readable', { emphaticR: 'as-written' }),
+  'ablation: readable − doubled letters = CⴻC': revConv('readable', { doubledLetters: 'geminate' }),
+  'variant: readable, damma not read as ⵯ': revConv('readable', { labialization: 'ignore' }),
+}
+const noSchwa = (s) => s.replace(/ⴻ/g, '')
+const noSchwaR = (s) => noSchwa(s).replace(/ⵕ/g, 'ⵔ')
+const noSchwaRLab = (s) => noSchwaR(s).replace(/ⵯ/g, '')
+function evaluateReverse(name, sys, items) {
+  let exact = 0, s1 = 0, s2 = 0, s3 = 0, edits = 0, refLen = 0
+  for (const it of items) {
+    const pred = sys.run(it.arabic)
+    exact += pred === it.tifinagh
+    s1 += noSchwa(pred) === noSchwa(it.tifinagh)
+    s2 += noSchwaR(pred) === noSchwaR(it.tifinagh)
+    s3 += noSchwaRLab(pred) === noSchwaRLab(it.tifinagh)
+    edits += levenshtein(pred, it.tifinagh)
+    refLen += [...it.tifinagh].length
+  }
+  const n = items.length
+  return { system: name, n, exact, exactRate: exact / n, noSchwaRate: s1 / n, noSchwaRRate: s2 / n, noSchwaRLabRate: s3 / n, cer: edits / refLen }
+}
+const reverseResults = {}
+for (const [ds, items] of Object.entries(DATASETS)) {
+  const readings = new Map()
+  for (const it of items) {
+    if (!readings.has(it.arabic)) readings.set(it.arabic, new Set())
+    readings.get(it.arabic).add(it.tifinagh)
+  }
+  const unambiguous = [...readings].filter(([, v]) => v.size === 1).map(([arabic, v]) => ({ arabic, tifinagh: [...v][0] }))
+  reverseResults[ds] = Object.entries(REV_SYSTEMS).map(([name, sys]) => evaluateReverse(name, sys, unambiguous))
+}
+const rl = ['\n# Arabic script → Tifinagh']
+for (const [ds, rows] of Object.entries(reverseResults)) {
+  rl.push(`\n## ${ds} (n = ${rows[0].n})\n`)
+  rl.push('| system | exact | ignoring ⴻ | ignoring ⴻ and ⵔ/ⵕ | also ignoring ⵯ | CER |')
+  rl.push('|---|---:|---:|---:|---:|---:|')
+  for (const r of rows) rl.push(`| ${r.system} | ${r.exact}/${r.n} (${pct(r.exactRate)}) | ${pct(r.noSchwaRate)} | ${pct(r.noSchwaRRate)} | ${pct(r.noSchwaRLabRate)} | ${r.cer.toFixed(3)} |`)
+}
+console.log(rl.join('\n'))
+
 const out = argVal('--json')
-if (out) writeFileSync(out, JSON.stringify({ results, coverage, preservation: preserve }, null, 2) + '\n')
+if (out) writeFileSync(out, JSON.stringify({ results, reverse: reverseResults, coverage, preservation: preserve }, null, 2) + '\n')

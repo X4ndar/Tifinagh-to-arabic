@@ -171,9 +171,54 @@ pronunciation.
 | Proposal | Why rejected |
 |---|---|
 | Albane R1: full vowels → diacritics after one consonant | contradicts all Moroccan references (ازول, افوس, ئفاسّن) |
-| Inverting IRCAM rule 1 (ر → ⵕ in emphatic words) | Arabic → Tifinagh heuristic; meaningless in this direction |
+| Inverting IRCAM rule 1 (ر → ⵕ in emphatic words) for Tifinagh → Arabic | it is an Arabic → Tifinagh rule; used in that direction (§9) |
 | ⴻ → ى / ي / ا | turns a non-phonemic schwa into a full vowel |
 | final ⵜ → ة | imports Arabic morphology |
 | Arabic article detection (ⵍ… → ال…) | would change the Amazigh word |
 | ⵥ → ظ by default | not documented by IRCAM; offered as an alternative |
 | hamza seats in hiatus (ئ / ؤ) by default | refuted by Tawalt (0 of 87 words); kept as option |
+
+## 9. Arabic script → Tifinagh
+
+The reverse direction (`from: 'arabic'`, `src/reverse/arabicToTifinagh.ts`)
+reads Arabic-script Amazigh with the rules IRCAM gives for this direction
+(SITACAM 2013, §III.B.2: ر in a word with an emphatic letter is ⵕ; ي after a
+vowel is ⵢ, otherwise ⵉ; و after ا is ⵡ, after ي or between consonants ⵓ;
+shadda doubles the letter) and with conventions measured on the Tawalt
+dictionary (local evaluation only). The profile names the convention of the
+**input**; each rule below is in `REVERSE_RULES` with executable examples.
+
+| Rule id | Reading | Profiles | Status | Evidence |
+|---|---|---|---|---|
+| `rev.letter` | consonant letters: inverse of §2 (ك/ک → ⴽ; گ/ڭ/ڨ → ⴳ; ژ/ظ → ⵥ; ه/ھ → ⵀ; ڔ → ⵕ) | all | documented | T1, T2 |
+| `rev.alef` | ا أ آ ٱ ى → ⴰ | all | documented | T1; Tawalt uses final ى for ⴰ |
+| `rev.initial-hamza-seat` | ئ → ⵉ, ؤ → ⵓ, إ → ⵉ; word-initial ئي / إي / ؤو = one vowel, unless ا follows | all (merging: readable) | documented | T2; Tawalt (ؤوا = ⵓⵡⴰ 4/4; ئي + C = ⵉ 17 vs ⵉⵢ 13) |
+| `rev.yeh.context` | ي → ⵢ at word start, after a vowel, or before ا; else ⵉ | readable | documented | IRCAM rule; Tawalt: before ا 95 % (370), after ا 100 % (505), between consonants ⵉ 93 % (6,356) |
+| `rev.waw.context` | و → ⵡ at word start, before ا, or after ا / و / vowel ي (not after ئ); else ⵓ | readable | documented | IRCAM rule (after ا); Tawalt: before ا 100 % (505), after ا 100 % (758), between consonants ⵓ 96 % (8,201); ئو + C = ⵉⵓ |
+| `rev.semivowel.marked` | ي / و with U+065B, U+0302, sukun or shadda → ⵢ / ⵡ | all | derived | T1 marks; Tawalt: sukun on ي/و is a semivowel in all 1,466 words |
+| `rev.vowel.marked-mode` | unmarked ي / و → ⵉ / ⵓ; word-initial plain ي → ⵢ | ircam, phonetic | derived | T2 (initial ي) |
+| `rev.r.emphatic-word` / `rev.r.plain-word` | ر → ⵕ in a word with ض ص ط ظ ژ, else ⵔ | readable | documented | IRCAM rule |
+| `rev.r.as-written` | ر → ⵔ, ڔ (or ر + U+05B6) → ⵕ | ircam, phonetic | derived | T1 |
+| `rev.shadda` | letter + ّ → doubled letter | all | documented | IRCAM rule |
+| `rev.schwa.between-identical` | two adjacent copies of a consonant letter → CⴻC (not ي / و) | readable (`doubledLetters: 'schwa'`) | derived | geminates are written with shadda; Tawalt: 605 of 606 |
+| `rev.damma.labialization` | damma on ك / گ → ⵯ; other dammas ignored (info) | all | documented | T2 |
+| `rev.schwa` | kasra (or fatha) after a consonant → ⴻ; on ا → ⴻ alone | phonetic | heuristic | inverse of this library's `phonetic` |
+| `rev.nonstandard` | ث ذ پ چ ڤ ة → ⵜ ⴷ ⴱ ⵛ ⴼ ⴰ, ء dropped — with `APPROXIMATED_CHAR` | all | heuristic | — |
+
+Outside words: ، ؛ ؟ ٪ → , ; ? % and Arabic-Indic digits → 0–9 (IRCAM
+recommends international punctuation and digits with Tifinagh; `punctuation`
+and `digits` options keep them). Tatweel and formatting characters are
+removed, presentation forms are folded (NFKC) and decomposed hamza / madda
+recomposed (NFC). Other scripts, URLs, e-mails and code are untouched.
+
+**What Tawalt does not tell us.** Its Tifinagh never writes ⵕ (0 of 27,921
+words) or ⵯ, although its Arabic often has a damma on ك / گ. The ⵕ rule
+and the damma → ⵯ reading therefore rest on IRCAM alone; the evaluation
+reports scores with and without these letters.
+
+**Exactness.** Arabic written by this library's `ircam` profile (words
+without ⴻ) and `phonetic` profile reads back to the same Tifinagh, and
+`readable` text reads back to Tifinagh with the same `readable` spelling —
+property-tested on random words, excluding the documented ambiguities
+(vowel sequences, ⵔⵕ, word-initial ⵉⵢ / ⵓⵡ; see limitations).
+

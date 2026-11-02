@@ -6,9 +6,9 @@
  *   GET  /healthz               liveness / readiness probe
  *   GET  /api                   endpoint list
  *   GET  /api/version           package name and version
- *   GET  /api/profiles          profiles and their options
+ *   GET  /api/profiles          profiles and their options (?from=arabic: Arabic → Tifinagh options)
  *   GET  /api/transliterate?text=…&profile=…
- *   POST /api/transliterate     {"text": "…"} or {"texts": ["…", …]} + options
+ *   POST /api/transliterate     {"text": "…"} or {"texts": ["…", …]} + options; "from": "arabic" for Arabic → Tifinagh
  */
 import * as fs from 'fs'
 import * as http from 'http'
@@ -16,6 +16,8 @@ import * as path from 'path'
 import * as zlib from 'zlib'
 import { ArabicConverter } from '../core/arabic'
 import { latinToTifinagh } from '../converters/latinToTifinagh'
+import { tifinaghToLatin } from '../converters/tifinaghToLatin'
+import { ArabicToTifinaghConverter, REVERSE_PROFILES, type ReverseOptions } from '../reverse/arabicToTifinagh'
 import { TransliterationError } from '../diagnostics/diagnostics'
 import { Lexicon } from '../lexicon/lexicon'
 import { PROFILES } from '../profiles/profiles'
@@ -242,15 +244,16 @@ interface ApiRequest {
   profile?: unknown
   options?: unknown
   from?: unknown
+  to?: unknown
   alternatives?: unknown
   trace?: unknown
   strict?: unknown
 }
 
 /** Prepared converters, one cache per server (each server has its own lexicon). */
-type ConverterCache = Map<string, ArabicConverter>
-function converterFor(cache: ConverterCache, key: string, make: () => ArabicConverter): ArabicConverter {
-  let c = cache.get(key)
+type ConverterCache = Map<string, ArabicConverter | ArabicToTifinaghConverter>
+function converterFor<C extends ArabicConverter | ArabicToTifinaghConverter>(cache: ConverterCache, key: string, make: () => C): C {
+  let c = cache.get(key) as C | undefined
   if (!c) {
     c = make()
     if (cache.size > 200) cache.clear()
@@ -265,10 +268,15 @@ function transliterateRequest(body: ApiRequest, cfg: ServerConfig, cache: Conver
     throw new HttpError(400, `'profile' must be one of ${Object.keys(PROFILES).join(', ')}.`)
   }
   if (body.options !== undefined && (typeof body.options !== 'object' || body.options === null || Array.isArray(body.options))) {
-    throw new HttpError(400, "'options' must be an object of Arabic options (see GET /api/profiles).")
+    throw new HttpError(400, "'options' must be an object of options (see GET /api/profiles, or /api/profiles?from=arabic).")
   }
   const from = body.from ?? 'tifinagh'
-  if (from !== 'tifinagh' && from !== 'latin') throw new HttpError(400, "'from' must be 'tifinagh' or 'latin'.")
+  if (from !== 'tifinagh' && from !== 'latin' && from !== 'arabic') throw new HttpError(400, "'from' must be 'tifinagh', 'latin' or 'arabic'.")
+  const to = body.to ?? (from === 'arabic' ? 'tifinagh' : 'arabic')
+  if (from === 'arabic' ? to !== 'tifinagh' && to !== 'latin' : to !== 'arabic') {
+    throw new HttpError(400, from === 'arabic' ? "With 'from': 'arabic', 'to' must be 'tifinagh' or 'latin'." : "'to' must be 'arabic' (or use 'from': 'arabic').")
+  }
+  if (from === 'arabic' && body.alternatives === true) throw new HttpError(400, "'alternatives' is available for Arabic output only.")
   const flags = { alternatives: body.alternatives === true, trace: body.trace === true, strict: body.strict === true }
 
   let texts: string[]
@@ -287,21 +295,41 @@ function transliterateRequest(body: ApiRequest, cfg: ServerConfig, cache: Conver
   if (tooLong >= 0) throw new HttpError(413, `Text ${batch ? `#${tooLong} ` : ''}is longer than ${cfg.maxTextChars} characters.`)
 
   const options = (body.options ?? {}) as Partial<ArabicOptions>
-  let converter: ArabicConverter
+  let convertOne: (t: string) => Record<string, unknown>
   try {
-    converter = converterFor(cache, JSON.stringify([profile, options, flags]), () => new ArabicConverter({ profile, arabic: options, ...flags, lexicon: cfg.lexicon }))
+    if (from === 'arabic') {
+      const reverse = converterFor(cache, JSON.stringify(['arabic', profile, options, flags]), () =>
+        new ArabicToTifinaghConverter({ profile, options: options as Partial<ReverseOptions>, trace: flags.trace, strict: flags.strict, lexicon: cfg.lexicon }),
+      )
+      convertOne = (t) => {
+        const r = reverse.convert(t)
+        const out: Record<string, unknown> = { output: r.output, profile: r.profile, warnings: r.warnings }
+        if (to === 'latin') {
+          const l = tifinaghToLatin(r.output)
+          out.output = l.output
+          out.tifinagh = r.output
+          ;(out.warnings as unknown[]).push(...l.warnings)
+        }
+        if (r.trace) out.trace = r.trace
+        return out
+      }
+    } else {
+      const converter = converterFor(cache, JSON.stringify([profile, options, flags]), () => new ArabicConverter({ profile, arabic: options, ...flags, lexicon: cfg.lexicon }))
+      convertOne = (t) => {
+        const r = converter.convert(from === 'latin' ? latinToTifinagh(t).output : t)
+        const out: Record<string, unknown> = { output: r.output, profile: r.profile, warnings: r.warnings }
+        if (r.alternatives) out.alternatives = r.alternatives
+        if (r.trace) out.trace = r.trace
+        return out
+      }
+    }
   } catch (e) {
     throw new HttpError(400, (e as Error).message)
   }
 
   const one = (t: string): Record<string, unknown> => {
-    const source = from === 'latin' ? latinToTifinagh(t).output : t
     try {
-      const r = converter.convert(source)
-      const out: Record<string, unknown> = { output: r.output, profile: r.profile, warnings: r.warnings }
-      if (r.alternatives) out.alternatives = r.alternatives
-      if (r.trace) out.trace = r.trace
-      return out
+      return convertOne(t)
     } catch (e) {
       if (e instanceof TransliterationError) {
         if (!batch) throw new HttpError(422, e.message, { warnings: e.warnings })
@@ -363,8 +391,9 @@ export function createServer(cfg: ServerConfig): RunningServer {
         return sendJson(req, res, 200, {
           endpoints: {
             'GET /api/transliterate?text=…&profile=…': 'Transliterate one text (query string).',
-            'POST /api/transliterate': "JSON body: {\"text\": \"…\"} or {\"texts\": [\"…\"]}, optional \"profile\", \"options\", \"from\" ('tifinagh'|'latin'), \"alternatives\", \"trace\", \"strict\".",
-            'GET /api/profiles': 'Profiles and their options.',
+            'POST /api/transliterate':
+              "JSON body: {\"text\": \"…\"} or {\"texts\": [\"…\"]}, optional \"profile\", \"options\", \"from\" ('tifinagh'|'latin'|'arabic'), \"to\" ('tifinagh'|'latin' with from=arabic), \"alternatives\", \"trace\", \"strict\".",
+            'GET /api/profiles': 'Profiles and their options (?from=arabic for Arabic → Tifinagh).',
             'GET /api/version': 'Version.',
             'GET /healthz': 'Health check.',
           },
@@ -377,7 +406,7 @@ export function createServer(cfg: ServerConfig): RunningServer {
       }
       if (p === '/api/profiles') {
         if (method !== 'GET' && method !== 'HEAD') throw new HttpError(405, 'Use GET.', {}, { Allow: 'GET, HEAD' })
-        return sendJson(req, res, 200, PROFILES, h)
+        return sendJson(req, res, 200, url.searchParams.get('from') === 'arabic' ? REVERSE_PROFILES : PROFILES, h)
       }
       if (p === '/api/transliterate') {
         let body: ApiRequest
@@ -387,6 +416,7 @@ export function createServer(cfg: ServerConfig): RunningServer {
             text: q.get('text') ?? undefined,
             profile: q.get('profile') ?? undefined,
             from: q.get('from') ?? undefined,
+            to: q.get('to') ?? undefined,
             alternatives: q.get('alternatives') === 'true',
             trace: q.get('trace') === 'true',
             strict: q.get('strict') === 'true',

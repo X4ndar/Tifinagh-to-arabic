@@ -72,7 +72,7 @@
     "unsupportedRate": 0,
     "wordsWithWarnings": 0,
     "warningCodes": {},
-    "ms": 69.786234
+    "ms": 64.577264
   }
 }
 ```
@@ -138,3 +138,57 @@ readable vs official toponyms — by phenomenon (exact):
   g: '0/27',
   labialization: '0/5'
 }
+
+# Arabic script → Tifinagh
+
+## moroccan (n = 7)
+
+| system | exact | ignoring ⴻ | ignoring ⴻ and ⵔ/ⵕ | also ignoring ⵯ | CER |
+|---|---:|---:|---:|---:|---:|
+| baseline: letter by letter (ي = ⵉ, و = ⵓ, ر = ⵔ) | 6/7 (85.7%) | 85.7% | 85.7% | 85.7% | 0.027 |
+| ours: readable (default) | 7/7 (100.0%) | 100.0% | 100.0% | 100.0% | 0.000 |
+| ours: ircam | 6/7 (85.7%) | 85.7% | 85.7% | 85.7% | 0.027 |
+| ours: phonetic | 6/7 (85.7%) | 85.7% | 85.7% | 85.7% | 0.027 |
+| ablation: readable − ي/و context rules | 6/7 (85.7%) | 85.7% | 85.7% | 85.7% | 0.027 |
+| ablation: readable − emphatic-word rule for ر | 7/7 (100.0%) | 100.0% | 100.0% | 100.0% | 0.000 |
+| ablation: readable − doubled letters = CⴻC | 7/7 (100.0%) | 100.0% | 100.0% | 100.0% | 0.000 |
+| variant: readable, damma not read as ⵯ | 7/7 (100.0%) | 100.0% | 100.0% | 100.0% | 0.000 |
+
+## toponyms (n = 190)
+
+| system | exact | ignoring ⴻ | ignoring ⴻ and ⵔ/ⵕ | also ignoring ⵯ | CER |
+|---|---:|---:|---:|---:|---:|
+| baseline: letter by letter (ي = ⵉ, و = ⵓ, ر = ⵔ) | 43/190 (22.6%) | 22.6% | 25.3% | 25.8% | 0.197 |
+| ours: readable (default) | 71/190 (37.4%) | 37.4% | 39.5% | 40.5% | 0.139 |
+| ours: ircam | 49/190 (25.8%) | 25.8% | 28.4% | 29.5% | 0.180 |
+| ours: phonetic | 49/190 (25.8%) | 25.8% | 28.4% | 29.5% | 0.180 |
+| ablation: readable − ي/و context rules | 50/190 (26.3%) | 26.3% | 28.4% | 29.5% | 0.178 |
+| ablation: readable − emphatic-word rule for ر | 70/190 (36.8%) | 36.8% | 39.5% | 40.5% | 0.141 |
+| ablation: readable − doubled letters = CⴻC | 71/190 (37.4%) | 37.4% | 39.5% | 40.5% | 0.139 |
+| variant: readable, damma not read as ⵯ | 71/190 (37.4%) | 37.4% | 39.5% | 40.5% | 0.139 |
+
+## albane (n = 3)
+
+| system | exact | ignoring ⴻ | ignoring ⴻ and ⵔ/ⵕ | also ignoring ⵯ | CER |
+|---|---:|---:|---:|---:|---:|
+| baseline: letter by letter (ي = ⵉ, و = ⵓ, ر = ⵔ) | 0/3 (0.0%) | 0.0% | 0.0% | 0.0% | 0.412 |
+| ours: readable (default) | 1/3 (33.3%) | 33.3% | 33.3% | 33.3% | 0.353 |
+| ours: ircam | 1/3 (33.3%) | 33.3% | 33.3% | 33.3% | 0.353 |
+| ours: phonetic | 1/3 (33.3%) | 33.3% | 33.3% | 33.3% | 0.353 |
+| ablation: readable − ي/و context rules | 1/3 (33.3%) | 33.3% | 33.3% | 33.3% | 0.353 |
+| ablation: readable − emphatic-word rule for ر | 1/3 (33.3%) | 33.3% | 33.3% | 33.3% | 0.353 |
+| ablation: readable − doubled letters = CⴻC | 1/3 (33.3%) | 33.3% | 33.3% | 33.3% | 0.353 |
+| variant: readable, damma not read as ⵯ | 1/3 (33.3%) | 33.3% | 33.3% | 33.3% | 0.353 |
+
+## tawalt (n = 27921)
+
+| system | exact | ignoring ⴻ | ignoring ⴻ and ⵔ/ⵕ | also ignoring ⵯ | CER |
+|---|---:|---:|---:|---:|---:|
+| baseline: letter by letter (ي = ⵉ, و = ⵓ, ر = ⵔ) | 21303/27921 (76.3%) | 78.4% | 78.4% | 78.4% | 0.044 |
+| ours: readable (default) | 25978/27921 (93.0%) | 93.1% | 98.2% | 99.4% | 0.012 |
+| ours: ircam | 23525/27921 (84.3%) | 86.7% | 86.7% | 87.8% | 0.028 |
+| ours: phonetic | 23525/27921 (84.3%) | 86.7% | 86.7% | 87.8% | 0.028 |
+| ablation: readable − ي/و context rules | 22840/27921 (81.8%) | 81.8% | 86.7% | 87.8% | 0.033 |
+| ablation: readable − emphatic-word rule for ر | 27403/27921 (98.1%) | 98.2% | 98.2% | 99.4% | 0.003 |
+| ablation: readable − doubled letters = CⴻC | 25299/27921 (90.6%) | 93.1% | 98.2% | 99.4% | 0.017 |
+| variant: readable, damma not read as ⵯ | 26301/27921 (94.2%) | 94.2% | 99.4% | 99.4% | 0.010 |

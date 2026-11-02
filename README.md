@@ -1,11 +1,12 @@
 # amazigh-transliterate
 
-**Tifinagh → Arabic-script transliteration for Moroccan Amazigh (Tamazight)**,
+**Tifinagh ↔ Arabic-script transliteration for Moroccan Amazigh (Tamazight)**,
 plus the Tifinagh ↔ Latin conversion of the upstream
 [`tifinagh-convert`](https://github.com/hamza-bouqssim/tifinagh-convert).
 
 ```
 ⵜⴰⵎⴰⵣⵉⵖⵜ  →  تامازيغت        ⵉⴼⴰⵙⵙⵏ  →  ئفاسّن        ⴰⴳⴳⵯⴰ  →  أگُّا
+تامازيغت  →  ⵜⴰⵎⴰⵣⵉⵖⵜ        أمودد  →  ⴰⵎⵓⴷⴻⴷ        براير  →  ⴱⵔⴰⵢⵔ
 ```
 
 > **Transliteration, not translation.** The output is the *same Amazigh
@@ -17,6 +18,9 @@ plus the Tifinagh ↔ Latin conversion of the upstream
   with its source; context rules (initial vowels, gemination, labialization,
   schwa) are data-driven and auditable.
 * Three profiles: `readable` (default), `ircam` (reference), `phonetic`.
+* **Both directions.** Arabic-script Amazigh → Tifinagh (and → Latin) with
+  the reading rules IRCAM documents, checked against the Tawalt dictionary;
+  see [Arabic → Tifinagh](#arabic--tifinagh).
 * Safe on real text: other scripts, numbers, emoji, URLs, e-mails and
   Markdown code are left untouched; unknown characters are never dropped.
 * Diagnostics, alternative spellings and a rule trace on request.
@@ -25,7 +29,7 @@ plus the Tifinagh ↔ Latin conversion of the upstream
 ## Contents
 
 [Scope](#scope) · [Install](#install) · [JavaScript / TypeScript](#javascript--typescript) ·
-[CLI](#cli) · [Python](#python) · [Profiles](#profiles) · [Examples](#examples) ·
+[CLI](#cli) · [Python](#python) · [Arabic → Tifinagh](#arabic--tifinagh) · [Profiles](#profiles) · [Examples](#examples) ·
 [Accuracy](#accuracy-and-evidence) · [Limitations](#limitations) ·
 [Extending](#extending) · [Sources and licensing](#sources-and-licensing)
 
@@ -48,7 +52,7 @@ Requires Node.js ≥ 18.
 git clone https://github.com/x4ndar/tifinagh-to-arabic.git
 cd tifinagh-to-arabic
 npm install        # also builds dist/ (prepare script)
-npm test           # 388 tests
+npm test           # 468 tests
 npm run test:heavy # randomized tests at 20,000 cases each
 npm run test:e2e   # demo page in a real browser + accessibility scan (needs Playwright)
 npm run test:pack  # installs the packed tarball and uses it like a consumer
@@ -81,9 +85,16 @@ toArabic('ⴰⵔⴳⴰⵣ ⵉⵎⵉ', { arabic: { initialVowels: 'hamza-alef', g
 // reusable converter for batches (options validated once)
 const c = createConverter({ profile: 'ircam' })
 c.convert('ⵉⴼⴰⵙⵙⵏ').output   // 'ئفاسسن'
+
+// Arabic script → Tifinagh (or Latin)
+import { fromArabic } from 'amazigh-transliterate'
+fromArabic('أزول فلّاون')                                          // 'ⴰⵣⵓⵍ ⴼⵍⵍⴰⵡⵏ'
+convert('تامازيغت', { from: 'arabic', to: 'latin' }).output        // 'tamaziɣt'
+convert('Azul أزول', { to: 'tifinagh' }).output                    // 'Azul ⴰⵣⵓⵍ' (source detected)
 ```
 
-Other exports: `detect`, `alphabet` (upstream), `Lexicon`,
+Other exports: `detect`, `alphabet` (upstream), `arabicToTifinagh`,
+`ArabicToTifinaghConverter`, `REVERSE_PROFILES`, `REVERSE_RULES`, `Lexicon`,
 `TransliterationError`, `PROFILES`, `CORRESPONDENCES`, `LETTER_RULES`,
 `MODIFIER_RULES`, `SOURCES`, `IRCAM_LETTERS`, `normalizeText`, `segment`,
 `tokenizeWord`. `strict: true` throws on unsupported or malformed Tifinagh.
@@ -99,6 +110,9 @@ amazigh-transliterate --jsonl < records.jsonl            # {"id":…,"text":…}
 amazigh-transliterate --strict --diagnostics corpus.txt  # exit 3 on unsupported input, warnings on stderr
 amazigh-transliterate --option gemination=double --option g=gaf --text "ⴰⴳⴳⴰ"
 amazigh-transliterate --to latin --text "ⵜⴰⵎⵓⵔⵜ"         # upstream Tifinagh → Latin
+amazigh-transliterate --from arabic --text "أزول"        # Arabic script → Tifinagh: ⴰⵣⵓⵍ
+amazigh-transliterate --from arabic --to latin book.ar.txt
+amazigh-transliterate --from arabic --profile ircam --option semivowels=context --text "اوال"
 ```
 
 Run `amazigh-transliterate --help` for all options (inside the repository:
@@ -111,13 +125,17 @@ process, so results are identical. Copy or import
 [`python/amazigh_transliterate.py`](python/amazigh_transliterate.py):
 
 ```python
-from amazigh_transliterate import Transliterator, to_arabic
+from amazigh_transliterate import Transliterator, to_arabic, from_arabic
 
 to_arabic("ⴰⵣⵓⵍ")                                  # 'أزول'
+from_arabic("أزول")                                # 'ⴰⵣⵓⵍ'
 
 with Transliterator(profile="readable") as tr:     # one Node process, fast for ASR/OCR batches
     tr.convert_many(["ⵜⴰⵎⴰⵣⵉⵖⵜ", "ⴰⵎⵖⴰⵔ"])         # ['تامازيغت', 'أمغار']
     tr.convert_detailed("ⵯ")["warnings"][0]["code"] # 'ORPHAN_LABIALIZATION'
+
+with Transliterator(source="arabic") as tr:        # Arabic script → Tifinagh (target="latin" for Latin)
+    tr.convert("تامازيغت")                         # 'ⵜⴰⵎⴰⵣⵉⵖⵜ'
 ```
 
 The CLI is found via `AMAZIGH_TRANSLITERATE_CLI`, `node_modules/.bin`, the
@@ -137,6 +155,32 @@ curl -s localhost:3000/api/transliterate -H 'Content-Type: application/json' -d 
 On Coolify: new resource from this repository, build pack *Docker Compose*,
 deploy. Step-by-step instructions, settings and the API reference:
 [docs/deploy.md](docs/deploy.md).
+
+## Arabic → Tifinagh
+
+Arabic script does not write everything Tifinagh does, so this direction
+*reads* the spelling with rules. With `from: 'arabic'` the profile names the
+convention of the **input**:
+
+| input profile | for | ي / و | ر | ⴻ | two identical letters |
+|---|---|---|---|---|---|
+| `readable` (default) | everyday spelling (Tawalt, this library's `readable`) | ⵢ ⵡ at the start, after a vowel or before ا; else ⵉ ⵓ | ⵕ in words with ض ص ط ظ ژ (IRCAM rule), else ⵔ | not written | دد = ⴷⴻⴷ (a geminate is دّ) |
+| `ircam` | letter-by-letter IRCAM spelling | ⵢ ⵡ only when marked (يٛ وٛ, sukun, shadda) | ⵕ only for ڔ | not written | دد = ⴷⴷ |
+| `phonetic` | this library's `phonetic` spelling | as `ircam` | as `ircam` | kasra = ⴻ | دد = ⴷⴷ |
+
+In every profile: damma on ك/گ is ⵯ, shadda doubles the letter, ئ ؤ are ⵉ ⵓ,
+presentation forms and decomposed hamza are normalized, ، ؛ ؟ and
+Arabic-Indic digits become , ; ? and 0–9 (configurable), and letters foreign
+to Amazigh (ث ذ پ چ ڤ ة) are approximated **with a warning**. Every rule is
+listed with its source and examples in `REVERSE_RULES` and
+[docs/linguistic-rules.md](docs/linguistic-rules.md#9-arabic-script--tifinagh).
+
+What it **cannot** know: whether a plain ر in a word without an emphatic
+letter is ⵕ, where an unwritten ⴻ goes (except between identical letters),
+and a few ي/و readings. Text written by this library's `ircam` or `phonetic`
+profile reads back exactly (property-tested); `readable` text reads back to
+Tifinagh that is spelled the same way in `readable`. A lexicon fixes
+individual words (`lexicon.lookupArabic`).
 
 ## Profiles
 
@@ -201,13 +245,19 @@ Full report: [docs/evaluation.md](docs/evaluation.md). In short:
   tests for preservation, determinism, Unicode validity, idempotent
   normalization and the unknown-character policy.
 * **Speed:** ≈ 7 MiB/s (≈ 330,000 words/s) single-threaded; ~1.6 µs per word.
+* **Arabic → Tifinagh, Tawalt (27,921 words):** `readable` recovers Tawalt's
+  exact Tifinagh for **93.0 %** of words; **99.4 %** when ⵔ/ⵕ and ⵯ are not
+  compared (Tawalt's Tifinagh never writes ⵕ or ⵯ). A letter-by-letter
+  baseline gets 76.3 % (78.4 %). The ي/و rules were chosen on this data, so
+  it is not a blind test.
 * **Not yet established:** a licensed, linguist-reviewed gold standard, and
   any reference for running text in context.
 
 ## Limitations
 
 See [docs/limitations.md](docs/limitations.md). Most important: Arabic script
-merges some Amazigh contrasts in `readable` (ⵔ/ⵕ, ⵓ/ⵡ, ⵉ/ⵢ, schwa);
+merges some Amazigh contrasts in `readable` (ⵔ/ⵕ, ⵓ/ⵡ, ⵉ/ⵢ, schwa), so
+Arabic → Tifinagh has to guess them from context;
 IRCAM's ṛ and semivowel marks have no exact Unicode encoding; official
 spellings of place names are lexicalized and need a lexicon; accuracy on
 real Moroccan Arabic-script text still needs validation by linguists.
@@ -217,6 +267,7 @@ real Moroccan Arabic-script text still needs validation by linguists.
 * **Mappings:** `src/alphabet/arabic.ts` (`CORRESPONDENCES`, `baseArabic`).
 * **Rules:** `src/rules/rules.ts` — each rule has an id, priority, declarative
   condition, sources, status and executable examples run by the tests.
+  Arabic → Tifinagh: `src/reverse/arabicToTifinagh.ts` (`REVERSE_RULES`).
 * **Profiles / options:** `src/profiles/profiles.ts`.
 * **Lexicon:** pass `new Lexicon([...])` or `--lexicon file.json`; entries
   need a `source` and `status: "verified"` to override rules

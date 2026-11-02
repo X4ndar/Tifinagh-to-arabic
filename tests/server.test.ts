@@ -87,6 +87,19 @@ describe('HTTP server', () => {
     expect((await json(r)).warnings[0].code).toBe('ORPHAN_LABIALIZATION')
   })
 
+  test('Arabic input: to Tifinagh (default) or Latin, batch, query string, profiles', async () => {
+    expect(await json(post(s.base, { text: 'أزول فلّاون', from: 'arabic' }))).toEqual({ output: 'ⴰⵣⵓⵍ ⴼⵍⵍⴰⵡⵏ', profile: 'readable', warnings: [] })
+    const b = await json(post(s.base, { texts: ['تامازيغت', 'اوٛال'], from: 'arabic', to: 'latin', profile: 'ircam' }))
+    expect(b.results.map((r: { output: string }) => r.output)).toEqual(['tamaziɣt', 'awal'])
+    expect(b.results[0].tifinagh).toBe('ⵜⴰⵎⴰⵣⵉⵖⵜ')
+    const g = await fetch(`${s.base}/api/transliterate?from=arabic&text=${encodeURIComponent('أزول')}`)
+    expect((await json(g)).output).toBe('ⴰⵣⵓⵍ')
+    const strict = await post(s.base, { text: 'ثاء', from: 'arabic', strict: true })
+    expect(strict.status).toBe(422)
+    const p = await json(await fetch(`${s.base}/api/profiles?from=arabic`))
+    expect(p.ircam.semivowels).toBe('marked')
+  })
+
   test('latin input', async () => {
     expect((await json(post(s.base, { text: 'tamazight', from: 'latin' }))).output).toBe('تامازيغت')
   })
@@ -98,7 +111,11 @@ describe('HTTP server', () => {
     [{ text: 'ⴰ', profile: 'x' }, 400, /'profile' must be one of/],
     [{ text: 'ⴰ', options: [] }, 400, /'options' must be an object/],
     [{ text: 'ⴰ', options: { g: 'nope' } }, 400, /Invalid value "nope" for option 'g'/],
-    [{ text: 'ⴰ', from: 'arabic' }, 400, /'from' must be/],
+    [{ text: 'ⴰ', from: 'greek' }, 400, /'from' must be/],
+    [{ text: 'ⴰ', from: 'arabic', to: 'arabic' }, 400, /'to' must be 'tifinagh' or 'latin'/],
+    [{ text: 'ⴰ', to: 'latin' }, 400, /'to' must be 'arabic'/],
+    [{ text: 'ⴰ', from: 'arabic', alternatives: true }, 400, /'alternatives' is available for Arabic output only/],
+    [{ text: 'ⴰ', from: 'arabic', options: { g: 'ng' } }, 400, /Unknown Arabic → Tifinagh option 'g'/],
     ['{not json', 400, /not valid JSON/],
     ['[1,2]', 400, /must be a JSON object/],
   ])('bad request %#', async (body, status, msg) => {

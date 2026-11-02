@@ -24,6 +24,24 @@ Arabic word ── optional lexicon override (verified entries)  src/lexicon/lex
 output + diagnostics (+ alternatives, + trace)              src/core/arabic.ts
 ```
 
+Arabic script → Tifinagh (`from: 'arabic'`) uses the same segmentation with
+an Arabic word predicate:
+
+```
+input string
+  │  segment(…, isArabicWordChar)   protected spans · Arabic words · other text
+  ▼
+Arabic word ── optional reverse lexicon lookup (marks ignored)
+  │  units()        letters + marks; presentation forms → NFKC, hamza/madda → NFC;
+  │                 tatweel and format characters removed
+  │  per letter     REVERSE_RULES: letter table, ي/و reading (context or marks),
+  │                 ر reading, ئي/ؤو merge, CⴻC between identical letters
+  │  per mark       shadda doubles · damma on ك/گ → ⵯ · kasra → ⴻ (phonetic)
+  ▼
+Tifinagh word + diagnostics (+ trace)        src/reverse/arabicToTifinagh.ts
+other text: ، ؛ ؟ → , ; ? and Arabic-Indic digits → 0–9 (options)
+```
+
 Every stage is a pure function and is tested on its own (`segment`,
 `tokenizeWord`, `selectRule`, `convertUnits`). Non-Tifinagh segments are
 copied verbatim, so the converter is safe on arbitrary text.
@@ -44,6 +62,7 @@ copied verbatim, so the converter is safe on arbitrary text.
 | `src/lexicon/lexicon.ts` | validated, provenance-tagged overrides with conflict detection |
 | `src/diagnostics/diagnostics.ts` | warning codes, severities, `TransliterationError` |
 | `src/core/arabic.ts` | `ArabicConverter` (precompiled options, streaming `convertChunk`) |
+| `src/reverse/arabicToTifinagh.ts` | Arabic script → Tifinagh: `ArabicToTifinaghConverter`, `REVERSE_RULES`, `REVERSE_PROFILES`, options |
 | `src/cli/` | command-line interface |
 | `src/server/` | dependency-free HTTP server: web page + JSON API, used by the Docker image ([deploy.md](deploy.md)) |
 | `src/converters/`, `src/data/mapping.ts` | upstream Latin ↔ Tifinagh code (unchanged logic) |
@@ -107,6 +126,20 @@ overridden per call (`arabic: { gemination: 'double' }`) or on the CLI
 | `protectUrls`, `protectCode` | **`true`** · `false` |
 | `reportSchwaOmission` | **`false`** · `true` |
 
+Arabic → Tifinagh options (`reverse: {…}` in `convert()`, `options` in
+`ArabicToTifinaghConverter`, `--option` with `--from arabic`):
+
+| Option | readable | ircam | phonetic | Values |
+|---|---|---|---|---|
+| `semivowels` | `context` | `marked` | `marked` | `context` (IRCAM rules + Tawalt) · `marked` (only يٛ وٛ / sukun / shadda) |
+| `emphaticR` | `word-rule` | `as-written` | `as-written` | `word-rule` (ر = ⵕ with ض ص ط ظ ژ) · `as-written` (ڔ = ⵕ) |
+| `schwa` | `ignore` | `ignore` | `vowel-sign` | `vowel-sign` (kasra/fatha = ⴻ) · `ignore` |
+| `doubledLetters` | `schwa` | `geminate` | `geminate` | `schwa` (دد = ⴷⴻⴷ) · `geminate` (دد = ⴷⴷ) |
+| `labialization` | `damma` | `damma` | `damma` | `damma` (ُ on ك/گ = ⵯ) · `ignore` |
+| `punctuation` | `latin` | `latin` | `latin` | `latin` (، ؛ ؟ → , ; ?) · `preserve` |
+| `digits` | `western` | `western` | `western` | `western` (٠–٩ ۰–۹ → 0–9) · `preserve` |
+| `protectUrls`, `protectCode` | `true` | `true` | `true` | `true` · `false` |
+
 ## Lexicon
 
 Optional and empty by default. JSON format (array or `{ "entries": [...] }`):
@@ -122,6 +155,9 @@ Optional and empty by default. JSON format (array or `{ "entries": [...] }`):
   kept + `LEXICON_CONFLICT`; `lexicon.conflicts()` lists them;
 * every override is reported (`LEXICON_OVERRIDE`) and the rule output is kept
   as the first alternative;
+* the same entries work in reverse: `lookupArabic(word, profile)` matches the
+  Arabic spelling with vowel signs, shadda and tatweel ignored
+  (`arabicLexiconKey`), and overrides Arabic → Tifinagh;
 * entries are schema-validated (Tifinagh letters only; one Arabic-script word;
   provenance required; unknown fields rejected); `maxEntries` bounds size, and
   the CLI refuses lexicon files over 64 MiB.
@@ -144,6 +180,12 @@ Optional and empty by default. JSON format (array or `{ "entries": [...] }`):
 | `SCHWA_BETWEEN_IDENTICAL` | info | schwa omission merges CeC with CC (`double` only) |
 | `SCHWA_OMITTED` | info | only with `reportSchwaOmission` |
 | `LEXICON_OVERRIDE` | info | lexicon replaced the rule output |
+
+Arabic → Tifinagh uses `APPROXIMATED_CHAR` (warning: ث ذ پ چ ڤ ة approximated,
+ء dropped), `UNKNOWN_CHAR` (warning: letter or mark without a Tifinagh
+counterpart, kept), `EMPTY_WORD`, `FORMAT_CHAR_REMOVED`, `LEXICON_*` and
+`VOWEL_SIGN_IGNORED` (info: a short-vowel sign, tanwin or other sign the
+profile does not read).
 
 `strict: true` (CLI `--strict`) throws `TransliterationError` (exit code 3) on
 any *warning*; *info* never fails. Positions are UTF-16 offsets into the
@@ -170,8 +212,12 @@ always holds (property-tested).
 * **Changed**: `to: 'arabic'` is implemented (it threw before). With no
   `from`, any Tifinagh in the input selects `from: 'tifinagh'`.
 * **New**: `from: 'latin', to: 'arabic'` (Latin → Tifinagh → Arabic; Latin
-  input is ambiguous, prefer Tifinagh input); `from: 'arabic'` throws with an
-  explanation.
+  input is ambiguous, prefer Tifinagh input).
+* **Changed**: `from: 'arabic'` is implemented (it threw before):
+  `to: 'tifinagh'`, or `to: 'latin'` via Tifinagh. With no `from` and
+  `to: 'tifinagh' | 'latin'`, Arabic letters and no Tifinagh select
+  `from: 'arabic'`. `ConvertOptions` gains `reverse`; `LexiconLike` gains an
+  optional `lookupArabic`.
 * `ConvertOptions`/`ConvertResult`/`ConversionWarning` gain optional fields
   only.
 * Package renamed `amazigh-transliterate` (fork); version 0.2.0.

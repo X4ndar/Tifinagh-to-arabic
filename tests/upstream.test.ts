@@ -180,7 +180,8 @@ describe('error handling', () => {
     expect(convert('\u2D4E\u2D53\u2D54', { from: 'tifinagh', to: 'arabic' }).output).toBe('مور')
   })
 
-  test('arabic as a source script is rejected with an explanation', () => {
-    expect(() => convert('\u0645\u0648\u0631', { from: 'arabic', to: 'tifinagh' })).toThrow(/not supported/)
+  test('arabic as a source script is supported (it threw before)', () => {
+    expect(convert('\u0645\u0648\u0631', { from: 'arabic', to: 'tifinagh' }).output).toBe('ⵎⵓⵔ')
+    expect(convert('\u0645\u0648\u0631', { from: 'arabic', to: 'latin' }).output).toBe('mur')
   })
 })

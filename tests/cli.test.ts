@@ -90,11 +90,45 @@ describe('CLI', () => {
   })
 
   test('usage errors', async () => {
-    for (const args of [['--profile', 'x'], ['--option', 'g=zz'], ['--option', 'nope=1'], ['--bogus'], ['--from', 'arabic'], ['--json', '--jsonl'], ['--to', 'latin', '--trace'], ['--max-bytes', '-1']]) {
+    for (const args of [
+      ['--profile', 'x'],
+      ['--option', 'g=zz'],
+      ['--option', 'nope=1'],
+      ['--bogus'],
+      ['--from', 'arabic', '--to', 'arabic'],
+      ['--from', 'arabic', '--option', 'g=ng'],
+      ['--from', 'arabic', '--alternatives'],
+      ['--from', 'greek'],
+      ['--json', '--jsonl'],
+      ['--to', 'latin', '--trace'],
+      ['--max-bytes', '-1'],
+    ]) {
       const r = await run(args)
       expect(r.code).toBe(EXIT.USAGE)
       expect(r.err).toMatch(/^error:/)
     }
+  })
+
+  test('--from arabic: Tifinagh by default, Latin on request, options, JSON, streaming, strict', async () => {
+    expect(await run(['--from', 'arabic', '--text', 'أزول فلّاون، مانزا كين؟'])).toEqual({ code: 0, out: 'ⴰⵣⵓⵍ ⴼⵍⵍⴰⵡⵏ, ⵎⴰⵏⵣⴰ ⴽⵉⵏ?\n', err: '' })
+    expect((await run(['--from', 'arabic', '--to', 'latin', '--text', 'تامازيغت'])).out).toBe('tamaziɣt\n')
+    expect((await run(['--from', 'arabic', '--profile', 'ircam', '--text', 'اوال'])).out).toBe('ⴰⵓⴰⵍ\n')
+    expect((await run(['--from', 'arabic', '--profile', 'ircam', '--option', 'semivowels=context', '--text', 'اوال'])).out).toBe('ⴰⵡⴰⵍ\n')
+    const j = JSON.parse((await run(['--from', 'arabic', '--json', '--trace'], 'أژيضر')).out)
+    expect(j).toMatchObject({ output: 'ⴰⵥⵉⴹⵕ', from: 'arabic', to: 'tifinagh', profile: 'readable' })
+    expect(j.trace).toHaveLength(5)
+    expect((await run(['--from', 'arabic'], 'أزول\r\n\n```\nكود\n```\nئفاسّن')).out).toBe('ⴰⵣⵓⵍ\r\n\n```\nكود\n```\nⵉⴼⴰⵙⵙⵏ')
+    const l = await run(['--from', 'arabic', '--jsonl', '--strict'], '{"id":1,"text":"أزول"}\n{"id":2,"text":"ثاء"}\n')
+    expect(l.code).toBe(EXIT.STRICT)
+    expect(l.out.trim().split('\n').map((x) => JSON.parse(x))).toMatchObject([{ id: 1, output: 'ⴰⵣⵓⵍ' }, { id: 2, error: expect.stringMatching(/Strict/) }])
+    expect(Object.keys(JSON.parse((await run(['--from', 'arabic', '--list-profiles'])).out).readable)).toContain('semivowels')
+  })
+
+  test('--from arabic with a lexicon', async () => {
+    const dir = mkdtempSync(join(tmpdir(), 'amz-'))
+    const lex = join(dir, 'lex.json')
+    writeFileSync(lex, JSON.stringify([{ tifinagh: 'ⴰⴳⴰⴷⵉⵔ', arabic: 'أكادير', status: 'verified', source: 'test' }]))
+    expect((await run(['--from', 'arabic', '--lexicon', lex, '--text', 'أكادير'])).out).toBe('ⴰⴳⴰⴷⵉⵔ\n')
   })
 
   test('missing input file is an I/O error', async () => {

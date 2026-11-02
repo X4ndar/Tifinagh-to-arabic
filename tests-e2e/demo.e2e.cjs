@@ -165,6 +165,41 @@ async function axe(page) {
     assert.deepEqual(loaded, [true, true, true])
   })
 
+  await check('Arabic → Tifinagh: switching carries the result over and converts it back', async () => {
+    await page.fill('#src', 'ⵜⴰⵎⴰⵣⵉⵖⵜ ⴰⵣⵓⵍ')
+    await page.check('input[value="a2t"]')
+    assert.equal(await page.inputValue('#src'), 'تامازيغت أزول')
+    assert.equal(await page.textContent('#out'), 'ⵜⴰⵎⴰⵣⵉⵖⵜ ⴰⵣⵓⵍ')
+    assert.equal(await page.getAttribute('#src', 'dir'), 'rtl')
+    assert.equal(await page.getAttribute('#out', 'dir'), 'ltr')
+    assert.equal(await page.textContent('#copy'), 'Copy Tifinagh text')
+    assert.equal(await page.isVisible('#keys'), false)
+  })
+
+  await check('Arabic → Tifinagh: output equals the library, map explains each letter', async () => {
+    await page.fill('#src', 'أژيضر ئفاسّن، براير')
+    assert.equal(await page.textContent('#out'), lib.convert('أژيضر ئفاسّن، براير', { from: 'arabic', to: 'tifinagh' }).output)
+    assert.equal(await page.locator('.thread').count(), lib.convert('أژيضر', { from: 'arabic', to: 'tifinagh', trace: true }).trace.length)
+    await page.locator('.thread').last().click()
+    assert.match(await page.textContent('#unit-rules'), /emphatic/)
+    assert.ok((await page.locator('#alts li').count()) >= 1)
+    await page.check('input[value="ircam"]')
+    assert.equal(await page.textContent('#out'), lib.convert('أژيضر ئفاسّن، براير', { from: 'arabic', to: 'tifinagh', profile: 'ircam' }).output)
+    await page.check('input[value="readable"]')
+  })
+
+  await check('Arabic → Tifinagh: examples load in Arabic script; Swap goes back', async () => {
+    await page.click('.examples button[data-text="ⵉⴼⴰⵙⵙⵏ"]')
+    assert.equal(await page.inputValue('#src'), 'ئفاسّن')
+    assert.equal(await page.textContent('#out'), 'ⵉⴼⴰⵙⵙⵏ')
+    const v = await axe(page)
+    assert.deepEqual(v, [])
+    await page.click('#swap')
+    assert.equal(await page.evaluate(() => document.querySelector('input[name="dir"]:checked').value), 't2a')
+    assert.equal(await page.inputValue('#src'), 'ⵉⴼⴰⵙⵙⵏ')
+    assert.equal(await page.textContent('#out'), 'ئفاسّن')
+  })
+
   await check('accessibility scan (axe-core, WCAG 2.1 AA), light mode', async () => {
     await page.fill('#src', 'ⴰⵣⵓⵍ ⵯ')
     const v = await axe(page)

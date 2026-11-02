@@ -98,18 +98,26 @@ curl -s https://amazigh.example.com/api/transliterate \
   -d '{"texts": ["ⵉⴼⴰⵙⵙⵏ", "ⵓⴽⵙⵓⵎ"], "profile": "ircam", "options": {"gemination": "shadda"}}'
 # → {"profile":"ircam","results":[{"output":"ئفاسّن",…},{"output":"ؤكسوم",…}]}
 
+# Arabic script → Tifinagh (or "to": "latin")
+curl -s https://amazigh.example.com/api/transliterate \
+  -H 'Content-Type: application/json' \
+  -d '{"text": "أزول فلّاون", "from": "arabic"}'
+# → {"output":"ⴰⵣⵓⵍ ⴼⵍⵍⴰⵡⵏ","profile":"readable","warnings":[]}
+
 # quick test in a browser address bar
 https://amazigh.example.com/api/transliterate?text=ⵜⴰⵎⴰⵣⵉⵖⵜ
+https://amazigh.example.com/api/transliterate?from=arabic&text=تامازيغت
 ```
 
 | Request field | Type | Meaning |
 |---|---|---|
 | `text` / `texts` | string / array of strings | What to convert (one of the two) |
 | `profile` | `readable` \| `ircam` \| `phonetic` | Default: `DEFAULT_PROFILE` |
-| `options` | object | Any option from `GET /api/profiles`, e.g. `{"initialVowels": "hamza-seat", "g": "ng"}` |
-| `from` | `tifinagh` \| `latin` | Input script (default `tifinagh`) |
-| `alternatives`, `trace` | boolean | Also return other accepted spellings / the rules applied |
-| `strict` | boolean | Fail on unsupported or malformed Tifinagh: HTTP 422 for one text, an `error` per item in a batch |
+| `options` | object | Any option from `GET /api/profiles`, e.g. `{"initialVowels": "hamza-seat", "g": "ng"}`; with `from: "arabic"`, from `GET /api/profiles?from=arabic`, e.g. `{"semivowels": "marked"}` |
+| `from` | `tifinagh` \| `latin` \| `arabic` | Input script (default `tifinagh`) |
+| `to` | `arabic` \| `tifinagh` \| `latin` | Output script: `arabic` for Tifinagh/Latin input; `tifinagh` (default) or `latin` for Arabic input. With `latin`, each result also has `tifinagh` |
+| `alternatives`, `trace` | boolean | Also return other accepted spellings (Arabic output only) / the rules applied |
+| `strict` | boolean | Fail on unsupported or malformed input: HTTP 422 for one text, an `error` per item in a batch |
 
 | Status | When |
 |---|---|
@@ -122,7 +130,7 @@ https://amazigh.example.com/api/transliterate?text=ⵜⴰⵎⴰⵣⵉⵖⵜ
 | 429 | Rate limit reached (`Retry-After` says when to retry) |
 
 Other endpoints: `GET /healthz`, `GET /api`, `GET /api/version`,
-`GET /api/profiles`.
+`GET /api/profiles` (`?from=arabic` for the Arabic → Tifinagh options).
 
 From Python (standard library only):
 
@@ -131,6 +139,7 @@ from amazigh_transliterate import HttpTransliterator   # python/amazigh_translit
 tr = HttpTransliterator("https://amazigh.example.com")
 tr.convert("ⴰⵣⵓⵍ")                        # 'أزول'
 tr.convert_many(corpus_lines)              # sent in batches of 500
+HttpTransliterator("https://amazigh.example.com", source="arabic").convert("أزول")  # 'ⴰⵣⵓⵍ'
 ```
 
 ## Any other Docker host

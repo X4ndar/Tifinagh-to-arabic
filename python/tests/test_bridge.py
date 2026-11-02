@@ -4,7 +4,7 @@ import sys
 import unittest
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
-from amazigh_transliterate import HttpTransliterator, Transliterator, TransliterationError, to_arabic  # noqa: E402
+from amazigh_transliterate import HttpTransliterator, Transliterator, TransliterationError, from_arabic, to_arabic  # noqa: E402
 
 
 class BridgeTest(unittest.TestCase):
@@ -19,6 +19,16 @@ class BridgeTest(unittest.TestCase):
     def test_profile_and_options(self):
         with Transliterator(profile="ircam", options={"gemination": "shadda"}) as tr:
             self.assertEqual(tr.convert("ⵉⴼⴰⵙⵙⵏ"), "ئفاسّن")
+
+    def test_arabic_to_tifinagh(self):
+        self.assertEqual(from_arabic("أزول"), "ⴰⵣⵓⵍ")
+        self.assertEqual(from_arabic("تامازيغت", target="latin"), "tamaziɣt")
+        with Transliterator(source="arabic") as tr:
+            self.assertEqual(tr.convert_many(["أمغار", "ئفاسّن", "براير"]), ["ⴰⵎⵖⴰⵔ", "ⵉⴼⴰⵙⵙⵏ", "ⴱⵔⴰⵢⵔ"])
+        with Transliterator(source="arabic", profile="ircam", options={"semivowels": "context"}) as tr:
+            self.assertEqual(tr.convert("اوال"), "ⴰⵡⴰⵍ")
+        with self.assertRaises(ValueError):
+            Transliterator(source="arabic", target="arabic")
 
     def test_warnings_and_strict(self):
         with Transliterator() as tr:
@@ -62,6 +72,11 @@ class HttpClientTest(unittest.TestCase):
         self.assertEqual(tr.convert("ⴰⵣⵓⵍ"), "أزول")
         self.assertEqual(tr.convert_many(["ⵜⴰⵎⴰⵣⵉⵖⵜ", "ⴰⵎⵖⴰⵔ"] * 3, batch_size=2), ["تامازيغت", "أمغار"] * 3)
         self.assertEqual(HttpTransliterator(f"http://127.0.0.1:{self.port}", profile="ircam").convert("ⵉⴼⴰⵙⵙⵏ"), "ئفاسسن")
+
+    def test_http_arabic_source(self):
+        url = f"http://127.0.0.1:{self.port}"
+        self.assertEqual(HttpTransliterator(url, source="arabic").convert("أزول"), "ⴰⵣⵓⵍ")
+        self.assertEqual(HttpTransliterator(url, source="arabic", target="latin").convert_many(["أمغار"]), ["amɣar"])
 
     def test_http_errors(self):
         with self.assertRaises(TransliterationError):

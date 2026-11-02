@@ -2407,7 +2407,7 @@
         "altMatchRate": 0.4711149314136313,
         "noVowelSignsRate": 0.29902224132373484,
         "skeletonRate": 0.29902224132373484,
-        "cer": 0.19535549766222116,
+        "cer": 0.1953900036231259,
         "byTag": {
           "gemination": {
             "n": 11256,
@@ -2768,6 +2768,336 @@
       }
     ]
   },
+  "reverse": {
+    "moroccan": [
+      {
+        "system": "baseline: letter by letter (ي = ⵉ, و = ⵓ, ر = ⵔ)",
+        "n": 7,
+        "exact": 6,
+        "exactRate": 0.8571428571428571,
+        "noSchwaRate": 0.8571428571428571,
+        "noSchwaRRate": 0.8571428571428571,
+        "noSchwaRLabRate": 0.8571428571428571,
+        "cer": 0.02702702702702703
+      },
+      {
+        "system": "ours: readable (default)",
+        "n": 7,
+        "exact": 7,
+        "exactRate": 1,
+        "noSchwaRate": 1,
+        "noSchwaRRate": 1,
+        "noSchwaRLabRate": 1,
+        "cer": 0
+      },
+      {
+        "system": "ours: ircam",
+        "n": 7,
+        "exact": 6,
+        "exactRate": 0.8571428571428571,
+        "noSchwaRate": 0.8571428571428571,
+        "noSchwaRRate": 0.8571428571428571,
+        "noSchwaRLabRate": 0.8571428571428571,
+        "cer": 0.02702702702702703
+      },
+      {
+        "system": "ours: phonetic",
+        "n": 7,
+        "exact": 6,
+        "exactRate": 0.8571428571428571,
+        "noSchwaRate": 0.8571428571428571,
+        "noSchwaRRate": 0.8571428571428571,
+        "noSchwaRLabRate": 0.8571428571428571,
+        "cer": 0.02702702702702703
+      },
+      {
+        "system": "ablation: readable − ي/و context rules",
+        "n": 7,
+        "exact": 6,
+        "exactRate": 0.8571428571428571,
+        "noSchwaRate": 0.8571428571428571,
+        "noSchwaRRate": 0.8571428571428571,
+        "noSchwaRLabRate": 0.8571428571428571,
+        "cer": 0.02702702702702703
+      },
+      {
+        "system": "ablation: readable − emphatic-word rule for ر",
+        "n": 7,
+        "exact": 7,
+        "exactRate": 1,
+        "noSchwaRate": 1,
+        "noSchwaRRate": 1,
+        "noSchwaRLabRate": 1,
+        "cer": 0
+      },
+      {
+        "system": "ablation: readable − doubled letters = CⴻC",
+        "n": 7,
+        "exact": 7,
+        "exactRate": 1,
+        "noSchwaRate": 1,
+        "noSchwaRRate": 1,
+        "noSchwaRLabRate": 1,
+        "cer": 0
+      },
+      {
+        "system": "variant: readable, damma not read as ⵯ",
+        "n": 7,
+        "exact": 7,
+        "exactRate": 1,
+        "noSchwaRate": 1,
+        "noSchwaRRate": 1,
+        "noSchwaRLabRate": 1,
+        "cer": 0
+      }
+    ],
+    "toponyms": [
+      {
+        "system": "baseline: letter by letter (ي = ⵉ, و = ⵓ, ر = ⵔ)",
+        "n": 190,
+        "exact": 43,
+        "exactRate": 0.22631578947368422,
+        "noSchwaRate": 0.22631578947368422,
+        "noSchwaRRate": 0.25263157894736843,
+        "noSchwaRLabRate": 0.2578947368421053,
+        "cer": 0.19724437998549674
+      },
+      {
+        "system": "ours: readable (default)",
+        "n": 190,
+        "exact": 71,
+        "exactRate": 0.3736842105263158,
+        "noSchwaRate": 0.3736842105263158,
+        "noSchwaRRate": 0.39473684210526316,
+        "noSchwaRLabRate": 0.4052631578947368,
+        "cer": 0.13850616388687453
+      },
+      {
+        "system": "ours: ircam",
+        "n": 190,
+        "exact": 49,
+        "exactRate": 0.2578947368421053,
+        "noSchwaRate": 0.2578947368421053,
+        "noSchwaRRate": 0.28421052631578947,
+        "noSchwaRLabRate": 0.29473684210526313,
+        "cer": 0.1798404641044235
+      },
+      {
+        "system": "ours: phonetic",
+        "n": 190,
+        "exact": 49,
+        "exactRate": 0.2578947368421053,
+        "noSchwaRate": 0.2578947368421053,
+        "noSchwaRRate": 0.28421052631578947,
+        "noSchwaRLabRate": 0.29473684210526313,
+        "cer": 0.1798404641044235
+      },
+      {
+        "system": "ablation: readable − ي/و context rules",
+        "n": 190,
+        "exact": 50,
+        "exactRate": 0.2631578947368421,
+        "noSchwaRate": 0.2631578947368421,
+        "noSchwaRRate": 0.28421052631578947,
+        "noSchwaRLabRate": 0.29473684210526313,
+        "cer": 0.17766497461928935
+      },
+      {
+        "system": "ablation: readable − emphatic-word rule for ر",
+        "n": 190,
+        "exact": 70,
+        "exactRate": 0.3684210526315789,
+        "noSchwaRate": 0.3684210526315789,
+        "noSchwaRRate": 0.39473684210526316,
+        "noSchwaRLabRate": 0.4052631578947368,
+        "cer": 0.1406816533720087
+      },
+      {
+        "system": "ablation: readable − doubled letters = CⴻC",
+        "n": 190,
+        "exact": 71,
+        "exactRate": 0.3736842105263158,
+        "noSchwaRate": 0.3736842105263158,
+        "noSchwaRRate": 0.39473684210526316,
+        "noSchwaRLabRate": 0.4052631578947368,
+        "cer": 0.13850616388687453
+      },
+      {
+        "system": "variant: readable, damma not read as ⵯ",
+        "n": 190,
+        "exact": 71,
+        "exactRate": 0.3736842105263158,
+        "noSchwaRate": 0.3736842105263158,
+        "noSchwaRRate": 0.39473684210526316,
+        "noSchwaRLabRate": 0.4052631578947368,
+        "cer": 0.13850616388687453
+      }
+    ],
+    "albane": [
+      {
+        "system": "baseline: letter by letter (ي = ⵉ, و = ⵓ, ر = ⵔ)",
+        "n": 3,
+        "exact": 0,
+        "exactRate": 0,
+        "noSchwaRate": 0,
+        "noSchwaRRate": 0,
+        "noSchwaRLabRate": 0,
+        "cer": 0.4117647058823529
+      },
+      {
+        "system": "ours: readable (default)",
+        "n": 3,
+        "exact": 1,
+        "exactRate": 0.3333333333333333,
+        "noSchwaRate": 0.3333333333333333,
+        "noSchwaRRate": 0.3333333333333333,
+        "noSchwaRLabRate": 0.3333333333333333,
+        "cer": 0.35294117647058826
+      },
+      {
+        "system": "ours: ircam",
+        "n": 3,
+        "exact": 1,
+        "exactRate": 0.3333333333333333,
+        "noSchwaRate": 0.3333333333333333,
+        "noSchwaRRate": 0.3333333333333333,
+        "noSchwaRLabRate": 0.3333333333333333,
+        "cer": 0.35294117647058826
+      },
+      {
+        "system": "ours: phonetic",
+        "n": 3,
+        "exact": 1,
+        "exactRate": 0.3333333333333333,
+        "noSchwaRate": 0.3333333333333333,
+        "noSchwaRRate": 0.3333333333333333,
+        "noSchwaRLabRate": 0.3333333333333333,
+        "cer": 0.35294117647058826
+      },
+      {
+        "system": "ablation: readable − ي/و context rules",
+        "n": 3,
+        "exact": 1,
+        "exactRate": 0.3333333333333333,
+        "noSchwaRate": 0.3333333333333333,
+        "noSchwaRRate": 0.3333333333333333,
+        "noSchwaRLabRate": 0.3333333333333333,
+        "cer": 0.35294117647058826
+      },
+      {
+        "system": "ablation: readable − emphatic-word rule for ر",
+        "n": 3,
+        "exact": 1,
+        "exactRate": 0.3333333333333333,
+        "noSchwaRate": 0.3333333333333333,
+        "noSchwaRRate": 0.3333333333333333,
+        "noSchwaRLabRate": 0.3333333333333333,
+        "cer": 0.35294117647058826
+      },
+      {
+        "system": "ablation: readable − doubled letters = CⴻC",
+        "n": 3,
+        "exact": 1,
+        "exactRate": 0.3333333333333333,
+        "noSchwaRate": 0.3333333333333333,
+        "noSchwaRRate": 0.3333333333333333,
+        "noSchwaRLabRate": 0.3333333333333333,
+        "cer": 0.35294117647058826
+      },
+      {
+        "system": "variant: readable, damma not read as ⵯ",
+        "n": 3,
+        "exact": 1,
+        "exactRate": 0.3333333333333333,
+        "noSchwaRate": 0.3333333333333333,
+        "noSchwaRRate": 0.3333333333333333,
+        "noSchwaRLabRate": 0.3333333333333333,
+        "cer": 0.35294117647058826
+      }
+    ],
+    "tawalt": [
+      {
+        "system": "baseline: letter by letter (ي = ⵉ, و = ⵓ, ر = ⵔ)",
+        "n": 27921,
+        "exact": 21303,
+        "exactRate": 0.7629741055119802,
+        "noSchwaRate": 0.7843558611797572,
+        "noSchwaRRate": 0.7843558611797572,
+        "noSchwaRLabRate": 0.7843558611797572,
+        "cer": 0.043933457511722014
+      },
+      {
+        "system": "ours: readable (default)",
+        "n": 27921,
+        "exact": 25978,
+        "exactRate": 0.9304108019053758,
+        "noSchwaRate": 0.9306256939221375,
+        "noSchwaRRate": 0.981698363239139,
+        "noSchwaRLabRate": 0.9937323161777873,
+        "cer": 0.012378911473265638
+      },
+      {
+        "system": "ours: ircam",
+        "n": 27921,
+        "exact": 23525,
+        "exactRate": 0.8425557823860177,
+        "noSchwaRate": 0.8665878729271874,
+        "noSchwaRRate": 0.8665878729271874,
+        "noSchwaRLabRate": 0.8780129651516779,
+        "cer": 0.027764964177065147
+      },
+      {
+        "system": "ours: phonetic",
+        "n": 27921,
+        "exact": 23525,
+        "exactRate": 0.8425557823860177,
+        "noSchwaRate": 0.8665878729271874,
+        "noSchwaRRate": 0.8665878729271874,
+        "noSchwaRLabRate": 0.8780129651516779,
+        "cer": 0.027764964177065147
+      },
+      {
+        "system": "ablation: readable − ي/و context rules",
+        "n": 27921,
+        "exact": 22840,
+        "exactRate": 0.8180222771390709,
+        "noSchwaRate": 0.8182371691558326,
+        "noSchwaRRate": 0.8665878729271874,
+        "noSchwaRLabRate": 0.8780129651516779,
+        "cer": 0.03285082827763797
+      },
+      {
+        "system": "ablation: readable − emphatic-word rule for ر",
+        "n": 27921,
+        "exact": 27403,
+        "exactRate": 0.9814476558862505,
+        "noSchwaRate": 0.981698363239139,
+        "noSchwaRRate": 0.981698363239139,
+        "noSchwaRLabRate": 0.9937323161777873,
+        "cer": 0.0030947278683164095
+      },
+      {
+        "system": "ablation: readable − doubled letters = CⴻC",
+        "n": 27921,
+        "exact": 25299,
+        "exactRate": 0.9060921886751907,
+        "noSchwaRate": 0.9306256939221375,
+        "noSchwaRRate": 0.981698363239139,
+        "noSchwaRLabRate": 0.9937323161777873,
+        "cer": 0.016577230977642052
+      },
+      {
+        "system": "variant: readable, damma not read as ⵯ",
+        "n": 27921,
+        "exact": 26301,
+        "exactRate": 0.9419791554743742,
+        "noSchwaRate": 0.9421940474911357,
+        "noSchwaRRate": 0.9937323161777873,
+        "noSchwaRLabRate": 0.9937323161777873,
+        "cer": 0.01040529256856574
+      }
+    ]
+  },
   "coverage": {
     "ircamUnits": 33,
     "ircamUnitsMapped": 33,
@@ -2778,7 +3108,7 @@
       "unsupportedRate": 0,
       "wordsWithWarnings": 0,
       "warningCodes": {},
-      "ms": 69.786234
+      "ms": 64.577264
     }
   },
   "preservation": {

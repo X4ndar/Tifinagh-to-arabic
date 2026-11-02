@@ -3,6 +3,7 @@ import { tifinaghToLatin } from './converters/tifinaghToLatin'
 import { latinToTifinagh } from './converters/latinToTifinagh'
 import { MAPPING } from './data/mapping'
 import { ArabicConverter, type ArabicConverterConfig, type ArabicResult } from './core/arabic'
+import { ArabicToTifinaghConverter, type ReverseConverterConfig, type ReverseResult } from './reverse/arabicToTifinagh'
 
 import type { ConvertOptions, ConvertResult, CharEntry, Region, Script } from './types/index'
 
@@ -24,6 +25,7 @@ export type {
   LexiconLike,
   LexiconLookup,
   LexiconStatus,
+  ReverseLexiconLookup,
   GStyle,
   KStyle,
   EmphaticRStyle,
@@ -51,7 +53,7 @@ export { SOURCES } from './alphabet/sources'
 export type { SourceId, SourceRef } from './alphabet/sources'
 export { LETTER_RULES, MODIFIER_RULES } from './rules/rules'
 export type { Rule, ModifierRule, Condition, Action } from './rules/rules'
-export { Lexicon, validateEntry, LexiconValidationError } from './lexicon/lexicon'
+export { Lexicon, validateEntry, LexiconValidationError, arabicLexiconKey } from './lexicon/lexicon'
 export type { LexiconEntry, LexiconOptions, LexiconConflict } from './lexicon/lexicon'
 export { TransliterationError, SEVERITY } from './diagnostics/diagnostics'
 export { normalizeText } from './normalization/normalize'
@@ -60,10 +62,33 @@ export type { Unit, TokenizedWord } from './tokenization/units'
 export { segment } from './tokenization/segment'
 export type { Segment, SegmentState } from './tokenization/segment'
 
+// ─── Arabic → Tifinagh ───────────────────────────────────────────────────────
+export {
+  ArabicToTifinaghConverter,
+  arabicToTifinagh,
+  REVERSE_PROFILES,
+  REVERSE_RULES,
+  REVERSE_OPTION_VALUES,
+  resolveReverseOptions,
+  isArabicWordChar,
+} from './reverse/arabicToTifinagh'
+export type { ReverseOptions, ReverseRule, ReverseConverterConfig, ReverseResult } from './reverse/arabicToTifinagh'
+
 // ─── detect() ────────────────────────────────────────────────────────────────
 export { detectScript as detect }
 
 const HAS_TIFINAGH = /[ⴰ-ⵯ]/
+const HAS_ARABIC_LETTER = /[\u0621-\u064A\u0671-\u06D3\uFB50-\uFDFB\uFE70-\uFEFC]/
+
+function reverseConfig(options: Omit<ConvertOptions, 'to' | 'from' | 'region'>): ReverseConverterConfig {
+  return {
+    profile: options.profile,
+    options: options.reverse,
+    strict: options.strict,
+    trace: options.trace,
+    lexicon: options.lexicon ?? null,
+  }
+}
 
 function arabicConfig(options: Omit<ConvertOptions, 'to' | 'from' | 'region'>): ArabicConverterConfig {
   return {
@@ -82,11 +107,15 @@ function arabicConfig(options: Omit<ConvertOptions, 'to' | 'from' | 'region'>): 
  * Convert text between Tifinagh, Latin, and Arabic scripts.
  *
  * Supported directions: tifinagh → latin, latin → tifinagh,
- * tifinagh → arabic (direct, rule-based), latin → arabic (via Tifinagh).
+ * tifinagh → arabic (direct, rule-based), latin → arabic (via Tifinagh),
+ * arabic → tifinagh (rule-based), arabic → latin (via Tifinagh).
  *
  * @example
  * convert('ⵜⴰⵎⴰⵣⵉⵖⵜ', { from: 'tifinagh', to: 'arabic', profile: 'readable' }).output
  * // → 'تامازيغت'
+ *
+ * @example
+ * convert('أزول', { from: 'arabic', to: 'tifinagh' }).output  // → 'ⴰⵣⵓⵍ'
  *
  * @example
  * convert('ⵎⵓⵔ', { to: 'latin' }).output  // → 'mur'
@@ -105,8 +134,11 @@ export function convert(text: string, options: ConvertOptions): ConvertResult {
   let from = options.from
   let detected = false
   if (!from) {
-    // For Arabic output, any Tifinagh in the input means "convert the Tifinagh parts".
-    from = to === 'arabic' && HAS_TIFINAGH.test(text) ? 'tifinagh' : detectScript(text).script
+    // For Arabic output, any Tifinagh in the input means "convert the Tifinagh parts";
+    // for Tifinagh/Latin output, Arabic letters (and no Tifinagh) mean "convert the Arabic parts".
+    if (to === 'arabic' && HAS_TIFINAGH.test(text)) from = 'tifinagh'
+    else if (to !== 'arabic' && !HAS_TIFINAGH.test(text) && HAS_ARABIC_LETTER.test(text)) from = 'arabic'
+    else from = detectScript(text).script
     detected = true
   }
 
@@ -117,7 +149,7 @@ export function convert(text: string, options: ConvertOptions): ConvertResult {
   // Empty input is valid and yields empty output (upstream threw; see docs/architecture.md §Compatibility).
   if (text === '') {
     const base: ConvertResult = { output: '', from, to, region, detected, warnings: [] }
-    if (to === 'arabic') base.profile = options.profile ?? 'readable'
+    if (to === 'arabic' || from === 'arabic') base.profile = options.profile ?? 'readable'
     return base
   }
 
@@ -154,10 +186,18 @@ export function convert(text: string, options: ConvertOptions): ConvertResult {
     return result
   }
 
-  if (from === 'arabic') {
-    throw new Error(
-      'Arabic → Tifinagh/Latin conversion is not supported: Arabic script does not encode all Amazigh distinctions (vowels, schwa, emphatics, labialization), so the reverse direction cannot be done reliably without a lexicon.',
-    )
+  if (from === 'arabic' && (to === 'tifinagh' || to === 'latin')) {
+    const r: ReverseResult = new ArabicToTifinaghConverter(reverseConfig(options)).convert(text)
+    let output = r.output
+    const warnings = [...r.warnings]
+    if (to === 'latin') {
+      const l = tifinaghToLatin(r.output, region)
+      output = l.output
+      warnings.push(...l.warnings)
+    }
+    const result: ConvertResult = { output, from, to, region, detected, warnings, profile: r.profile }
+    if (r.trace) result.trace = r.trace
+    return result
   }
 
   throw new Error(`Unsupported conversion: ${from} → ${to}`)
@@ -183,6 +223,15 @@ export function toArabic(text: string, options: ToArabicOptions = {}): string {
  */
 export function transliterate(text: string, options: ToArabicOptions = {}): ArabicResult {
   return new ArabicConverter(options).convert(text)
+}
+
+/**
+ * Arabic-script Amazigh → Tifinagh. Text in other scripts is preserved.
+ *
+ * @example fromArabic('أزول')  // → 'ⴰⵣⵓⵍ'
+ */
+export function fromArabic(text: string, options: ReverseConverterConfig = {}): string {
+  return new ArabicToTifinaghConverter(options).convert(text).output
 }
 
 /** Create a reusable converter (options validated once; use for batches). */

@@ -6,6 +6,7 @@ import { latinToTifinagh } from '../converters/latinToTifinagh'
 import { TransliterationError } from '../diagnostics/diagnostics'
 import { Lexicon } from '../lexicon/lexicon'
 import { OPTION_VALUES, PROFILES } from '../profiles/profiles'
+import { ArabicToTifinaghConverter, REVERSE_OPTION_VALUES, REVERSE_PROFILES, type ReverseOptions } from '../reverse/arabicToTifinagh'
 import type { SegmentState } from '../tokenization/segment'
 import type { ArabicOptions, ConversionWarning, ProfileId } from '../types/index'
 
@@ -18,10 +19,11 @@ export interface CliIO {
 }
 
 interface CliArgs {
-  from: 'tifinagh' | 'latin'
+  from: 'tifinagh' | 'latin' | 'arabic'
   to: 'arabic' | 'latin' | 'tifinagh'
   profile: ProfileId
   overrides: Partial<ArabicOptions>
+  reverseOverrides: Partial<ReverseOptions>
   text?: string
   inputs: string[]
   output?: string
@@ -39,26 +41,29 @@ interface CliArgs {
   listProfiles: boolean
 }
 
-export const HELP = `amazigh-transliterate — Tifinagh → Arabic-script (and Latin) transliteration for Moroccan Amazigh
+export const HELP = `amazigh-transliterate — Tifinagh ↔ Arabic-script (and Latin) transliteration for Moroccan Amazigh
 
 Usage:
   amazigh-transliterate [options] --text "ⴰⵣⵓⵍ"
+  amazigh-transliterate --from arabic [options] --text "أزول"
   amazigh-transliterate [options] [FILE ...]          (UTF-8 files; '-' or none = stdin)
 
 Options:
-  --from tifinagh|latin        Source script (default: tifinagh)
-  --to arabic|latin|tifinagh   Target script (default: arabic)
+  --from tifinagh|latin|arabic Source script (default: tifinagh)
+  --to arabic|latin|tifinagh   Target script (default: arabic; tifinagh when --from arabic)
   --profile readable|ircam|phonetic
-                               Arabic conversion profile (default: readable)
-  --option KEY=VALUE           Override one Arabic option (repeatable), e.g. --option gemination=double
+                               Conversion profile (default: readable). With --from arabic it names
+                               the spelling convention of the input
+  --option KEY=VALUE           Override one option (repeatable), e.g. --option gemination=double;
+                               with --from arabic e.g. --option semivowels=marked
   --text STRING                Convert STRING instead of reading files/stdin
   -o, --output FILE            Write output to FILE (default: stdout)
   --json                       Emit one JSON document {output, profile, warnings, ...}
   --jsonl                      Batch mode: each input line is JSON {"id"?, "text"}; each output line is
                                JSON {"id", "output", "warnings"[, "alternatives", "trace"]}
   --diagnostics                In plain-text mode, also write warnings to stderr as JSON lines
-  --strict                     Fail (exit code 3) on unsupported/malformed Tifinagh
-  --alternatives               Include alternative spellings (JSON modes)
+  --strict                     Fail (exit code 3) on unsupported/malformed input
+  --alternatives               Include alternative spellings (JSON modes; --to arabic)
   --trace                      Include the rule trace (JSON modes)
   --lexicon FILE               JSON lexicon of validated overrides (see docs/architecture.md)
   --allow-provisional          Let provisional lexicon entries override rules
@@ -79,6 +84,7 @@ function parseArgs(argv: string[]): CliArgs {
     to: 'arabic',
     profile: 'readable',
     overrides: {},
+    reverseOverrides: {},
     inputs: [],
     json: false,
     jsonl: false,
@@ -96,6 +102,8 @@ function parseArgs(argv: string[]): CliArgs {
     if (i >= argv.length) throw new UsageError(`Missing value for ${flag}`)
     return argv[i]
   }
+  const rawOptions: string[] = []
+  let toSet = false
   for (let i = 0; i < argv.length; i++) {
     const arg = argv[i]
     let flag = arg
@@ -108,7 +116,7 @@ function parseArgs(argv: string[]): CliArgs {
     switch (flag) {
       case '--from': {
         const v = value()
-        if (v !== 'tifinagh' && v !== 'latin') throw new UsageError(`--from must be tifinagh or latin (got '${v}')`)
+        if (v !== 'tifinagh' && v !== 'latin' && v !== 'arabic') throw new UsageError(`--from must be tifinagh, latin or arabic (got '${v}')`)
         a.from = v
         break
       }
@@ -116,6 +124,7 @@ function parseArgs(argv: string[]): CliArgs {
         const v = value()
         if (v !== 'arabic' && v !== 'latin' && v !== 'tifinagh') throw new UsageError(`--to must be arabic, latin or tifinagh (got '${v}')`)
         a.to = v
+        toSet = true
         break
       }
       case '--profile': {
@@ -124,20 +133,9 @@ function parseArgs(argv: string[]): CliArgs {
         a.profile = v as ProfileId
         break
       }
-      case '--option': {
-        const v = value()
-        const eq = v.indexOf('=')
-        if (eq < 1) throw new UsageError(`--option expects KEY=VALUE (got '${v}')`)
-        const key = v.slice(0, eq) as keyof ArabicOptions
-        const raw = v.slice(eq + 1)
-        if (!(key in OPTION_VALUES)) throw new UsageError(`Unknown option '${key}'. Known: ${Object.keys(OPTION_VALUES).join(', ')}`)
-        const parsed: unknown = raw === 'true' ? true : raw === 'false' ? false : raw
-        if (!(OPTION_VALUES[key] as readonly unknown[]).includes(parsed)) {
-          throw new UsageError(`Invalid value '${raw}' for ${key}. Allowed: ${(OPTION_VALUES[key] as readonly unknown[]).join(', ')}`)
-        }
-        ;(a.overrides as Record<string, unknown>)[key] = parsed
+      case '--option':
+        rawOptions.push(value())
         break
-      }
       case '--text':
         a.text = value()
         break
@@ -191,10 +189,28 @@ function parseArgs(argv: string[]): CliArgs {
         a.inputs.push(arg)
     }
   }
+  if (a.from === 'arabic' && !toSet) a.to = 'tifinagh'
   if (a.from === a.to) throw new UsageError(`--from and --to cannot both be '${a.from}'`)
   if (a.json && a.jsonl) throw new UsageError('--json and --jsonl are mutually exclusive')
-  if (a.to !== 'arabic' && (a.alternatives || a.trace || a.lexicon || a.strict)) {
-    throw new UsageError('--alternatives, --trace, --lexicon and --strict apply to --to arabic only')
+  const rich = a.to === 'arabic' || a.from === 'arabic'
+  if (!rich && (a.alternatives || a.trace || a.lexicon || a.strict || rawOptions.length > 0)) {
+    throw new UsageError('--option, --alternatives, --trace, --lexicon and --strict apply to Arabic input or output only')
+  }
+  if (a.alternatives && a.to !== 'arabic') throw new UsageError('--alternatives applies to --to arabic only')
+  // options are validated once the direction is known
+  const table: Readonly<Record<string, readonly unknown[]>> = a.from === 'arabic' ? REVERSE_OPTION_VALUES : OPTION_VALUES
+  const target = (a.from === 'arabic' ? a.reverseOverrides : a.overrides) as Record<string, unknown>
+  for (const v of rawOptions) {
+    const eq = v.indexOf('=')
+    if (eq < 1) throw new UsageError(`--option expects KEY=VALUE (got '${v}')`)
+    const key = v.slice(0, eq)
+    const raw = v.slice(eq + 1)
+    if (!Object.prototype.hasOwnProperty.call(table, key)) {
+      throw new UsageError(`Unknown option '${key}'${a.from === 'arabic' ? ' for --from arabic' : ''}. Known: ${Object.keys(table).join(', ')}`)
+    }
+    const parsed: unknown = raw === 'true' ? true : raw === 'false' ? false : raw
+    if (!table[key].includes(parsed)) throw new UsageError(`Invalid value '${raw}' for ${key}. Allowed: ${table[key].join(', ')}`)
+    target[key] = parsed
   }
   return a
 }
@@ -306,7 +322,7 @@ export async function main(argv: string[], io: CliIO): Promise<number> {
     return EXIT.OK
   }
   if (a.listProfiles) {
-    await write(io.stdout, JSON.stringify(PROFILES, null, 2) + '\n')
+    await write(io.stdout, JSON.stringify(a.from === 'arabic' ? REVERSE_PROFILES : PROFILES, null, 2) + '\n')
     return EXIT.OK
   }
 
@@ -317,7 +333,7 @@ export async function main(argv: string[], io: CliIO): Promise<number> {
       if (st.size > 64 * 1024 * 1024) throw new Error('lexicon file larger than 64 MiB')
       lexicon = Lexicon.fromJSON(fs.readFileSync(a.lexicon, 'utf8'), { allowProvisional: a.allowProvisional })
       const words = new Set(lexicon.conflicts().map((c) => c.tifinagh)).size
-      if (words > 0) {
+      if (words > 0 && a.from !== 'arabic') {
         await write(io.stderr, `warning: lexicon has conflicting spellings for ${words} word${words === 1 ? '' : 's'}; those words keep the rule output\n`)
       }
     } catch (e) {
@@ -327,7 +343,15 @@ export async function main(argv: string[], io: CliIO): Promise<number> {
   }
 
   let converter: ArabicConverter | null = null
-  if (a.to === 'arabic') {
+  let reverse: ArabicToTifinaghConverter | null = null
+  if (a.from === 'arabic') {
+    try {
+      reverse = new ArabicToTifinaghConverter({ profile: a.profile, options: a.reverseOverrides, strict: a.strict, trace: a.trace, lexicon })
+    } catch (e) {
+      await write(io.stderr, `error: ${(e as Error).message}\n`)
+      return EXIT.USAGE
+    }
+  } else if (a.to === 'arabic') {
     try {
       converter = new ArabicConverter({
         profile: a.profile,
@@ -344,6 +368,16 @@ export async function main(argv: string[], io: CliIO): Promise<number> {
   }
 
   const convertPlain = (text: string, state: SegmentState, offset: number): { output: string; warnings: ConversionWarning[]; extra: Record<string, unknown> } => {
+    if (reverse) {
+      const r = reverse.convertChunk(text, state, offset)
+      const extra: Record<string, unknown> = {}
+      if (r.trace) extra.trace = r.trace
+      if (a.to === 'latin') {
+        const l = tifinaghToLatin(r.output)
+        return { output: l.output, warnings: [...r.warnings, ...l.warnings], extra }
+      }
+      return { output: r.output, warnings: r.warnings, extra }
+    }
     if (converter) {
       const r = a.from === 'latin' ? converter.convertChunk(latinToTifinagh(text).output, state, offset) : converter.convertChunk(text, state, offset)
       const extra: Record<string, unknown> = {}
@@ -371,7 +405,7 @@ export async function main(argv: string[], io: CliIO): Promise<number> {
     if (a.text !== undefined) {
       const r = convertPlain(a.text, { fence: null }, 0)
       if (a.json || a.jsonl) {
-        await write(out, JSON.stringify({ output: r.output, from: a.from, to: a.to, profile: converter ? a.profile : undefined, warnings: r.warnings, ...r.extra }) + '\n')
+        await write(out, JSON.stringify({ output: r.output, from: a.from, to: a.to, profile: converter || reverse ? a.profile : undefined, warnings: r.warnings, ...r.extra }) + '\n')
       } else {
         await write(out, r.output + '\n')
         if (a.diagnostics) for (const w of r.warnings) await write(io.stderr, JSON.stringify(w) + '\n')
@@ -386,7 +420,7 @@ export async function main(argv: string[], io: CliIO): Promise<number> {
       let text = ''
       for (const s of inputs) text += await readAll(s, a.maxBytes || 256 * 1024 * 1024)
       const r = convertPlain(text, { fence: null }, 0)
-      await write(out, JSON.stringify({ output: r.output, from: a.from, to: a.to, profile: converter ? a.profile : undefined, warnings: r.warnings, ...r.extra }) + '\n')
+      await write(out, JSON.stringify({ output: r.output, from: a.from, to: a.to, profile: converter || reverse ? a.profile : undefined, warnings: r.warnings, ...r.extra }) + '\n')
       return EXIT.OK
     }
 

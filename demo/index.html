@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Tamazight in Arabic letters</title>
-<meta name="description" content="Transliterate Moroccan Amazigh from Tifinagh into Arabic script, offline, and see how each letter was written.">
+<meta name="description" content="Transliterate Moroccan Amazigh between Tifinagh and Arabic script, offline, and see how each letter was written.">
 <style>
   /* Fonts are bundled (SIL Open Font License, see fonts/OFL-*.txt) so the page works offline. */
   @font-face { font-family: "Noto Sans"; src: url(fonts/NotoSans-Variable-latin.woff2) format("woff2"); font-weight: 100 900; font-stretch: 62.5% 100%; font-display: swap; }
@@ -61,6 +61,7 @@
   .segmented span { display: block; padding: 0.375rem 0.875rem; border-radius: 0.375rem; font-size: 0.9375rem; font-weight: 550; }
   .segmented input:checked + span { background: var(--indigo); color: var(--on-indigo); }
   .segmented input:focus-visible + span { outline: 2px solid var(--indigo); outline-offset: 2px; }
+  .swap { display: inline-flex; align-items: center; gap: 0.375rem; }
   .profile-note { margin: 0.375rem 0 0; font-size: 0.875rem; color: var(--slate); max-width: 30rem; min-height: 1.4em; }
 
   /* ── The loom: input and output facing each other ─────── */
@@ -74,6 +75,16 @@
   textarea#src { width: 100%; min-height: 7rem; flex: 1; resize: vertical; border: 0; background: transparent; padding: 0;
     font: 400 1.625rem/1.7 var(--tifinagh); color: var(--ink); }
   textarea#src:focus-visible { outline: none; }
+  textarea#src[dir="rtl"] { font: 400 1.875rem/1.85 var(--arabic); text-align: right; }
+  #out[dir="ltr"] { font: 400 1.625rem/1.7 var(--tifinagh); text-align: left; }
+  body.rev .pane-in .pane-label { text-align: right; }
+  body.rev .pane-out .pane-label { text-align: left; }
+  body.rev .pane-out .pane-actions { justify-content: flex-start; }
+  .thread .t.ar { font: 400 2.25rem/1.3 var(--arabic); }
+  .thread .a.tf { font: 400 2rem/1.6 var(--tifinagh); }
+  .explain .pair .tf { font: 400 1.25rem var(--tifinagh); }
+  .alts .tf { font: 400 1.25rem var(--tifinagh); }
+  .examples .t.ar { font: 400 1.375rem/1.4 var(--arabic); text-align: right; }
   .pane-in:focus-within { box-shadow: inset 0 0 0 2px var(--indigo); }
   #out { min-height: 6rem; flex: 1; font: 400 1.875rem/1.85 var(--arabic); white-space: pre-wrap; overflow-wrap: anywhere; text-align: right; }
   #out mark { background: none; color: inherit; text-decoration: underline 3px var(--saffron); text-underline-offset: 0.35em; }
@@ -145,11 +156,19 @@
 <main>
   <header class="masthead">
     <h1>Tamazight in Arabic letters</h1>
-    <p class="lede">Type or paste Tifinagh. You get the same words written in Arabic script: this is transliteration, not translation. Everything runs in your browser.</p>
+    <p class="lede">Type or paste Tifinagh and get the same words in Arabic script — or the other way round. This is transliteration, not translation. Everything runs in your browser.</p>
   </header>
   <p id="missing">This page needs the built library. Run <code>npm install</code> in the project folder, then open this file again.</p>
 
   <div class="controls">
+    <fieldset>
+      <legend>Direction</legend>
+      <div class="segmented" role="radiogroup">
+        <label><input type="radio" name="dir" value="t2a" checked><span>Tifinagh → Arabic</span></label>
+        <label><input type="radio" name="dir" value="a2t"><span>Arabic → Tifinagh</span></label>
+      </div>
+      <p class="profile-note" id="dir-note" aria-live="polite"></p>
+    </fieldset>
     <fieldset>
       <legend>Spelling style</legend>
       <div class="segmented" role="radiogroup">
@@ -163,12 +182,13 @@
 
   <section class="loom" aria-label="Converter">
     <div class="pane pane-in">
-      <label class="pane-label" for="src">Tifinagh</label>
+      <label class="pane-label" for="src" id="src-label">Tifinagh</label>
       <textarea id="src" lang="zgh-Tfng" spellcheck="false" autocapitalize="off" autocomplete="off">ⴰⵣⵓⵍ ⴼⵍⵍⴰⵡⵏ! ⴰⵙⴳⴳⵯⴰⵙ ⴰⵎⴰⵢⵏⵓ ⵉⵖⵓⴷⴰⵏ.</textarea>
       <div class="pane-actions">
+        <button type="button" class="btn swap" id="swap" title="Switch direction and continue from the result"><span aria-hidden="true">⇄</span> Swap</button>
         <button type="button" class="btn" id="clear">Clear</button>
       </div>
-      <details class="keys">
+      <details class="keys" id="keys">
         <summary>Tifinagh keyboard</summary>
         <div class="keygrid" id="keygrid" aria-label="Insert a Tifinagh letter"></div>
       </details>
@@ -198,7 +218,7 @@
         <ul id="unit-rules"></ul>
       </div>
       <div>
-        <h3>Other accepted spellings</h3>
+        <h3 id="alts-title">Other accepted spellings</h3>
         <ul class="alts" id="alts"></ul>
       </div>
     </div>
@@ -217,7 +237,7 @@
   </section>
 
   <footer>
-    <p>Spellings follow the IRCAM correspondence tables, with the Tawalt dictionary's conventions in the Readable style. Arabic script cannot show every Amazigh sound; see the <a href="../README.md">README</a> and <a href="../docs/limitations.md">limitations</a>.</p>
+    <p>Spellings follow the IRCAM correspondence tables, with the Tawalt dictionary's conventions in the Readable style. Arabic script cannot show every Amazigh sound, so Arabic → Tifinagh has to guess some letters (ⵡ or ⵓ, ⵢ or ⵉ, ⵕ or ⵔ, and the unwritten ⴻ); see the <a href="../README.md">README</a> and <a href="../docs/limitations.md">limitations</a>.</p>
   </footer>
 </main>
 
@@ -231,6 +251,46 @@
   var src = document.getElementById('src')
   var out = document.getElementById('out')
   var copyBtn = document.getElementById('copy')
+
+  var REV_PROFILE_NOTES = {
+    readable: 'For everyday Arabic-script spelling: ي and و are read as ⵢ ⵡ or ⵉ ⵓ from the letters around them, and ر is ⵕ in words with ض ص ط ژ.',
+    ircam: 'For text written letter by letter with IRCAM’s marks: only يٛ وٛ (or a sukun) are ⵢ ⵡ, and only ڔ is ⵕ.',
+    phonetic: 'Like IRCAM, and a kasra after a consonant is read as the neutral vowel ⴻ.'
+  }
+  var DIR_NOTES = {
+    t2a: 'Every Tifinagh letter has a fixed Arabic spelling.',
+    a2t: 'Arabic script leaves some sounds unwritten, so a few letters are best guesses. Check the letter map.'
+  }
+
+  // Plain-language explanations of the Arabic → Tifinagh rules (ids from src/reverse/arabicToTifinagh.ts).
+  var REV_EXPLAIN = {
+    'rev.letter': 'Written with its usual Tifinagh letter.',
+    'rev.alef': 'ا, أ, آ and ى are the vowel ⴰ.',
+    'rev.initial-hamza-seat': 'ئ is the vowel ⵉ and ؤ is ⵓ; a ي or و right after them at the start of a word only repeats the vowel.',
+    'rev.yeh.context': 'ي is the consonant ⵢ at the start of a word, after a vowel or before ا; elsewhere it is the vowel ⵉ.',
+    'rev.waw.context': 'و is the consonant ⵡ at the start of a word, after a vowel or before ا; between consonants it is the vowel ⵓ.',
+    'rev.semivowel.marked': 'A mark (ٛ, sukun or shadda) shows that this ي or و is a consonant: ⵢ or ⵡ.',
+    'rev.vowel.marked-mode': 'In this style an unmarked ي or و is a vowel (ⵉ, ⵓ); only a word-initial ي is ⵢ.',
+    'rev.r.emphatic-word': 'The word has an emphatic letter (ض ص ط ژ), so ر is the emphatic ⵕ, following IRCAM’s rule.',
+    'rev.r.as-written': 'ر is ⵔ; only ڔ would be the emphatic ⵕ.',
+    'rev.r.plain-word': 'The word has no emphatic letter (ض ص ط ژ), so ر is the plain ⵔ.',
+    'rev.shadda': 'A shadda (ّ) means the letter is doubled.',
+    'rev.damma.labialization': 'A damma (ُ) on ك or گ is the rounding mark ⵯ.',
+    'rev.schwa': 'A kasra (ِ) here is the neutral vowel ⴻ.',
+    'rev.nonstandard': 'This letter is not used in Amazigh; the nearest Tifinagh letter was chosen.',
+    'lexicon.override': 'This word is in the word list, so its listed spelling is used.',
+    'passthrough.unsupported': 'This character has no Tifinagh equivalent, so it is kept as it is.'
+  }
+
+  // Other readings of an Arabic-script word: the same text under one changed option.
+  var REV_VARIANTS = [
+    { opt: { emphaticR: 'as-written' }, label: 'ر always read as ⵔ' },
+    { opt: { emphaticR: 'word-rule' }, label: 'ر read as ⵕ in words with an emphatic letter' },
+    { opt: { semivowels: 'marked' }, label: 'Unmarked ي و read as vowels ⵉ ⵓ' },
+    { opt: { semivowels: 'context' }, label: 'ي و read from the letters around them' },
+    { opt: { labialization: 'ignore' }, label: 'Damma ignored (no ⵯ)' },
+    { opt: { schwa: 'vowel-sign' }, label: 'Kasra read as ⴻ' }
+  ]
 
   var PROFILE_NOTES = {
     readable: 'Everyday spelling, as in the Tawalt dictionary: أ ئ ؤ at the start of words, گ for ⴳ, shadda for doubled letters.',
@@ -307,25 +367,54 @@
       case 'NONSTANDARD_LABIALIZATION': return q + ': in standard spelling only ⴳ and ⴽ take the rounding mark ⵯ. Check the word.'
       case 'COMBINING_MARK_ON_TIFINAGH': return 'A mark on ' + q + ' has no Arabic equivalent. It was left as it is.'
       case 'LONG_CONSONANT_RUN': return q + ' repeats a letter three or more times. Check the spelling.'
-      case 'EMPTY_WORD': return q + ' has no letter that is written in Arabic script, so it was left as it is.'
+      case 'EMPTY_WORD': return rev() ? q + ' has no letter that is written in Tifinagh, so it was left as it is.' : q + ' has no letter that is written in Arabic script, so it was left as it is.'
+      case 'APPROXIMATED_CHAR': return q + ' is not used in Amazigh. The nearest Tifinagh letter was used; check the word.'
+      case 'UNKNOWN_CHAR': return q + ' has no Tifinagh equivalent. It was left as it is.'
       default: return w.message
     }
   }
 
   function profile() { return document.querySelector('input[name="profile"]:checked').value }
+  function rev() { return document.querySelector('input[name="dir"]:checked').value === 'a2t' }
+  function convertText(text, opts) { return lib.convert(text, Object.assign({ from: 'arabic', to: 'tifinagh' }, opts)) }
   function el(tag, cls, text) { var n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n }
   var isTif = function (ch) { var c = ch.charCodeAt(0); return (c >= 0x2D30 && c <= 0x2D6F) || c === 0x2D7F }
+  var isAr = function (ch) { var c = ch.charCodeAt(0); return (c >= 0x0621 && c <= 0x065F) || c === 0x0670 || (c >= 0x0671 && c <= 0x06D3) || (c >= 0x0750 && c <= 0x077F) }
 
-  // Word under the caret (or the first Tifinagh word in the text).
+  // Word under the caret (or the first word in the text).
   function activeWord(text, caret) {
+    var isW = rev() ? isAr : isTif
     var s = caret, e = caret
-    while (s > 0 && isTif(text[s - 1])) s--
-    while (e < text.length && isTif(text[e])) e++
+    while (s > 0 && isW(text[s - 1])) s--
+    while (e < text.length && isW(text[e])) e++
     if (e > s) return { start: s, end: e }
     for (var i = 0; i < text.length; i++) {
-      if (isTif(text[i])) { var j = i; while (j < text.length && isTif(text[j])) j++; return { start: i, end: j } }
+      if (isW(text[i])) { var j = i; while (j < text.length && isW(text[j])) j++; return { start: i, end: j } }
     }
     return null
+  }
+
+  // Labels, fonts and directions for the current direction.
+  function applyDirection() {
+    var r = rev()
+    document.body.classList.toggle('rev', r)
+    document.getElementById('src-label').textContent = r ? 'Arabic script' : 'Tifinagh'
+    src.setAttribute('dir', r ? 'rtl' : 'ltr')
+    src.setAttribute('lang', r ? 'zgh-Arab' : 'zgh-Tfng')
+    document.getElementById('out-label').textContent = r ? 'Tifinagh' : 'Arabic script'
+    out.setAttribute('dir', r ? 'ltr' : 'rtl')
+    out.setAttribute('lang', r ? 'zgh-Tfng' : 'zgh-Arab')
+    copyBtn.textContent = r ? 'Copy Tifinagh text' : 'Copy Arabic text'
+    document.getElementById('keys').hidden = r
+    document.getElementById('alts-title').textContent = r ? 'Other possible readings' : 'Other accepted spellings'
+    document.getElementById('dir-note').textContent = DIR_NOTES[r ? 'a2t' : 't2a']
+    document.querySelectorAll('.examples button').forEach(function (b) {
+      var t = b.querySelector('.t')
+      var tif = b.getAttribute('data-text')
+      t.textContent = r ? lib.toArabic(tif) : tif
+      t.className = r ? 't ar' : 't'
+      t.setAttribute('dir', r ? 'rtl' : 'ltr')
+    })
   }
 
   var selected = 0
@@ -335,7 +424,8 @@
     var text = src.value
     var p = profile()
     var big = text.length > 20000
-    var r = lib.transliterate(text, { profile: p, alternatives: !big })
+    var isRev = rev()
+    var r = isRev ? convertText(text, { profile: p }) : lib.transliterate(text, { profile: p, alternatives: !big })
     var word = activeWord(text, src.selectionStart || 0)
 
     // Output, with the active word underlined when the mapping is exact.
@@ -355,7 +445,7 @@
     if (!built) out.textContent = r.output
     if (!text) out.textContent = ''
 
-    setMixed(document.getElementById('profile-note'), PROFILE_NOTES[p])
+    setMixed(document.getElementById('profile-note'), (isRev ? REV_PROFILE_NOTES : PROFILE_NOTES)[p])
 
     // Warnings worth acting on (info-level notes are not shown here).
     var ws = r.warnings.filter(function (w) { return w.severity !== 'info' })
@@ -364,7 +454,73 @@
     ws.slice(0, 8).forEach(function (w) { var li = el('li'); li.appendChild(mixed(warningText(w))); wl.appendChild(li) })
     document.getElementById('warnings').hidden = ws.length === 0
 
-    renderMap(word ? text.slice(word.start, word.end) : '', p, word ? word.start : -1)
+    var w = word ? text.slice(word.start, word.end) : ''
+    if (isRev) renderRevMap(w, p, word ? word.start : -1)
+    else renderMap(w, p, word ? word.start : -1)
+  }
+
+  function renderRevMap(word, p, start) {
+    var title = document.getElementById('map-title')
+    var hint = document.getElementById('map-hint')
+    var warp = document.getElementById('warp')
+    var unitTitle = document.getElementById('unit-title')
+    var unitRules = document.getElementById('unit-rules')
+    var alts = document.getElementById('alts')
+    title.textContent = ''; warp.textContent = ''; unitRules.textContent = ''; alts.textContent = ''; unitTitle.textContent = ''
+    if (!word) {
+      title.textContent = 'Letter by letter'
+      hint.textContent = 'Type an Arabic-script word to see how each of its letters is read in Tifinagh.'
+      return
+    }
+    if (start !== lastWordStart) { selected = 0; lastWordStart = start }
+    var r = convertText(word, { profile: p, trace: true })
+    var wa = el('bdi', 'w-a', word); wa.setAttribute('dir', 'rtl')
+    title.append('How ', wa, ' became ', el('span', 'w-t', r.output))
+    hint.textContent = 'Each column is one Arabic letter and what it became; columns follow the Tifinagh, left to right. Select a column to see why.'
+
+    var units = r.trace || []
+    if (selected >= units.length) selected = 0
+    units.forEach(function (u, i) {
+      var b = el('button', 'thread')
+      b.type = 'button'
+      b.setAttribute('aria-pressed', i === selected ? 'true' : 'false')
+      var latin = u.output ? lib.convert(u.output, { from: 'tifinagh', to: 'latin' }).output : ''
+      var t = el('span', 't ar', u.source); t.setAttribute('dir', 'rtl'); t.setAttribute('lang', 'zgh-Arab')
+      b.append(t, el('span', 'l', latin || '\u00a0'))
+      b.appendChild(el('span', u.output ? 'a tf' : 'a none', u.output || 'not written'))
+      b.setAttribute('aria-label', u.source + ' becomes ' + (u.output ? u.output + ' (' + latin + ')' : 'nothing'))
+      b.addEventListener('click', function () { selected = i; renderRevMap(word, p, start) })
+      warp.appendChild(b)
+    })
+
+    var u = units[selected]
+    if (u) {
+      unitTitle.className = 'pair'
+      var a = el('bdi', 'ar', u.source); a.setAttribute('dir', 'rtl')
+      unitTitle.append(a, document.createTextNode('  → '), el('span', 'tf', u.output || '–'))
+      var seen = {}
+      u.rules.forEach(function (id) {
+        var text = REV_EXPLAIN[id]
+        if (!text || seen[text]) return
+        seen[text] = true
+        var li = el('li'); li.appendChild(mixed(text)); unitRules.appendChild(li)
+      })
+      if (!unitRules.children.length) unitRules.appendChild(el('li', null, 'Written with its usual Tifinagh letter.'))
+    }
+
+    var found = {}
+    found[r.output] = true
+    var n = 0
+    REV_VARIANTS.forEach(function (v) {
+      var o
+      try { o = convertText(word, { profile: p, reverse: v.opt }).output } catch (e) { return }
+      if (found[o] || n >= 6) return
+      found[o] = true; n++
+      var li = el('li')
+      li.append(el('span', 'why', v.label), el('span', 'tf', o))
+      alts.appendChild(li)
+    })
+    if (!n) alts.appendChild(el('li', 'why', 'No other reading of this word under the other options.'))
   }
 
   function renderMap(word, p, start) {
@@ -461,10 +617,25 @@
   src.addEventListener('input', render)
   ;['keyup', 'click', 'select'].forEach(function (ev) { src.addEventListener(ev, render) })
   document.querySelectorAll('input[name="profile"]').forEach(function (r) { r.addEventListener('change', render) })
+  // Changing direction continues from the result: the output becomes the new input.
+  function switchDirection() {
+    var carried = out.textContent
+    applyDirection()
+    src.value = carried
+    src.setSelectionRange(0, 0)
+    render()
+  }
+  document.querySelectorAll('input[name="dir"]').forEach(function (r) { r.addEventListener('change', switchDirection) })
+  document.getElementById('swap').addEventListener('click', function () {
+    var other = document.querySelector('input[name="dir"]:not(:checked)')
+    other.checked = true
+    switchDirection()
+    src.focus()
+  })
   document.getElementById('clear').addEventListener('click', function () { src.value = ''; src.focus(); render() })
   document.querySelectorAll('.examples button').forEach(function (b) {
     b.addEventListener('click', function () {
-      src.value = b.getAttribute('data-text')
+      src.value = rev() ? lib.toArabic(b.getAttribute('data-text'), { profile: profile() }) : b.getAttribute('data-text')
       src.setSelectionRange(0, 0)
       render()
       document.getElementById('map-title').scrollIntoView({ block: 'nearest', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' })
@@ -474,7 +645,7 @@
   var copyTimer
   copyBtn.addEventListener('click', function () {
     var text = out.textContent
-    var done = function () { copyBtn.textContent = 'Copied'; clearTimeout(copyTimer); copyTimer = setTimeout(function () { copyBtn.textContent = 'Copy Arabic text' }, 1600) }
+    var done = function () { copyBtn.textContent = 'Copied'; clearTimeout(copyTimer); copyTimer = setTimeout(function () { copyBtn.textContent = rev() ? 'Copy Tifinagh text' : 'Copy Arabic text' }, 1600) }
     if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, function () { selectOut(); })
     else selectOut()
   })
@@ -484,6 +655,7 @@
     copyBtn.textContent = 'Text selected: press Ctrl+C'
   }
 
+  applyDirection()
   src.setSelectionRange(src.value.indexOf('ⴰⵙⴳⴳⵯⴰⵙ') + 1, src.value.indexOf('ⴰⵙⴳⴳⵯⴰⵙ') + 1)
   render()
 })()
